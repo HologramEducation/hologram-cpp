@@ -152,7 +152,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>mbnapi_uuid.lib;rasapi32.lib;Setupapi.lib;Cfgmgr32.lib;onecoreuap.lib</AdditionalDependencies>
+      <AdditionalDependencies>Ws2_32.lib;Cfgmgr32.lib;onecoreuap.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -228,14 +228,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="MobileBroadband.h" />
     <ClInclude Include="Modem.h" />
+    <ClInclude Include="PPP.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MobileBroadband.cpp" />
     <ClCompile Include="Modem.cpp" />
+    <ClCompile Include="PPP.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -3,11 +3,11 @@
   <ItemGroup>
     <ClInclude Include="Modem.h" />
     <ClInclude Include="Utils.h" />
-    <ClInclude Include="MobileBroadband.h" />
+    <ClInclude Include="PPP.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Modem.cpp" />
-    <ClCompile Include="MobileBroadband.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PPP.cpp" />
   </ItemGroup>
 </Project>

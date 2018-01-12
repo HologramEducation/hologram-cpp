@@ -1,5 +1,5 @@
 #pragma once
-#include "Utils.h"
+#include "PPP.h"
 
 typedef struct _MODEM_INFO {
 	std::wstring strManufacturer;
@@ -37,39 +37,11 @@ public:
 
 	static std::vector<SERIAL_DEVICE_INFO> getConnectedSerialDevices();
 
-	//RSA Stuff
-	bool setupCellularConnection(LPWSTR modemName, LPWSTR connName);
 	bool connect();
+	void disconnect();
 
-	RASCONNSTATUS getConnectionStatus() {
-		rasConnStatus.dwSize = sizeof(RASCONNSTATUS);
-		RasGetConnectStatus(hRasConn, &rasConnStatus);
-		return rasConnStatus;
-	}
-	void disconnect() {
-		if (hRasConn != NULL) {
-			RasHangUp(hRasConn);
-		}
-	}
-	void updateConnectionStatus() {
-		rasConnStatus.dwSize = sizeof(RASCONNSTATUS);
-		RasGetConnectStatus(hRasConn, &rasConnStatus);
-		connState = rasConnStatus.rasconnstate;
-	}
-	RASCONNSTATE getConnectionState() {
-		return connState;
-	}
-
-	static std::vector<LPRASDEVINFO> getConnectedModems();
-	static void getConnectionProfiles();
-	static void determineOFlags(DWORD flag);
-	static void determineO2Flags(DWORD flag);
 private:
 	HANDLE m_hCom;
-	HRASCONN hRasConn;
-	RASCONNSTATE connState;
-	RASCONNSTATUS rasConnStatus;
-	LPWSTR profileName;
 
 	static bool parseVidPid(std::wstring deviceId, int* vid, int* pid)
 	{

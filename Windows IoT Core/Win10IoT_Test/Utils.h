@@ -2,18 +2,21 @@
 #include <windows.h>
 #include <stdio.h>
 #include <vector>
-#include "ras.h"
-#include "raserror.h"
 #include <locale>
 #include <algorithm>
-#include <setupapi.h>
 #include <string>
 #include <strsafe.h>
+#include <memory>
+
+//Serial Port
 #include <cfgmgr32.h>
 #include <initguid.h>
 #include <propkey.h>
 #include <devpkey.h>
 
+//PPP
+#include <winsock.h>
+#include <ws2tcpip.h>
 
 //--------------------------------------------------
 static std::string ofTrimFront(const std::string & src, const std::string& locale) {
