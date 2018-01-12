@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0">
+  <PropertyGroup>
+    <Name>Python</Name>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == 'Any CPU' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.16299.0</WindowsTargetPlatformMinVersion>
+    <ApplicationType>Windows Store</ApplicationType>
+    <AppContainerApplication>true</AppContainerApplication>
+    <AppxPackage>true</AppxPackage>
+    <AppxPackageSigningEnabled>true</AppxPackageSigningEnabled>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <ProjectGuid>55d13510-d3f3-4299-9222-85b4d86b142f</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <WorkingDirectory>.</WorkingDirectory>
+    <StartupFile>StartupTask.py</StartupFile>
+    <ContainsStartupTask>true</ContainsStartupTask>
+    <SearchPath />
+    <PackageCertificateKeyFile>Python_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <ProjectTypeGuids>{2b557614-1a2b-4903-b9df-ed20d7b63f3a};{888888A0-9F3D-457C-B088-3A5042F75D52}</ProjectTypeGuids>
+    <InterpreterVersion>3.5</InterpreterVersion>
+    <InterpreterId>PythonUwpIoT|3.5|$(MSBuildProjectFullPath)</InterpreterId>
+    <RemoteDebugEnabled>true</RemoteDebugEnabled>
+    <RootNamespace>Python</RootNamespace>
+    <SitePackageChangedTime>1/12/2018 1:25:38 PM</SitePackageChangedTime>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.WindowsSDK.props" />
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <OutputPath>bin\Debug\$(Platform)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <OutputPath>bin\Release\$(Platform)\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="StartupTask.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <None Include="Python_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="PythonUwpIoT|3.5|C:\Users\domin\Desktop\Hologram-Nova\Windows IoT Core\Python\Python\Python.pyproj" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Uwp.targets" />
+</Project>

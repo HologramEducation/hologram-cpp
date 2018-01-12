@@ -1,6 +1,7 @@
 // main.cpp : Defines the entry point for the console application.
 //
 #include "Modem.h"
+#include <iostream>
 
 int main(int argc, char **argv)
 {
@@ -16,7 +17,17 @@ int main(int argc, char **argv)
 		}
 	}
 	if (nova.connect()) {
-		
+		wprintf(L"Connected");
+		std::vector<std::string> resultArray;
+		std::string input = "";
+		while (input != "exit") {
+			std::cout << "AT Command? ";
+			std::getline(std::cin, input);
+			nova.sendATCommand(input, resultArray);
+			for (auto result : resultArray) {
+				std::cout << "Result: " << result << std::endl;
+			}
+		}
 		nova.disconnect();
 	}
 	wprintf(L"\nExiting\n\n");

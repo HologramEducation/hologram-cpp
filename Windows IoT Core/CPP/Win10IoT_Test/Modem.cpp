@@ -189,8 +189,8 @@ bool Modem::connect()
 	if (!sendATCommand("ATDT*99***1#", std::string())) {
 		return false;
 	}
-	PPP p;
-	p.connect();
+	/*PPP p;
+	p.connect();*/
 }
 
 void Modem::disconnect()

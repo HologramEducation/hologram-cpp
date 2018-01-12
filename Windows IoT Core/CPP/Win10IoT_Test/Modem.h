@@ -1,5 +1,6 @@
 #pragma once
-#include "PPP.h"
+//#include "PPP.h"
+#include "Utils.h"
 
 typedef struct _MODEM_INFO {
 	std::wstring strManufacturer;

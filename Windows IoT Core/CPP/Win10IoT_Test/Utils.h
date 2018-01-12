@@ -15,8 +15,8 @@
 #include <devpkey.h>
 
 //PPP
-#include <winsock.h>
-#include <ws2tcpip.h>
+//#include <winsock.h>
+//#include <ws2tcpip.h>
 
 //--------------------------------------------------
 static std::string ofTrimFront(const std::string & src, const std::string& locale) {
