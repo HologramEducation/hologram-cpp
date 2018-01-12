@@ -24,14 +24,15 @@ public:
 	~Modem();
 
 	//Serial Stuff
-	bool setupSerialPort(std::wstring lpszCom, DWORD dwBaudrate = 115200);
-	bool IsValid();
+	bool setupModemSerialPort(std::wstring lpszCom, DWORD dwBaudrate = 115200);
+	bool setupSerialCommPort(std::wstring lpszCom, DWORD dwBaudrate = 115200);
+	bool IsValid(HANDLE handle);
 
 	// resultArray[0]: lpszATCommand
 	// resultArray[1] - [n - 1]: output lines.
 	bool parseATCommandResult(std::string strATCommand, std::string & strOutput, std::vector<std::string >& resultArray);
-	bool sendATCommand(std::string strATCommand, std::string & strOutput, DWORD dwWaitTime = 100);
-	bool sendATCommand(std::string strATCommand, std::vector<std::string >& resultArray, DWORD dwWaitTime = 100);
+	bool sendATCommand(std::string strATCommand, std::string & strOutput, DWORD dwWaitTime = 250);
+	bool sendATCommand(std::string strATCommand, std::vector<std::string >& resultArray, DWORD dwWaitTime = 250);
 
 	bool getInfo(MODEM_INFO& modemInfo, DWORD dwWaitTime = 100);
 	bool getIMSI(std::wstring& strIMSI, DWORD dwWaitTime = 100);
@@ -42,7 +43,11 @@ public:
 	void disconnect();
 
 private:
-	HANDLE m_hCom;
+	HANDLE hModemCom;
+	HANDLE hSerialCom;
+
+	bool sendATCommand(HANDLE &handle, std::string strATCommand, std::string & strOutput, DWORD dwWaitTime = 100);
+	bool sendATCommand(HANDLE &handle, std::string command, std::vector<std::string>& resultArray, DWORD dwWaitTime = 100);
 
 	static bool parseVidPid(std::wstring deviceId, int* vid, int* pid)
 	{
