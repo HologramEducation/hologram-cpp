@@ -149,9 +149,13 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Modem.cpp" />
+    <ClCompile Include="Nova.cpp" />
+    <ClCompile Include="Serial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Modem.h" />
+    <ClInclude Include="Nova.h" />
+    <ClInclude Include="Serial.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
