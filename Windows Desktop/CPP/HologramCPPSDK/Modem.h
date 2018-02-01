@@ -21,13 +21,14 @@ public:
 
 	//Serial Stuff
 	virtual bool sendMessage(std::string message) = 0;
+	virtual bool isRegistered() = 0;
 
 	bool parseATCommandResult(std::string strATCommand, std::string & strOutput, std::vector<std::string >& resultArray);
-	bool sendATCommand(std::string strATCommand, std::string & strOutput, DWORD dwWaitTime = 100);
-	bool sendAndParseATCommand(std::string strATCommand, std::vector<std::string >& resultArray, DWORD dwWaitTime = 100);
+	bool sendATCommand(std::string strATCommand, DWORD dwWaitTime = 500);
+	bool sendATCommand(std::string strATCommand, std::string & strOutput, DWORD dwWaitTime = 500);
+	bool sendAndParseATCommand(std::string strATCommand, std::vector<std::string >& resultArray, DWORD dwWaitTime = 500);
 
-	bool getInfo(MODEM_INFO& modemInfo, DWORD dwWaitTime = 100);
-	bool getIMSI(std::wstring& strIMSI, DWORD dwWaitTime = 100);
+	bool isPDPContextActive();
 
 	//RAS Stuff
 	bool setupCellularDataConnection(LPWSTR modemName, LPWSTR connName);

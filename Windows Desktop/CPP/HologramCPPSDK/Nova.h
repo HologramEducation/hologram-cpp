@@ -7,5 +7,14 @@ public:
 	~Nova();
 
 	bool sendMessage(std::string message);
+
+	bool isRegistered() {
+		return true;
+	}
+
+	bool setNetworkRegistrationStatus() {
+		return sendATCommand("+CEREG 2");
+	}
+
 private:
 };

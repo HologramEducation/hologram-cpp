@@ -14,8 +14,9 @@ Modem::Modem(std::wstring port, DWORD baud) : Modem()
 
 Modem::~Modem()
 {
-	if (m_hCom && m_hCom != INVALID_HANDLE_VALUE)
+	if (m_hCom && m_hCom != INVALID_HANDLE_VALUE) {
 		CloseHandle(m_hCom);
+	}
 	disconnect();
 }
 
@@ -23,8 +24,12 @@ bool Modem::parseATCommandResult(std::string strATCommand, std::string& strResul
 {
 	resultArray.clear();
 
-	if (strResult.find("\r\nOK\r\n") == std::string::npos)
+	if (strResult.find("\r\nOK\r\n") == std::string::npos) {
+		ofStringReplace(strResult, "\r\n", ";");
+		ofStringReplace(strResult, "\r", "");
+		resultArray = ofSplitString(strResult, ";");
 		return false;
+	}
 
 	ofStringReplace(strResult, "\r\nOK\r\n", "OK");
 	ofStringReplace(strResult, "\r\n", ";");
@@ -32,10 +37,22 @@ bool Modem::parseATCommandResult(std::string strATCommand, std::string& strResul
 
 	resultArray = ofSplitString(strResult, ";");
 
-	if (_stricmp(resultArray[0].c_str(), strATCommand.c_str()) != 0)
+	if (resultArray[0].find(strATCommand) == std::string::npos) {
 		return false;
+	}
 
 	return true;
+}
+
+bool Modem::sendATCommand(std::string command, DWORD dwWaitTime)
+{
+	std::string strOutput;
+
+	if (!sendATCommand(command, strOutput, dwWaitTime)) {
+		return false;
+	}
+	std::vector<std::string> resultArray;
+	return parseATCommandResult(command, strOutput, resultArray);
 }
 
 bool Modem::sendATCommand(std::string strATCommand, std::string& strOutput, DWORD dwWaitTime)
@@ -48,7 +65,7 @@ bool Modem::sendATCommand(std::string strATCommand, std::string& strOutput, DWOR
 		return false;
 	}
 
-	strATCommand += "\r\n";
+	strATCommand = strATCommand +"\r\n";
 
 	write(strATCommand);
 	Sleep(dwWaitTime);  // Wait input buffer to be filled.
@@ -68,43 +85,18 @@ bool Modem::sendAndParseATCommand(std::string command, std::vector<std::string>&
 	return parseATCommandResult(command, strOutput, resultArray);
 }
 
-bool Modem::getInfo(MODEM_INFO& modemInfo, DWORD dwWaitTime)
+bool Modem::isPDPContextActive()
 {
-	std::vector<std::string> lines;
-
-	if (!IsInitialized())
+	if (!isRegistered()) {
 		return false;
-
-	if (!sendAndParseATCommand("ati", lines, dwWaitTime))
-		return false;
-
-	for (size_t i = 1; i < lines.size(); i++)
-	{
-		if (lines[i].find("Manufacturer: ") != std::string::npos)
-			StringToWstring(CP_ACP, lines[i].substr(strlen("Manufacturer: ")), modemInfo.strManufacturer);
-		else if (lines[i].find("Model: ") != std::string::npos)
-			StringToWstring(CP_ACP, lines[i].substr(strlen("Model: ")), modemInfo.strModel);
-		else if (lines[i].find("Revision: ") != std::string::npos)
-			StringToWstring(CP_ACP, lines[i].substr(strlen("Revision: ")), modemInfo.strRevision);
-		else if (lines[i].find("SVN: ") != std::string::npos)
-			StringToWstring(CP_ACP, lines[i].substr(strlen("SVN: ")), modemInfo.strSVN);
-		else if (lines[i].find("IMEI: ") != std::string::npos)
-			StringToWstring(CP_ACP, lines[i].substr(strlen("IMEI: ")), modemInfo.strIMEI);
 	}
-	return true;
-}
 
-bool Modem::getIMSI(std::wstring& strIMSI, DWORD dwWaitTime)
-{
-	std::vector<std::string> lines;
+	std::vector<std::string > resultArray;
+	if (sendAndParseATCommand("+UPSND 0,8", resultArray)) {
 
-	if (!IsInitialized())
-		return false;
+	}
 
-	if (!sendAndParseATCommand("at+cimi", lines, dwWaitTime))
-		return false;
-
-	return StringToWstring(CP_ACP, lines[1], strIMSI);
+	return false;
 }
 
 bool Modem::setupCellularDataConnection(LPWSTR modemName, LPWSTR connName)
