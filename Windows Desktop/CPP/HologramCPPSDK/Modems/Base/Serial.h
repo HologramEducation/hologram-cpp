@@ -1,5 +1,6 @@
 #pragma once
-#include "Utils.h"
+#include "../../Utils.h"
+#include <setupapi.h>
 
 typedef struct _SERIAL_DEVICE_INFO {
 	std::wstring friendlyName;

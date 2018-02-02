@@ -2,11 +2,8 @@
 #include <windows.h>
 #include <stdio.h>
 #include <vector>
-#include "ras.h"
-#include "raserror.h"
 #include <locale>
 #include <algorithm>
-#include <setupapi.h>
 #include <string>
 
 // All functions prepended with of are taken from Openframeworks

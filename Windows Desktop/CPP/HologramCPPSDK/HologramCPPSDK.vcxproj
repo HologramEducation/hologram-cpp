@@ -148,14 +148,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Modem.cpp" />
-    <ClCompile Include="Nova.cpp" />
-    <ClCompile Include="Serial.cpp" />
+    <ClCompile Include="Modems\Base\Modem.cpp" />
+    <ClCompile Include="Modems\Base\Serial.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Modem.h" />
-    <ClInclude Include="Nova.h" />
-    <ClInclude Include="Serial.h" />
+    <ClInclude Include="Modems\Base\Modem.h" />
+    <ClInclude Include="Modems\Base\Serial.h" />
+    <ClInclude Include="Modems\Nova.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

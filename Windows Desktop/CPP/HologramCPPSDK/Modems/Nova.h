@@ -1,14 +1,14 @@
 #pragma once
-#include "Modem.h"
+#include "Base\Modem.h"
 
 class Nova : public Modem {
 public:
 	Nova();
 	~Nova();
 
-	bool sendMessage(std::string message);
+	virtual bool sendMessage(std::wstring message);
 
-	bool isRegistered() {
+	virtual bool isRegistered() {
 		return true;
 	}
 

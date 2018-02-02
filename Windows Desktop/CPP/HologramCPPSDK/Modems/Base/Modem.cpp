@@ -7,7 +7,7 @@ Modem::Modem()
 
 }
 
-Modem::Modem(std::wstring port, DWORD baud) : Modem()
+Modem::Modem(std::wstring port, unsigned int baud) : Modem()
 {
 	setupSerialPort(port, baud);
 }
@@ -44,18 +44,18 @@ bool Modem::parseATCommandResult(std::string strATCommand, std::string& strResul
 	return true;
 }
 
-bool Modem::sendATCommand(std::string command, DWORD dwWaitTime)
+bool Modem::sendATCommand(std::string command, unsigned int waitTIme)
 {
 	std::string strOutput;
 
-	if (!sendATCommand(command, strOutput, dwWaitTime)) {
+	if (!sendATCommand(command, strOutput, waitTIme)) {
 		return false;
 	}
 	std::vector<std::string> resultArray;
 	return parseATCommandResult(command, strOutput, resultArray);
 }
 
-bool Modem::sendATCommand(std::string strATCommand, std::string& strOutput, DWORD dwWaitTime)
+bool Modem::sendATCommand(std::string strATCommand, std::string& strOutput, unsigned int waitTIme)
 {
 	if (!IsInitialized()) {
 		return false;
@@ -68,17 +68,17 @@ bool Modem::sendATCommand(std::string strATCommand, std::string& strOutput, DWOR
 	strATCommand = strATCommand +"\r\n";
 
 	write(strATCommand);
-	Sleep(dwWaitTime);  // Wait input buffer to be filled.
+	Sleep(waitTIme);  // Wait input buffer to be filled.
 	read(strOutput);
 
 	return true;
 }
 
-bool Modem::sendAndParseATCommand(std::string command, std::vector<std::string>& resultArray, DWORD dwWaitTime)
+bool Modem::sendAndParseATCommand(std::string command, std::vector<std::string>& resultArray, unsigned int waitTIme)
 {
 	std::string strOutput;
 
-	if (!sendATCommand(command, strOutput, dwWaitTime)) {
+	if (!sendATCommand(command, strOutput, waitTIme)) {
 		return false;
 	}
 
@@ -99,10 +99,10 @@ bool Modem::isPDPContextActive()
 	return false;
 }
 
-bool Modem::setupCellularDataConnection(LPWSTR modemName, LPWSTR connName)
+bool Modem::setupCellularDataConnection(std::wstring modemName, std::wstring connName)
 {
-	TCHAR tchNewEntry[MAX_PATH + 1] = TEXT("\0");
-	wsprintf(tchNewEntry, connName);
+	wchar_t tchNewEntry[MAX_PATH + 1] = TEXT("\0");
+	wsprintf(tchNewEntry, connName.c_str());
 	profileName = connName;
 
 	// Validate the entry name
@@ -114,7 +114,7 @@ bool Modem::setupCellularDataConnection(LPWSTR modemName, LPWSTR connName)
 		memset(&rasEntry, 0, sizeof(RASENTRY));
 
 		rasEntry.dwSize = sizeof(RASENTRY);
-		wsprintf(rasEntry.szDeviceName, modemName);
+		wsprintf(rasEntry.szDeviceName, modemName.c_str());
 		wsprintf(rasEntry.szDeviceType, RASDT_Modem);
 		wsprintf(rasEntry.szLocalPhoneNumber, TEXT("*99***1#"));
 		rasEntry.dwFramingProtocol = RASFP_Ppp;
@@ -156,7 +156,7 @@ bool Modem::connect()
 	memset(&rasDialParams, 0, sizeof(RASDIALPARAMS));
 
 	rasDialParams.dwSize = sizeof(RASDIALPARAMS);
-	wsprintf(rasDialParams.szEntryName, profileName);
+	wsprintf(rasDialParams.szEntryName, profileName.c_str());
 
 	//auto retval = RasDial(NULL, NULL, &rasDialParams, 0L, (LPVOID)RasDialCallbackFunc, &hRasConn);
 	auto retval = RasDial(NULL, NULL, &rasDialParams, 0L, NULL, &hRasConn);
@@ -195,10 +195,8 @@ std::vector<LPRASDEVINFO> Modem::getConnectedModems() {
 
 		// If successful, print the names of the RAS devices
 		if (ERROR_SUCCESS == dwRet) {
-			wprintf(L"The following RAS Modems were found:\n");
-			for (DWORD i = 0; i < dwDevices; i++) {
+			for (unsigned int i = 0; i < dwDevices; i++) {
 				if (wcscmp(lpRasDevInfo[i].szDeviceType, RASDT_Modem) == 0) {
-					wprintf(L"%s\n", lpRasDevInfo[i].szDeviceName);
 					devices.push_back(&lpRasDevInfo[i]);
 				}
 			}
@@ -226,7 +224,7 @@ void Modem::getConnectionProfiles()
 	DWORD dwSize = 0, dwEntries;
 	LPRASENTRYNAME pRasEntryName = NULL;
 	LPRASENTRY pRasEntry = NULL;
-	DWORD i;
+	unsigned int i;
 
 	dwErr = RasEnumEntries(NULL, NULL, NULL, &dwSize, &dwEntries);
 
