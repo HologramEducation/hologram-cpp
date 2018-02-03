@@ -13,7 +13,7 @@ public:
 	}
 
 	bool setNetworkRegistrationStatus() {
-		return sendATCommand("+CEREG 2");
+		return sendATCommand("AT+CEREG 2");
 	}
 
 private:

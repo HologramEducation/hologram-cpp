@@ -147,15 +147,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Authentication\CSRPSKAuthentication.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Modems\Base\Modem.cpp" />
     <ClCompile Include="Modems\Base\Serial.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Authentication\Base\Authentication.h" />
+    <ClInclude Include="Authentication\CSRPSKAuthentication.h" />
     <ClInclude Include="Modems\Base\Modem.h" />
     <ClInclude Include="Modems\Base\Serial.h" />
     <ClInclude Include="Modems\Nova.h" />
-    <ClInclude Include="Utils.h" />
+    <ClInclude Include="Utils\json.hpp" />
+    <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

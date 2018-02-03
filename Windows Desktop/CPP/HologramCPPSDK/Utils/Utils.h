@@ -28,21 +28,30 @@ static std::string ofTrimBack(const std::string & src, const std::string& locale
 static std::string ofTrim(const std::string & src, const std::string& locale) {
 	return ofTrimFront(ofTrimBack(src, locale), locale);
 }
-static bool StringToWstring(UINT nCodePage, const std::string& str, std::wstring& wstr)
+
+static std::wstring StringToWstring(std::string source) {
+	wchar_t *wbuffer = new wchar_t[source.length() + 1];
+	std::mbstowcs(wbuffer, source.c_str(), source.length());
+	std::wstring retWstr = wbuffer;
+	delete[] wbuffer;
+	return retWstr;
+}
+
+static bool StringToWstring(unsigned int nCodePage, const std::string& str, std::wstring& wstr)
 {
 	bool fRet = false;
-	WCHAR* pBuffer = NULL;
+	wchar_t* pBuffer = NULL;
 	size_t nSize = 0;
 
 	if (str.empty())
-		goto END;
+		return false;
 
 	nSize = str.size();
-	pBuffer = new WCHAR[nSize + 1];
+	pBuffer = new wchar_t[nSize + 1];
 	if (!pBuffer)
-		goto END;
+		return false;
 
-	memset(pBuffer, 0, sizeof(WCHAR) * (nSize + 1));
+	memset(pBuffer, 0, sizeof(wchar_t) * (nSize + 1));
 
 	if (!MultiByteToWideChar(nCodePage, 0, str.c_str(), nSize, pBuffer, nSize + 1))
 		goto END;

@@ -11,6 +11,15 @@
     <Filter Include="Modem\Base">
       <UniqueIdentifier>{6809dfb8-8418-4a53-87ec-298c33727143}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Authentication">
+      <UniqueIdentifier>{53839921-c4af-4343-b656-b5fcc24975db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Authentication\Base">
+      <UniqueIdentifier>{ba4b5513-b725-47be-a15d-10abf53daf3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{c0d308a1-8669-4497-93b6-3f36d29e36c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Modems\Base\Modem.cpp">
@@ -20,6 +29,9 @@
       <Filter>Modem\Base</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Authentication\CSRPSKAuthentication.cpp">
+      <Filter>Authentication</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Modems\Nova.h">
@@ -31,6 +43,17 @@
     <ClInclude Include="Modems\Base\Serial.h">
       <Filter>Modem\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Utils.h" />
+    <ClInclude Include="Authentication\Base\Authentication.h">
+      <Filter>Authentication\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Authentication\CSRPSKAuthentication.h">
+      <Filter>Authentication</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\json.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Utils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
