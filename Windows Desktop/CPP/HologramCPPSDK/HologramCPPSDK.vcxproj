@@ -151,6 +151,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Modems\Base\Modem.cpp" />
     <ClCompile Include="Modems\Base\Serial.cpp" />
+    <ClCompile Include="NovaU201.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Authentication\Base\Authentication.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Modems\Base\Modem.h" />
     <ClInclude Include="Modems\Base\Serial.h" />
     <ClInclude Include="Modems\Nova.h" />
+    <ClInclude Include="NovaU201.h" />
     <ClInclude Include="Utils\json.hpp" />
     <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>

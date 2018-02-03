@@ -20,6 +20,12 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{c0d308a1-8669-4497-93b6-3f36d29e36c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Cloud">
+      <UniqueIdentifier>{8ed4f802-263e-443b-90c8-cbd9b96c3673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modem\Nova">
+      <UniqueIdentifier>{16e56975-d5b0-4f9a-8639-f56892c17bf4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Modems\Base\Modem.cpp">
@@ -32,11 +38,11 @@
     <ClCompile Include="Authentication\CSRPSKAuthentication.cpp">
       <Filter>Authentication</Filter>
     </ClCompile>
+    <ClCompile Include="NovaU201.cpp">
+      <Filter>Modem\Nova</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Modems\Nova.h">
-      <Filter>Modem</Filter>
-    </ClInclude>
     <ClInclude Include="Modems\Base\Modem.h">
       <Filter>Modem\Base</Filter>
     </ClInclude>
@@ -54,6 +60,12 @@
     </ClInclude>
     <ClInclude Include="Utils\Utils.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Modems\Nova.h">
+      <Filter>Modem\Nova</Filter>
+    </ClInclude>
+    <ClInclude Include="NovaU201.h">
+      <Filter>Modem\Nova</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
