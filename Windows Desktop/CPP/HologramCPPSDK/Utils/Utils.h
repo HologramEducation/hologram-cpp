@@ -31,10 +31,20 @@ static std::string ofTrim(const std::string & src, const std::string& locale) {
 
 static std::wstring StringToWstring(std::string source) {
 	wchar_t *wbuffer = new wchar_t[source.length() + 1];
-	std::mbstowcs(wbuffer, source.c_str(), source.length());
+	size_t numChars;
+	mbstowcs_s(&numChars, wbuffer, source.length() + 1, source.c_str(), source.length());
 	std::wstring retWstr = wbuffer;
 	delete[] wbuffer;
 	return retWstr;
+}
+
+static std::string wStringToString(std::wstring source) {
+	char *buffer = new char[source.length() + 1];
+	size_t numChars;
+	wcstombs_s(&numChars, buffer, source.length()+1, source.c_str(), source.length());
+	std::string retStr = buffer;
+	delete[] buffer;
+	return retStr;
 }
 
 static bool StringToWstring(unsigned int nCodePage, const std::string& str, std::wstring& wstr)
