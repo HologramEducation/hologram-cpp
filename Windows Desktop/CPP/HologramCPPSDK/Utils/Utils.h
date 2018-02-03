@@ -5,28 +5,51 @@
 #include <locale>
 #include <algorithm>
 #include <string>
+#include <sstream>
+#include <iomanip>
+#include <ctime>
+
+typedef struct _LOCATION {
+	time_t date;
+	double latitude;
+	double longitude;
+	double altitude;
+	double uncertainty;
+
+}LOCATION;
+
+typedef struct _SMS {
+	std::wstring sender;
+	time_t timestamp;
+	std::wstring message;
+}SMS;
 
 // All functions prepended with of are taken from Openframeworks
+//https://stackoverflow.com/questions/18906027/missing-punctuation-from-c-hex2bin
+static std::string hex2bin(std::string const& s) {
+	if (s.length() % 2 == 0) {
+		return "";
+	}
 
-//--------------------------------------------------
-static std::string ofTrimFront(const std::string & src, const std::string& locale) {
-	auto dst = src;
-	std::locale loc = std::locale(locale.c_str());
-	dst.erase(dst.begin(), std::find_if_not(dst.begin(), dst.end(), [&](char & c) {return std::isspace<char>(c, loc); }));
-	return dst;
+	std::string sOut;
+	sOut.reserve(s.length() / 2);
+
+	std::string extract;
+	for (std::string::const_iterator pos = s.begin(); pos<s.end(); pos += 2)
+	{
+		extract.assign(pos, pos + 2);
+		sOut.push_back(std::stoi(extract, nullptr, 16));
+	}
+	return sOut;
 }
 
-//--------------------------------------------------
-static std::string ofTrimBack(const std::string & src, const std::string& locale) {
-	auto dst = src;
-	std::locale loc = std::locale(locale.c_str());
-	dst.erase(std::find_if_not(dst.rbegin(), dst.rend(), [&](char & c) {return std::isspace<char>(c, loc); }).base(), dst.end());
-	return dst;
-}
+static std::string bin2hex(std::wstring const &s) {
+	std::ostringstream oss;
 
-//--------------------------------------------------
-static std::string ofTrim(const std::string & src, const std::string& locale) {
-	return ofTrimFront(ofTrimBack(src, locale), locale);
+	for (auto ch : s)
+		oss << std::hex << std::setw(2) << std::setfill('0') << (int)ch;
+
+	return oss.str();
 }
 
 static std::wstring StringToWstring(std::string source) {
@@ -76,6 +99,27 @@ END:
 		delete[] pBuffer;
 
 	return fRet;
+}
+
+//--------------------------------------------------
+static std::string ofTrimFront(const std::string & src, const std::string& locale) {
+	auto dst = src;
+	std::locale loc = std::locale(locale.c_str());
+	dst.erase(dst.begin(), std::find_if_not(dst.begin(), dst.end(), [&](char & c) {return std::isspace<char>(c, loc); }));
+	return dst;
+}
+
+//--------------------------------------------------
+static std::string ofTrimBack(const std::string & src, const std::string& locale) {
+	auto dst = src;
+	std::locale loc = std::locale(locale.c_str());
+	dst.erase(std::find_if_not(dst.rbegin(), dst.rend(), [&](char & c) {return std::isspace<char>(c, loc); }).base(), dst.end());
+	return dst;
+}
+
+//--------------------------------------------------
+static std::string ofTrim(const std::string & src, const std::string& locale) {
+	return ofTrimFront(ofTrimBack(src, locale), locale);
 }
 
 //--------------------------------------------------
