@@ -32,6 +32,9 @@
     <Filter Include="Cloud\Base">
       <UniqueIdentifier>{50412ac8-3aa0-4491-8759-0a26ad978dc6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Network\Base">
+      <UniqueIdentifier>{49d2d1fc-a515-4360-94c7-7d0dc8ef73a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -49,6 +52,10 @@
     </ClCompile>
     <ClCompile Include="Cloud\CustomCloud.cpp">
       <Filter>Cloud</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="Network\Cellular.cpp">
+      <Filter>Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +85,16 @@
     </ClInclude>
     <ClInclude Include="Cloud\CustomCloud.h">
       <Filter>Cloud</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Base\Network.h">
+      <Filter>Network\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkManager.h" />
+    <ClInclude Include="Network\Cellular.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\NetworkManager.h">
+      <Filter>Network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

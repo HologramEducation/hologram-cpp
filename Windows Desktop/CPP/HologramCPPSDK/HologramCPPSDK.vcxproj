@@ -150,6 +150,8 @@
     <ClCompile Include="Authentication\CSRPSKAuthentication.cpp" />
     <ClCompile Include="Cloud\CustomCloud.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="Network\Cellular.cpp" />
     <ClCompile Include="Network\Modems\Base\Modem.cpp" />
     <ClCompile Include="Network\Modems\Base\Serial.cpp" />
     <ClCompile Include="Network\Modems\Nova_U201.cpp" />
@@ -159,9 +161,13 @@
     <ClInclude Include="Authentication\CSRPSKAuthentication.h" />
     <ClInclude Include="Cloud\Base\Cloud.h" />
     <ClInclude Include="Cloud\CustomCloud.h" />
+    <ClInclude Include="NetworkManager.h" />
+    <ClInclude Include="Network\Base\Network.h" />
+    <ClInclude Include="Network\Cellular.h" />
     <ClInclude Include="Network\Modems\Base\Modem.h" />
     <ClInclude Include="Network\Modems\Base\Serial.h" />
     <ClInclude Include="Network\Modems\Nova_U201.h" />
+    <ClInclude Include="Network\NetworkManager.h" />
     <ClInclude Include="Utils\json.hpp" />
     <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
