@@ -490,6 +490,15 @@ Done:
 	}
 }
 
+bool Modem::checkRegistered(std::string atCommand)
+{
+	std::vector<std::string> result;
+	if (sendAndParseATCommand(atCommand, result) == MODEM_OK) {
+		std::vector<std::string> parts = ofSplitString(result.back().substr(result.back().find(":")), ",");
+	}
+	return false;
+}
+
 ModemResult Modem::determineModemResult(std::string result)
 {
 	if (result == "OK") {

@@ -45,6 +45,7 @@ public:
 	bool sendATCommand(std::string strATCommand, unsigned int waitTIme = 250);
 	bool sendATCommand(std::string strATCommand, std::string & strOutput, unsigned int waitTIme = 250);
 	ModemResult sendAndParseATCommand(std::string strATCommand, std::vector<std::string >& resultArray, unsigned int waitTIme = 250);
+	virtual void initModemSerialMode() = 0;
 
 	//Hologram
 	std::string sendMessage(std::wstring message);
@@ -52,7 +53,7 @@ public:
 	//Cellular
 	bool connect();
 	bool setTimezoneConfiguration();
-	//bool setNetworkRegistrationStatus();
+	virtual void setNetworkRegistrationStatus() = 0;
 	std::string popRecievedMessage();
 	bool isPDPContextActive();
 	bool setupPDPContext();
@@ -105,7 +106,7 @@ public:
 	static void getConnectionProfiles();
 	
 protected:
-
+	bool checkRegistered(std::string atCommand);
 private:
 	HRASCONN hRasConn;
 	RASCONNSTATE connState;
