@@ -7,11 +7,6 @@ Modem::Modem()
 	urcState = SOCKET_INIT;
 }
 
-Modem::Modem(std::wstring port, unsigned int baud) : Modem()
-{
-	setupSerialPort(port, baud);
-}
-
 Modem::~Modem()
 {
 	if (m_hCom && m_hCom != INVALID_HANDLE_VALUE) {

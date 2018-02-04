@@ -35,7 +35,7 @@ static std::string hex2bin(std::string const& s) {
 	sOut.reserve(s.length() / 2);
 
 	std::string extract;
-	for (std::string::const_iterator pos = s.begin(); pos<s.end(); pos += 2)
+	for (std::string::const_iterator pos = s.begin(); pos < s.end(); pos += 2)
 	{
 		extract.assign(pos, pos + 2);
 		sOut.push_back(std::stoi(extract, nullptr, 16));
@@ -64,7 +64,7 @@ static std::wstring StringToWstring(std::string source) {
 static std::string wStringToString(std::wstring source) {
 	char *buffer = new char[source.length() + 1];
 	size_t numChars;
-	wcstombs_s(&numChars, buffer, source.length()+1, source.c_str(), source.length());
+	wcstombs_s(&numChars, buffer, source.length() + 1, source.c_str(), source.length());
 	std::string retStr = buffer;
 	delete[] buffer;
 	return retStr;

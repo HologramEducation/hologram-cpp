@@ -10,14 +10,14 @@ using json = nlohmann::json;
 class Authentication {
 protected:
 
-	void buildPayloadString(std::wstring messages, std::vector<std::wstring> topics, std::string modemType="", std::string modemId="", std::string version="") {
+	void buildPayloadString(std::wstring messages, std::vector<std::wstring> topics, std::string modemType = "", std::string modemId = "", std::string version = "") {
 		buildAuthString();
 		buildMetadataString(modemType, modemId, version);
 
 		if (topics.size() > 0) {
 			buildTopicString(topics);
 		}
-	
+
 		buildMessageString(messages);
 	}
 
@@ -32,7 +32,7 @@ protected:
 		if (modemType == "Nova") {
 			payload += ('-' + modemId);
 		}
-				
+
 		return payload;
 	}
 

@@ -1,11 +1,11 @@
 #include "Nova_U201.h"
 
-
+#define DEFAULT_NOVA_U201_TIMEOUT 200
 
 Nova_U201::Nova_U201()
 {
-}
 
+}
 
 Nova_U201::~Nova_U201()
 {

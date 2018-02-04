@@ -34,7 +34,6 @@ enum URCState {
 class Modem : public Serial {
 public:
 	Modem();
-	Modem(std::wstring port, unsigned int baud);
 	~Modem();
 
 	//Stuff subclasses have to implement
@@ -71,9 +70,9 @@ public:
 	//URC
 	void checkURC();
 	void handleURC(std::string urcString);
-	virtual void handleURCSMS(std::string urcString) =0;
-	virtual void handleURCLocation(std::string urcString)=0;
-	virtual void handleURCListen(std::string urcString)=0;
+	virtual void handleURCSMS(std::string urcString) = 0;
+	virtual void handleURCLocation(std::string urcString) = 0;
+	virtual void handleURCListen(std::string urcString) = 0;
 
 	//SMS
 	bool popRecievedSMS();
@@ -97,14 +96,14 @@ public:
 			RasHangUp(hRasConn);
 		}
 	}
-	
+
 	RASCONNSTATE getConnectionState() {
 		return connState;
 	}
 
 	static std::vector<LPRASDEVINFO> getConnectedModems();
 	static void getConnectionProfiles();
-	
+
 protected:
 	bool checkRegistered(std::string atCommand);
 private:
@@ -112,11 +111,12 @@ private:
 	RASCONNSTATE connState;
 	RASCONNSTATUS rasConnStatus;
 	std::wstring profileName;
+
 	unsigned char socketId;
 	URCState urcState;
 	int last_read_payload_length;
 	std::deque<std::string> socketBuffer;
-	
+
 	ModemResult determineModemResult(std::string result);
 
 	void updateConnectionStatus() {
