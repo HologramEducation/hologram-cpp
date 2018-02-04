@@ -56,6 +56,9 @@
     <ClCompile Include="Network\Cellular.cpp">
       <Filter>Network</Filter>
     </ClCompile>
+    <ClCompile Include="Cloud\HologramCloud.cpp">
+      <Filter>Cloud</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Authentication\Base\Authentication.h">
@@ -93,6 +96,9 @@
     </ClInclude>
     <ClInclude Include="Network\NetworkManager.h">
       <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Cloud\HologramCloud.h">
+      <Filter>Cloud</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
