@@ -5,12 +5,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Modem">
-      <UniqueIdentifier>{a45dddf8-a87e-48c0-a800-dca8d1a82479}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modem\Base">
-      <UniqueIdentifier>{6809dfb8-8418-4a53-87ec-298c33727143}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Authentication">
       <UniqueIdentifier>{53839921-c4af-4343-b656-b5fcc24975db}</UniqueIdentifier>
     </Filter>
@@ -23,32 +17,41 @@
     <Filter Include="Cloud">
       <UniqueIdentifier>{8ed4f802-263e-443b-90c8-cbd9b96c3673}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modem\Nova">
+    <Filter Include="Network">
+      <UniqueIdentifier>{fdeb944d-b76c-4f81-bfec-84e2fecbdf2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Modem">
+      <UniqueIdentifier>{a45dddf8-a87e-48c0-a800-dca8d1a82479}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Modem\Base">
+      <UniqueIdentifier>{6809dfb8-8418-4a53-87ec-298c33727143}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Modem\Nova">
       <UniqueIdentifier>{16e56975-d5b0-4f9a-8639-f56892c17bf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cloud\Base">
+      <UniqueIdentifier>{50412ac8-3aa0-4491-8759-0a26ad978dc6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Modems\Base\Modem.cpp">
-      <Filter>Modem\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Modems\Base\Serial.cpp">
-      <Filter>Modem\Base</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Authentication\CSRPSKAuthentication.cpp">
       <Filter>Authentication</Filter>
     </ClCompile>
-    <ClCompile Include="NovaU201.cpp">
-      <Filter>Modem\Nova</Filter>
+    <ClCompile Include="Network\Modems\Nova_U201.cpp">
+      <Filter>Network\Modem\Nova</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Modems\Base\Modem.cpp">
+      <Filter>Network\Modem\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Modems\Base\Serial.cpp">
+      <Filter>Network\Modem\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Cloud\CustomCloud.cpp">
+      <Filter>Cloud</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Modems\Base\Modem.h">
-      <Filter>Modem\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Modems\Base\Serial.h">
-      <Filter>Modem\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Authentication\Base\Authentication.h">
       <Filter>Authentication\Base</Filter>
     </ClInclude>
@@ -61,11 +64,20 @@
     <ClInclude Include="Utils\Utils.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Modems\Nova.h">
-      <Filter>Modem\Nova</Filter>
+    <ClInclude Include="Network\Modems\Nova_U201.h">
+      <Filter>Network\Modem\Nova</Filter>
     </ClInclude>
-    <ClInclude Include="NovaU201.h">
-      <Filter>Modem\Nova</Filter>
+    <ClInclude Include="Network\Modems\Base\Modem.h">
+      <Filter>Network\Modem\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Modems\Base\Serial.h">
+      <Filter>Network\Modem\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Cloud\Base\Cloud.h">
+      <Filter>Cloud\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Cloud\CustomCloud.h">
+      <Filter>Cloud</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

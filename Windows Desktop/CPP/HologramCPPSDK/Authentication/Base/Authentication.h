@@ -10,7 +10,7 @@ using json = nlohmann::json;
 class Authentication {
 protected:
 
-	std::wstring buildPayloadString(std::wstring messages, std::vector<std::wstring> topics, std::string modemType="", std::string modemId="", std::string version="") {
+	void buildPayloadString(std::wstring messages, std::vector<std::wstring> topics, std::string modemType="", std::string modemId="", std::string version="") {
 		buildAuthString();
 		buildMetadataString(modemType, modemId, version);
 
