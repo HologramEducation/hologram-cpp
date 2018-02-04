@@ -1,7 +1,6 @@
 #pragma once
 #include "Base\Cloud.h"
 
-
 #define MAX_RECEIVE_BYTES 1024
 #define MAX_QUEUED_CONNECTIONS 5
 #define RECEIVE_TIMEOUT 5

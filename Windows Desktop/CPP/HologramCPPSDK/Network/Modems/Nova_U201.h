@@ -15,6 +15,8 @@ public:
 	virtual void handleURCListen(std::string urcString);
 	void handleURC(std::string urcString);
 
+	static USB_IDS usbIds;
+
 private:
 	LOCATION location;
 };

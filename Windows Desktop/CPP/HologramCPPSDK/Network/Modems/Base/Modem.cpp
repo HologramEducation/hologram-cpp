@@ -145,22 +145,24 @@ bool Modem::createSocket()
 	std::vector<std::string> result;
 	if (sendAndParseATCommand("AT+USOCR=6", result) == MODEM_OK) {
 		socketId = std::stoi(ofSplitString(result[0], ",").back());
+		return true;
 	}
+	return false;
 }
 
 bool Modem::connectSocket(std::string host, int port)
 {
 	std::vector<std::string> result;
-	char * buffer;
-	sprintf(buffer, "AT+USOCO=%d,\"%s\",%d", socketId, host, port);
+	char buffer[1024];
+	sprintf_s(buffer, "AT+USOCO=%d,\"%s\",%d", socketId, host.c_str(), port);
 	return sendAndParseATCommand(buffer, result, 5000) == MODEM_OK;
 }
 
 bool Modem::listenSocket(int port)
 {
 	std::vector<std::string> result;
-	char * buffer;
-	sprintf(buffer, "AT+USOLI=%d,%d", socketId, port);
+	char buffer[1024];
+	sprintf_s(buffer, "AT+USOLI=%d,%d", socketId, port);
 	return sendAndParseATCommand(buffer, result, 5000) == MODEM_OK;
 }
 
@@ -168,12 +170,13 @@ bool Modem::writeSocket(std::wstring data)
 {
 	setHexMode(true);
 	std::vector<std::string> result;
-	char * buffer;
-	sprintf(buffer, "AT+USOWR=%d,%s,\"%s\"", socketId, data.length(), bin2hex(data));
+	char buffer[4096];
+	sprintf_s(buffer, "AT+USOWR=%d,%d,\"%s\"", socketId, data.length(), bin2hex(data).c_str());
 	if (sendAndParseATCommand(buffer, result) != MODEM_OK) {
 		//do something? notify or what
 	}
 	setHexMode(false);
+	return true;
 }
 
 std::string Modem::readSocket(int socketID, int bufferLen)
@@ -188,8 +191,8 @@ std::string Modem::readSocket(int socketID, int bufferLen)
 
 	setHexMode(true);
 	std::vector<std::string> result;
-	char * buffer;
-	sprintf(buffer, "AT+USORD=%d,%d", socketID, bufferLen);
+	char buffer[4096];
+	sprintf_s(buffer, "AT+USORD=%d,%d", socketID, bufferLen);
 	sendAndParseATCommand(buffer, result);
 	std::string response;
 	if (result.size() > 0) {

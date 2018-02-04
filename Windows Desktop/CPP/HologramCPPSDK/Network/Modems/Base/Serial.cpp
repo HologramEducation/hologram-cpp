@@ -49,6 +49,7 @@ bool Serial::write(std::string message)
 	}
 
 	WaitCommEvent(m_hCom, &dwEvtMask, NULL);  // Wait tx operation done.
+	return true;
 }
 
 bool Serial::read(std::string & buffer)

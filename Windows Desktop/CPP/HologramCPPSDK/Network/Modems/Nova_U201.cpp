@@ -4,7 +4,7 @@
 
 Nova_U201::Nova_U201()
 {
-
+	name = "Nova_U201";
 }
 
 Nova_U201::~Nova_U201()

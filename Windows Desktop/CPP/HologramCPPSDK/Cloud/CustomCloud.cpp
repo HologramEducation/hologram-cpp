@@ -9,6 +9,11 @@ CustomCloud::~CustomCloud()
 {
 }
 
+bool CustomCloud::isReadyToSend()
+{
+	return false;
+}
+
 std::string CustomCloud::sendMessage(std::wstring message, int timeout, bool closeSocket)
 {
 	if (!isReadyToSend()) {

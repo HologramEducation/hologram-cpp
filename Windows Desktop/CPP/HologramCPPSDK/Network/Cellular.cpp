@@ -4,7 +4,13 @@
 
 Cellular::Cellular()
 {
+	supportedModems.push_back("E303");
+	supportedModems.push_back("MS2131");
+	supportedModems.push_back("NOVA201");
+	supportedModems.push_back("NOVA404");
+
 	Nova_U201::usbIds = USB_IDS(L"1546", L"1102");
+
 	connectionState = CLOUD_DISCONNECTED;
 }
 

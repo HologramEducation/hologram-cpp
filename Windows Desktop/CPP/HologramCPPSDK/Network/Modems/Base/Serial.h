@@ -24,7 +24,6 @@ public:
 
 	static bool isDeviceConnected(USB_IDS ids);
 	static std::vector<SERIAL_DEVICE_INFO> getConnectedSerialDevices();
-	static USB_IDS usbIds;
 
 protected:
 	HANDLE m_hCom;

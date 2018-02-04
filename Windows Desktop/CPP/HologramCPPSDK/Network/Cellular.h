@@ -5,13 +5,6 @@
 
 #define DEFAULT_CELLULAR_TIMEOUT 200
 
-std::string supportedModems[] = {
-	"E303",
-	"MS2131",
-	"NOVA201",
-	"NOVA404"
-};
-
 class Cellular : public Network
 {
 public:
@@ -25,23 +18,24 @@ public:
 		return modem->sendMessage(message);
 	}
 	virtual bool openReceiveSocket(int recv_port) {
-		modem->openReceiveSocket(recv_port);
+		return modem->openReceiveSocket(recv_port);
 	}
 	virtual bool createSocket() {
-		modem->createSocket();
+		return modem->createSocket();
 	}
 	virtual bool connectSocket(std::string host, int port) {
-		modem->connectSocket(host, port);
+		bool status = modem->connectSocket(host, port);
 		Sleep(2000);
+		return status;
 	}
 	virtual bool listenSocket(int port) {
-		modem->listenSocket(port);
+		return modem->listenSocket(port);
 	}
 	virtual bool writeSocket(std::wstring data) {
-		modem->writeSocket(data);
+		return modem->writeSocket(data);
 	}
 	virtual bool closeSocket() {
-		modem->closeSocket(-1);
+		return modem->closeSocket(-1);
 	}
 	virtual bool isConnected() {
 		return connectionState == CLOUD_CONNECTED;
@@ -50,5 +44,8 @@ public:
 	void autoDectectModem();
 
 	Modem * modem;
+
+private:
+	std::vector<std::string> supportedModems;
 };
 

@@ -81,6 +81,9 @@ public:
 
 	//MISC
 	void setHexMode(bool state);
+	std::string getName() {
+		return name;
+	}
 
 	//RAS Stuff
 	bool setupRASConnection(std::wstring modemName, std::wstring connName);
@@ -106,6 +109,7 @@ public:
 
 protected:
 	bool checkRegistered(std::string atCommand);
+	std::string name;
 private:
 	HRASCONN hRasConn;
 	RASCONNSTATE connState;

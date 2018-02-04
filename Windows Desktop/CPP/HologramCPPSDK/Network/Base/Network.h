@@ -27,6 +27,5 @@ public:
 	}
 	virtual bool isConnected() = 0;
 protected:
-	std::string name;
 	ConnectionState connectionState;
 };
