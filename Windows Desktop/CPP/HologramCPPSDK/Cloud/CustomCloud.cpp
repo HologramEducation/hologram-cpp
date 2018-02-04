@@ -9,17 +9,17 @@ CustomCloud::~CustomCloud()
 {
 }
 
-std::wstring CustomCloud::sendMessage(std::wstring message, int timeout, bool closeSocket)
+std::string CustomCloud::sendMessage(std::wstring message, int timeout, bool closeSocket)
 {
 	if (!isReadyToSend()) {
 		addPayloadToBuffer(message);
-		return L"";
+		return "";
 	}
-	std::wstring result;
+	std::string result;
 	openSendSocket(timeout);
 
 	if (useATSocket) {
-		result = L"AT Socket";
+		result = networkManager.getNetwork()->sendMessage(message);
 	}
 	else {
 		result = receiveSendSocket();

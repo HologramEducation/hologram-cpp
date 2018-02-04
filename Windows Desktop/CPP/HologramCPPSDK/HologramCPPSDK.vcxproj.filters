@@ -53,7 +53,6 @@
     <ClCompile Include="Cloud\CustomCloud.cpp">
       <Filter>Cloud</Filter>
     </ClCompile>
-    <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="Network\Cellular.cpp">
       <Filter>Network</Filter>
     </ClCompile>
@@ -89,7 +88,6 @@
     <ClInclude Include="Network\Base\Network.h">
       <Filter>Network\Base</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="Network\Cellular.h">
       <Filter>Network</Filter>
     </ClInclude>

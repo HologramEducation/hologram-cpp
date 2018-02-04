@@ -10,10 +10,19 @@ enum ConnectionState {
 };
 
 class Network {
-	virtual bool connect() = 0;
+public:
+	virtual bool connect(int timeout) = 0;
 	virtual bool disconnect() = 0;
 	virtual bool reconnect() = 0;
-	virtual ConnectionState getConnectionStatus() {
+	virtual std::string sendMessage(std::wstring message) = 0;
+	virtual bool openReceiveSocket(int recv_port) = 0;
+	virtual bool createSocket() = 0;
+	virtual bool connectSocket(std::string host, int port) = 0;
+	virtual bool listenSocket(int port) = 0;
+	virtual bool writeSocket(std::wstring data) = 0;
+	virtual bool closeSocket() = 0;
+	
+	ConnectionState getConnectionStatus() {
 		return connectionState;
 	}
 	virtual bool isConnected() = 0;

@@ -5,7 +5,7 @@
 
 #define DEFAULT_NETWORK_TIMEOUT  200
 
-enum NetworkTypes {
+enum NetworkType {
 	WIFI,
 	CELLULAR,
 	BLE,
@@ -15,10 +15,16 @@ enum NetworkTypes {
 class NetworkManager
 {
 public:
-	NetworkManager(Network * network) {
-
+	NetworkManager() {
+		active = false;
 	}
-	~NetworkManager();
+
+	NetworkManager(Network * network) : NetworkManager() {
+		this->network = network;
+	}
+	~NetworkManager() {
+		delete network;
+	}
 
 	void networkDisconnected() {
 		active = false;
@@ -27,7 +33,8 @@ public:
 		active = true;
 	}
 
-	void setNetworkType(NetworkTypes type, Modem * modem = NULL) {
+	void setNetworkType(NetworkType type, Modem * modem = NULL) {
+		this->type = type;
 		if (type == CELLULAR) {
 			network = new Cellular();
 			//set the network to cellular and detect or set modem
@@ -42,12 +49,17 @@ public:
 			//create a new network of the type
 		}
 	}
-	Network * getNetworkType() {
+	Network * getNetwork() {
 		return network;
+	}
+
+	NetworkType getNetworkType() {
+		return type;
 	}
 
 private:
 	Network * network;
+	NetworkType type;
 	bool active;
 };
 

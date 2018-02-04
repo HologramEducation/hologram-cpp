@@ -111,6 +111,7 @@ private:
 	RASCONNSTATE connState;
 	RASCONNSTATUS rasConnStatus;
 	std::wstring profileName;
+	MODEM_INFO modemInfo;
 
 	unsigned char socketId;
 	URCState urcState;

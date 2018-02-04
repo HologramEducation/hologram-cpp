@@ -14,10 +14,10 @@ public:
 	~CustomCloud();
 
 	bool isReadyToSend();
-	std::wstring sendMessage(std::wstring message, int timeout = SEND_TIMEOUT, bool closeSocket = true);
+	std::string sendMessage(std::wstring message, int timeout = SEND_TIMEOUT, bool closeSocket = true);
 	void openSendSocket(int timeout = SEND_TIMEOUT);
 	void closeSendSocket();
-	std::wstring receiveSendSocket(unsigned int maxBytesRead = MAX_RECEIVE_BYTES);
+	std::string receiveSendSocket(unsigned int maxBytesRead = MAX_RECEIVE_BYTES);
 	void sendSMS(std::string destination, std::wstring message);
 	void openReceiveSocket();
 	void closeReceiveSocket();
