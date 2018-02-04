@@ -79,7 +79,7 @@ bool Serial::read(std::string & buffer)
 			return false;
 		}
 	}
-	
+
 	buffer = pBuffer;
 
 	return true;
@@ -88,6 +88,31 @@ bool Serial::read(std::string & buffer)
 bool Serial::IsInitialized()
 {
 	return (m_hCom && m_hCom != INVALID_HANDLE_VALUE) ? true : false;
+}
+
+//https://stackoverflow.com/questions/7599331/list-usb-device-with-specified-vid-and-pid-without-using-windows-driver-kit
+bool Serial::isDeviceConnected(USB_IDS ids)
+{
+	unsigned index;
+	HDEVINFO hDevInfo;
+	SP_DEVINFO_DATA DeviceInfoData;
+	TCHAR HardwareID[1024];
+
+	// List all connected USB devices
+	hDevInfo = SetupDiGetClassDevs(NULL, TEXT("USB"), NULL, DIGCF_PRESENT | DIGCF_ALLCLASSES);
+	for (index = 0; ; index++) {
+		DeviceInfoData.cbSize = sizeof(DeviceInfoData);
+		if (!SetupDiEnumDeviceInfo(hDevInfo, index, &DeviceInfoData)) {
+			return false;     // no match
+		}
+
+		SetupDiGetDeviceRegistryProperty(hDevInfo, &DeviceInfoData, SPDRP_HARDWAREID, NULL, (BYTE*)HardwareID, sizeof(HardwareID), NULL);
+
+		std::wstring device = HardwareID;
+		if (device.find(ids.pid) != std::wstring::npos && device.find(ids.vid) != std::wstring::npos) {
+			return true;     // match
+		}
+	}
 }
 
 //static functions
