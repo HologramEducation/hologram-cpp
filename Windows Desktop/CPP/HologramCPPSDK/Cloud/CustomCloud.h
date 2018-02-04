@@ -1,6 +1,7 @@
 #pragma once
 #include "Base\Cloud.h"
 
+
 #define MAX_RECEIVE_BYTES 1024
 #define MAX_QUEUED_CONNECTIONS 5
 #define RECEIVE_TIMEOUT 5
@@ -18,7 +19,7 @@ public:
 	void openSendSocket(int timeout = SEND_TIMEOUT);
 	void closeSendSocket();
 	std::string receiveSendSocket(unsigned int maxBytesRead = MAX_RECEIVE_BYTES);
-	void sendSMS(std::string destination, std::wstring message);
+	void sendSMS(std::string destination, std::wstring message) {}
 	void openReceiveSocket();
 	void closeReceiveSocket();
 
