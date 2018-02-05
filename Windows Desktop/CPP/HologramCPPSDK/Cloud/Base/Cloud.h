@@ -21,7 +21,7 @@ protected:
 	void addPayloadToBuffer(std::wstring payload) {
 		messageBuffer.push_back(payload);
 	}
-	virtual std::string sendMessage(std::string message, std::vector<std::wstring> topics) = 0;
+	virtual std::string sendMessage(std::wstring message, std::vector<std::wstring> topics) = 0;
 	virtual void sendSMS(std::wstring message, std::vector<std::wstring> topics) = 0;
 
 

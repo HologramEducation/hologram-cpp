@@ -6,7 +6,7 @@ public:
 	Nova_U201();
 	~Nova_U201();
 
-	bool createSocket();
+	virtual bool createSocket();
 	virtual void setNetworkRegistrationStatus();
 	virtual void initModemSerialMode();
 	virtual bool isRegistered();
@@ -15,7 +15,7 @@ public:
 	virtual void handleURCListen(std::string urcString);
 	void handleURC(std::string urcString);
 
-	static USB_IDS usbIds;
+	virtual void populateModemInformation();
 
 private:
 	LOCATION location;

@@ -43,13 +43,14 @@ static std::string hex2bin(std::string const& s) {
 	return sOut;
 }
 
-static std::string bin2hex(std::wstring const &s) {
-	std::ostringstream oss;
+static std::string ToHex(const std::string& s)
+{
+	std::ostringstream ret;
 
-	for (auto ch : s)
-		oss << std::hex << std::setw(2) << std::setfill('0') << (int)ch;
+	for (std::string::size_type i = 0; i < s.length(); ++i)
+		ret << std::hex << std::setfill('0') << std::setw(2) <<  std::nouppercase << (int)s[i];
 
-	return oss.str();
+	return ret.str();
 }
 
 static std::wstring StringToWstring(std::string source) {

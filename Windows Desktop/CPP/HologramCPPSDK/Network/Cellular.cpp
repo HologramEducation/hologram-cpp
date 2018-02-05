@@ -9,8 +9,6 @@ Cellular::Cellular()
 	supportedModems.push_back("NOVA201");
 	supportedModems.push_back("NOVA404");
 
-	Nova_U201::usbIds = USB_IDS(L"1546", L"1102");
-
 	connectionState = CLOUD_DISCONNECTED;
 }
 
@@ -52,8 +50,11 @@ void Cellular::autoDectectModem()
 
 		}
 		if (modemName == "NOVA201") {
-			if (Serial::isDeviceConnected(Nova_U201::usbIds)) {
+			if (Serial::isDeviceConnected(Nova_U201::deviceInfo, L"AT")) {
 				modem = new Nova_U201();
+				modem->setupSerialPort(Nova_U201::deviceInfo.portName);
+				modem->initModemSerialMode(); 
+				modem->populateModemInformation();
 				break;
 			}
 		}

@@ -25,11 +25,11 @@ enum HOLOGRAM_ERROR_CODES {
 class HologramCloud : public CustomCloud
 {
 public:
-	HologramCloud(std::map<std::string, std::string> credentials, bool enable_inbound = false, Network * network = NULL, Authentication * auth = NULL);
+	HologramCloud(std::map<std::string, std::string> credentials, bool enable_inbound = false, NetworkType type = CELLULAR, Authentication * auth = NULL);
 	~HologramCloud();
 	void setAuthentication(Authentication * auth);
-	std::string sendMessage(std::wstring message);
-	std::string sendSMS(std::string dest_number, std::wstring message);
+	virtual std::string sendMessage(std::wstring message, std::vector<std::wstring> topics);
+	virtual void sendSMS(std::wstring message, std::vector<std::wstring> topics) {};
 
 private:
 	Authentication * auth;

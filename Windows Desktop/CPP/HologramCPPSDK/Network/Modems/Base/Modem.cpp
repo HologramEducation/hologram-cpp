@@ -1,4 +1,5 @@
 #include "Modem.h"
+#include <iostream>
 
 Modem::Modem()
 {
@@ -44,7 +45,7 @@ bool Modem::sendATCommand(std::string command, unsigned int waitTIme)
 	return parseATCommandResult(command, strOutput, resultArray) == MODEM_OK;
 }
 
-bool Modem::sendATCommand(std::string strATCommand, std::string& strOutput, unsigned int waitTIme)
+bool Modem::sendATCommand(std::string strATCommand, std::string& strOutput, unsigned int waitTime)
 {
 	if (!IsInitialized()) {
 		return false;
@@ -55,22 +56,23 @@ bool Modem::sendATCommand(std::string strATCommand, std::string& strOutput, unsi
 	}
 
 	strATCommand = strATCommand + "\r\n";
-
+	std::cout << strATCommand << std::endl;
+	setTimeout(waitTime);
 	write(strATCommand);
-	Sleep(waitTIme);  // Wait input buffer to be filled.
+	//Sleep(100);
 	read(strOutput);
-
+	std::cout << strOutput << std::endl;
 	return true;
 }
 
 ModemResult Modem::sendAndParseATCommand(std::string command, std::vector<std::string>& resultArray, unsigned int waitTIme)
 {
 	std::string strOutput;
-
+	
 	if (!sendATCommand(command, strOutput, waitTIme)) {
 		return MODEM_ERROR;
 	}
-
+	
 	return parseATCommandResult(command, strOutput, resultArray);
 }
 
@@ -144,7 +146,7 @@ bool Modem::createSocket()
 {
 	std::vector<std::string> result;
 	if (sendAndParseATCommand("AT+USOCR=6", result) == MODEM_OK) {
-		socketId = std::stoi(ofSplitString(result[0], ",").back());
+		socketId = std::stoi(ofSplitString(result[0], ":").back());
 		return true;
 	}
 	return false;
@@ -171,7 +173,7 @@ bool Modem::writeSocket(std::wstring data)
 	setHexMode(true);
 	std::vector<std::string> result;
 	char buffer[4096];
-	sprintf_s(buffer, "AT+USOWR=%d,%d,\"%s\"", socketId, data.length(), bin2hex(data).c_str());
+	sprintf_s(buffer, "AT+USOWR=%d,%d,\"%s\"", socketId, data.length(), ToHex(wStringToString(data)).c_str());
 	if (sendAndParseATCommand(buffer, result) != MODEM_OK) {
 		//do something? notify or what
 	}
@@ -348,8 +350,8 @@ bool Modem::connect()
 
 bool Modem::setTimezoneConfiguration()
 {
-	bool zoneSync = sendATCommand("AT+CTZU 1");
-	bool zoneURC = sendATCommand("AT+CTZR 1");
+	bool zoneSync = sendATCommand("AT+CTZU=1");
+	bool zoneURC = sendATCommand("AT+CTZR=1");
 	return zoneSync & zoneURC;
 }
 
@@ -493,6 +495,10 @@ bool Modem::checkRegistered(std::string atCommand)
 	std::vector<std::string> result;
 	if (sendAndParseATCommand(atCommand, result) == MODEM_OK) {
 		std::vector<std::string> parts = ofSplitString(result.back().substr(result.back().find(":")), ",");
+		if (parts.size() < 2) {
+			return false;
+		}
+		return parts[1] == "5" || parts[1] == "1";
 	}
 	return false;
 }

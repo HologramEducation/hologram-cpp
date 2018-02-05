@@ -5,12 +5,13 @@
 #include <deque>
 
 typedef struct _MODEM_INFO {
-	std::wstring strManufacturer;
-	std::wstring strModel;
-	std::wstring strRevision;
-	std::wstring strSVN;
-	std::wstring strIMEI;
-
+	std::wstring Manufacturer;
+	std::wstring Model;
+	std::wstring Revision;
+	std::wstring SVN;
+	std::wstring IMEI;
+	std::wstring ICCID;
+	std::wstring Mode;
 }MODEM_INFO;
 
 enum ModemResult {
@@ -57,10 +58,13 @@ public:
 	bool isPDPContextActive();
 	bool setupPDPContext();
 	void rebootModem();
+	bool isConnected() {
+		return isRegistered();
+	}
 
 	//Socket
 	bool openReceiveSocket(int recv_port);
-	bool createSocket();
+	virtual bool createSocket();
 	bool connectSocket(std::string host, int port);
 	bool listenSocket(int port);
 	bool writeSocket(std::wstring data);
@@ -84,6 +88,7 @@ public:
 	std::string getName() {
 		return name;
 	}
+	virtual void populateModemInformation() = 0;
 
 	//RAS Stuff
 	bool setupRASConnection(std::wstring modemName, std::wstring connName);
@@ -107,6 +112,7 @@ public:
 	static std::vector<LPRASDEVINFO> getConnectedModems();
 	static void getConnectionProfiles();
 
+	MODEM_INFO modemInfo;
 protected:
 	bool checkRegistered(std::string atCommand);
 	std::string name;
@@ -115,7 +121,6 @@ private:
 	RASCONNSTATE connState;
 	RASCONNSTATUS rasConnStatus;
 	std::wstring profileName;
-	MODEM_INFO modemInfo;
 
 	unsigned char socketId;
 	URCState urcState;

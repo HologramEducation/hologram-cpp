@@ -11,7 +11,7 @@ CustomCloud::~CustomCloud()
 
 bool CustomCloud::isReadyToSend()
 {
-	return false;
+	return networkManager.getNetwork() == NULL || networkManager.getNetwork()->isConnected();
 }
 
 std::string CustomCloud::sendMessage(std::wstring message, int timeout, bool closeSocket)

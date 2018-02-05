@@ -38,7 +38,7 @@ public:
 		return modem->closeSocket(-1);
 	}
 	virtual bool isConnected() {
-		return connectionState == CLOUD_CONNECTED;
+		return connectionState == CLOUD_CONNECTED || modem->isConnected();
 	}
 
 	void autoDectectModem();

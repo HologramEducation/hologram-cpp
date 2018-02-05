@@ -31,6 +31,8 @@ bool Serial::setupSerialPort(std::wstring port, DWORD baud)
 	if (!SetCommState(m_hCom, &dcb))
 		return false;
 
+	PurgeComm(m_hCom, PURGE_TXCLEAR | PURGE_TXABORT | PURGE_RXCLEAR | PURGE_RXABORT);
+
 	return true;
 }
 
@@ -55,9 +57,16 @@ bool Serial::write(std::string message)
 bool Serial::read(std::string & buffer)
 {
 	DWORD dwOut = 0;
+	DWORD dwEvtMask = 0;
 	char* pBuffer = NULL;
 	DWORD dwErrors = 0;
 	COMSTAT comStat = { 0 };
+
+	if (!SetCommMask(m_hCom, EV_RXCHAR)) {
+		return false;
+	}
+
+	WaitCommEvent(m_hCom, &dwEvtMask, NULL);  // Wait for the rx
 
 	if (!ClearCommError(m_hCom, &dwErrors, &comStat)) {
 		return false;
@@ -86,34 +95,73 @@ bool Serial::read(std::string & buffer)
 	return true;
 }
 
+void Serial::setTimeout(int timeout)
+{
+	COMMTIMEOUTS timeouts;
+	GetCommTimeouts(m_hCom, &timeouts);
+	timeouts.ReadIntervalTimeout = 50;
+	timeouts.ReadTotalTimeoutConstant = timeout;
+	timeouts.ReadTotalTimeoutMultiplier = 50;
+	SetCommTimeouts(m_hCom, &timeouts);
+}
+
 bool Serial::IsInitialized()
 {
 	return (m_hCom && m_hCom != INVALID_HANDLE_VALUE) ? true : false;
 }
 
 //https://stackoverflow.com/questions/7599331/list-usb-device-with-specified-vid-and-pid-without-using-windows-driver-kit
-bool Serial::isDeviceConnected(USB_IDS ids)
+bool Serial::isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name)
 {
 	unsigned index;
 	HDEVINFO hDevInfo;
 	SP_DEVINFO_DATA DeviceInfoData;
-	TCHAR HardwareID[1024];
+	TCHAR hardwareBuffer[1024];
 
 	// List all connected USB devices
-	hDevInfo = SetupDiGetClassDevs(NULL, TEXT("USB"), NULL, DIGCF_PRESENT | DIGCF_ALLCLASSES);
+	hDevInfo = SetupDiGetClassDevs((struct _GUID *)&GUID_SERENUM_BUS_ENUMERATOR, 0, 0, DIGCF_PRESENT);
 	for (index = 0; ; index++) {
 		DeviceInfoData.cbSize = sizeof(DeviceInfoData);
 		if (!SetupDiEnumDeviceInfo(hDevInfo, index, &DeviceInfoData)) {
 			return false;     // no match
 		}
 
-		SetupDiGetDeviceRegistryProperty(hDevInfo, &DeviceInfoData, SPDRP_HARDWAREID, NULL, (BYTE*)HardwareID, sizeof(HardwareID), NULL);
+		SetupDiGetDeviceRegistryProperty(hDevInfo, &DeviceInfoData, SPDRP_HARDWAREID, NULL, (BYTE*)hardwareBuffer, sizeof(hardwareBuffer), NULL);
 
-		std::wstring device = HardwareID;
-		if (device.find(ids.pid) != std::wstring::npos && device.find(ids.vid) != std::wstring::npos) {
+		std::wstring device = hardwareBuffer;
+		if (device.find(info.pid) != std::wstring::npos && device.find(info.vid) != std::wstring::npos) {
+			DWORD dataType, actualSize = 0;
+
+			if (SetupDiGetDeviceRegistryProperty(hDevInfo, &DeviceInfoData, SPDRP_FRIENDLYNAME,
+				&dataType, (PBYTE)hardwareBuffer, sizeof(hardwareBuffer), &actualSize)) {
+
+				TCHAR friendlyName[MAX_PATH + 1];
+				TCHAR shortName[16];
+				wsprintf(friendlyName, L"%s", hardwareBuffer);
+
+				if (wcsstr(hardwareBuffer, name.c_str()) == nullptr) {
+					continue;
+				}
+				// turn blahblahblah(COM4) into COM4
+
+				TCHAR * begin = nullptr;
+				TCHAR * end = nullptr;
+				begin = wcsstr(hardwareBuffer, L"COM");
+
+				if (begin) {
+					end = wcsstr(begin, L")");
+					if (end) {
+						*end = 0;   // get rid of the )...
+						wcscpy_s(shortName, begin);
+					}
+				}
+				info.portName = shortName;
+				info.friendlyName = friendlyName;
+			}
 			return true;     // match
 		}
 	}
+	return false;
 }
 
 //static functions
