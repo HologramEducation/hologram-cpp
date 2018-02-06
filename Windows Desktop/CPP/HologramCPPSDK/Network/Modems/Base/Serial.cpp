@@ -54,7 +54,7 @@ bool Serial::write(std::string message)
 	return true;
 }
 
-bool Serial::read(std::string & buffer)
+bool Serial::read(std::string & buffer, bool waitForBuffer)
 {
 	DWORD dwOut = 0;
 	DWORD dwEvtMask = 0;
@@ -62,11 +62,14 @@ bool Serial::read(std::string & buffer)
 	DWORD dwErrors = 0;
 	COMSTAT comStat = { 0 };
 
-	if (!SetCommMask(m_hCom, EV_RXCHAR)) {
-		return false;
-	}
+	if (waitForBuffer) {
+		if (!SetCommMask(m_hCom, EV_RXCHAR)) {
+				return false;
+			}
 
-	WaitCommEvent(m_hCom, &dwEvtMask, NULL);  // Wait for the rx
+			WaitCommEvent(m_hCom, &dwEvtMask, NULL);  // Wait for the rx
+	}
+	
 
 	if (!ClearCommError(m_hCom, &dwErrors, &comStat)) {
 		return false;

@@ -26,6 +26,31 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Authentication\Base\Authentication.h" />
+    <ClInclude Include="Authentication\CSRPSKAuthentication.h" />
+    <ClInclude Include="Cloud\Base\Cloud.h" />
+    <ClInclude Include="Cloud\CustomCloud.h" />
+    <ClInclude Include="Cloud\HologramCloud.h" />
+    <ClInclude Include="Network\Base\Network.h" />
+    <ClInclude Include="Network\Cellular.h" />
+    <ClInclude Include="Network\Modems\Base\Modem.h" />
+    <ClInclude Include="Network\Modems\Base\Serial.h" />
+    <ClInclude Include="Network\Modems\Nova_U201.h" />
+    <ClInclude Include="Network\NetworkManager.h" />
+    <ClInclude Include="Utils\json.hpp" />
+    <ClInclude Include="Utils\Utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Authentication\CSRPSKAuthentication.cpp" />
+    <ClCompile Include="Cloud\CustomCloud.cpp" />
+    <ClCompile Include="Cloud\HologramCloud.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Network\Cellular.cpp" />
+    <ClCompile Include="Network\Modems\Base\Modem.cpp" />
+    <ClCompile Include="Network\Modems\Base\Serial.cpp" />
+    <ClCompile Include="Network\Modems\Nova_U201.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{243E8ED0-58CF-4322-BB7D-D52E70352608}</ProjectGuid>
     <SccProjectName>SAK</SccProjectName>
@@ -227,16 +252,6 @@
       <AdditionalDependencies>onecoreuap.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="Modem.h" />
-    <ClInclude Include="PPP.h" />
-    <ClInclude Include="Utils.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Modem.cpp" />
-    <ClCompile Include="PPP.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

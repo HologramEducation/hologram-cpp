@@ -19,7 +19,7 @@ class Serial {
 public:
 	bool setupSerialPort(std::wstring port, DWORD baud = 115200);
 	bool write(std::string message);
-	bool read(std::string &buffer);
+	bool read(std::string &buffer, bool waitForBuffer = false);
 	void setTimeout(int timeout);
 
 	static bool isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name);
