@@ -1,5 +1,4 @@
 #include "Modem.h"
-#include <iostream>
 
 Modem::Modem()
 {
@@ -55,12 +54,9 @@ bool Modem::sendATCommand(std::string strATCommand, std::string& strOutput, unsi
 	}
 
 	strATCommand = strATCommand + "\r\n";
-	std::cout << strATCommand << std::endl;
 	setTimeout(waitTime);
 	write(strATCommand);
-	//Sleep(100);
 	read(strOutput, true);
-	std::cout << strOutput << std::endl;
 	return true;
 }
 
@@ -217,9 +213,12 @@ bool Modem::closeSocket(int socketID)
 
 void Modem::checkURC()
 {
-	std::string buffer;
 	while (true) {
+		std::string buffer;
 		read(buffer);
+		if (buffer.find("\r\n+") != std::string::npos) {
+			buffer = buffer.substr(2);
+		}
 		if (buffer.length() > 0 && buffer[0] == '+') {
 			handleURC(buffer);
 		}

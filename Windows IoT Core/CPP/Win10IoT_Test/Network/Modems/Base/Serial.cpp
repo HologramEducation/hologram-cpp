@@ -1,4 +1,5 @@
 #include "Serial.h"
+#include <iostream>
 
 bool Serial::setupSerialPort(std::wstring port, DWORD baud)
 {
@@ -27,6 +28,7 @@ bool Serial::setupSerialPort(std::wstring port, DWORD baud)
 
 bool Serial::write(std::string message)
 {
+	std::cout << message << std::endl;
 
 	DWORD dwOut = 0;
 	DWORD dwEvtMask = 0;
@@ -82,6 +84,7 @@ bool Serial::read(std::string & buffer, bool waitForBuffer)
 	}
 
 	buffer = pBuffer;
+	std::cout << buffer << std::endl;
 
 	return true;
 }
