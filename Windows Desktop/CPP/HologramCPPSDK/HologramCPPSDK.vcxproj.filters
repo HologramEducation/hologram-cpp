@@ -59,6 +59,9 @@
     <ClCompile Include="Cloud\HologramCloud.cpp">
       <Filter>Cloud</Filter>
     </ClCompile>
+    <ClCompile Include="Network\Modems\Nova_R404.cpp">
+      <Filter>Network\Modem\Nova</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Authentication\Base\Authentication.h">
@@ -99,6 +102,9 @@
     </ClInclude>
     <ClInclude Include="Cloud\HologramCloud.h">
       <Filter>Cloud</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Modems\Nova_R404.h">
+      <Filter>Network\Modem\Nova</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
