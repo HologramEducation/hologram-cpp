@@ -62,7 +62,7 @@ static std::wstring StringToWstring(std::string source) {
 	return retWstr;
 }
 
-static std::string wStringToString(std::wstring source) {
+static std::string WstringToString(std::wstring source) {
 	char *buffer = new char[source.length() + 1];
 	size_t numChars;
 	wcstombs_s(&numChars, buffer, source.length() + 1, source.c_str(), source.length());
