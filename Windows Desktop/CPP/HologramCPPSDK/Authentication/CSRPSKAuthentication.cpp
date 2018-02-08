@@ -41,15 +41,14 @@ void CSRPSKAuthentication::buildMetadataString(std::string modemType, std::strin
 
 void CSRPSKAuthentication::buildTopicString(std::vector<std::wstring> topics)
 {
-	std::string topicsString = "[";
-	for (auto topic : topics) {
-		topicsString += '"' + wStringToString(topic) + '"';
+	json topicArray = json::array();
+	for (std::wstring topic : topics) {
+		topicArray.push_back(WstringToString(topic));
 	}
-	topicsString += "]";
-	data["t"] = topicsString;
+	data["t"] = topicArray;
 }
 
 void CSRPSKAuthentication::buildMessageString(std::wstring messages)
 {
-	data["d"] = wStringToString(messages);
+	data["d"] = WstringToString(messages);
 }
