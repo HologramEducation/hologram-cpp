@@ -17,6 +17,8 @@ public:
 
 	virtual void populateModemInformation();
 
+	static SERIAL_DEVICE_INFO deviceInfo;
+
 private:
 	LOCATION location;
 };

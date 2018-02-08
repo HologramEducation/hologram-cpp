@@ -9,18 +9,7 @@ bool Serial::setupSerialPort(std::wstring port, DWORD baud)
 	if (m_hCom && m_hCom != INVALID_HANDLE_VALUE)
 		CloseHandle(m_hCom);
 
-	TCHAR pn[sizeof(port)];
-	int num;
-	if (swscanf_s(port.c_str(), L"COM%d", &num) == 1) {
-		// Microsoft KB115831 a.k.a if COM > COM9 you have to use a different
-		// syntax
-		swprintf_s(pn, L"\\\\.\\COM%d", num);
-	}
-	else {
-		wcsncpy_s(pn, (const TCHAR *)port.c_str(), sizeof(port) - 1);
-	}
-
-	m_hCom = CreateFile(pn, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+	m_hCom = CreateFile(port.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 	if (m_hCom == INVALID_HANDLE_VALUE)
 		return false;
 
@@ -118,105 +107,173 @@ bool Serial::IsInitialized()
 //https://stackoverflow.com/questions/7599331/list-usb-device-with-specified-vid-and-pid-without-using-windows-driver-kit
 bool Serial::isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name)
 {
-	unsigned index;
-	HDEVINFO hDevInfo;
-	SP_DEVINFO_DATA DeviceInfoData;
-	TCHAR hardwareBuffer[1024];
+	WCHAR CurrentDevice[MAX_DEVICE_ID_LEN];
+	ULONG length;
+	CONFIGRET cr;
+	std::vector<const GUID *> guids = { &GUID_DEVINTERFACE_COMPORT,  &GUID_DEVINTERFACE_MODEM };
+	for (const GUID * guid : guids) {
+		cr = CM_Get_Device_Interface_List_Size(
+			&length,
+			const_cast<GUID*>(guid),
+			nullptr,        // pDeviceID
+			CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
 
-	// List all connected USB devices
-	hDevInfo = SetupDiGetClassDevs((struct _GUID *)&GUID_SERENUM_BUS_ENUMERATOR, 0, 0, DIGCF_PRESENT);
-	for (index = 0; ; index++) {
-		DeviceInfoData.cbSize = sizeof(DeviceInfoData);
-		if (!SetupDiEnumDeviceInfo(hDevInfo, index, &DeviceInfoData)) {
-			return false;     // no match
+		if ((cr != CR_SUCCESS) || (length == 0)) {
+			wprintf(L"Failed to get interface list size of COM ports\n");
+			return false;
 		}
 
-		SetupDiGetDeviceRegistryProperty(hDevInfo, &DeviceInfoData, SPDRP_HARDWAREID, NULL, (BYTE*)hardwareBuffer, sizeof(hardwareBuffer), NULL);
+		std::vector<WCHAR> buf(length);
+		cr = CM_Get_Device_Interface_List(
+			const_cast<GUID*>(guid),
+			nullptr,        // pDeviceID
+			buf.data(),
+			static_cast<ULONG>(buf.size()),
+			CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
 
-		std::wstring device = hardwareBuffer;
-		if (device.find(info.pid) != std::wstring::npos && device.find(info.vid) != std::wstring::npos) {
-			DWORD dataType, actualSize = 0;
+		if ((cr != CR_SUCCESS) || (length == 0) || !buf[0]) {
+			wprintf(L"Failed to get interface list of COM ports\n");
+			return false;
+		}
 
-			if (SetupDiGetDeviceRegistryProperty(hDevInfo, &DeviceInfoData, SPDRP_FRIENDLYNAME,
-				&dataType, (PBYTE)hardwareBuffer, sizeof(hardwareBuffer), &actualSize)) {
+		*buf.rbegin() = UNICODE_NULL;
 
-				TCHAR friendlyName[MAX_PATH + 1];
-				TCHAR shortName[16];
-				wsprintf(friendlyName, L"%s", hardwareBuffer);
+		ULONG index = 0;
+		for (PCWSTR deviceInterface = buf.data();
+			*deviceInterface;
+			deviceInterface += wcslen(deviceInterface) + 1) {
 
-				if (wcsstr(hardwareBuffer, name.c_str()) == nullptr) {
-					continue;
+			const DEVPROPKEY propkey = {
+				PKEY_DeviceInterface_Serial_PortName.fmtid,
+				PKEY_DeviceInterface_Serial_PortName.pid
+			};
+			DEVPROPTYPE propertyType;
+			WCHAR portName[512];
+			ULONG propertyBufferSize = sizeof(portName);
+			cr = CM_Get_Device_Interface_Property(
+				deviceInterface,
+				&propkey,
+				&propertyType,
+				reinterpret_cast<BYTE*>(&portName),
+				&propertyBufferSize,
+				0); // ulFlags
+
+			if (isCorrectDevice(deviceInterface, info, name))
+			{
+				info.portName = deviceInterface;
+
+				propertyBufferSize = sizeof(CurrentDevice);
+				cr = CM_Get_Device_Interface_Property(deviceInterface,
+					&DEVPKEY_Device_InstanceId,
+					&propertyType,
+					(PBYTE)CurrentDevice,
+					&propertyBufferSize,
+					0);
+
+				if (cr != CR_SUCCESS)
+				{
+					wprintf(L"Failed getting the current device\n");
 				}
-				// turn blahblahblah(COM4) into COM4
-
-				TCHAR * begin = nullptr;
-				TCHAR * end = nullptr;
-				begin = wcsstr(hardwareBuffer, L"COM");
-
-				if (begin) {
-					end = wcsstr(begin, L")");
-					if (end) {
-						*end = 0;   // get rid of the )...
-						wcscpy_s(shortName, begin);
-					}
+				else if (propertyType != DEVPROP_TYPE_STRING)
+				{
+					wprintf(L"Property is not string\n");
 				}
-				info.portName = shortName;
-				info.friendlyName = friendlyName;
+				else {
+					info.friendlyName.assign(GetDeviceDescription(CurrentDevice));
+
+				}
+				return true;
 			}
-			return true;     // match
+			++index;
 		}
 	}
 	return false;
 }
 
 //static functions
+
 std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
 	std::vector<SERIAL_DEVICE_INFO> devices;
-	HDEVINFO hDevInfo = nullptr;
-	SP_DEVINFO_DATA DeviceInterfaceData;
-	DWORD dataType, actualSize = 0;
+	WCHAR CurrentDevice[MAX_DEVICE_ID_LEN];
+	ULONG length;
+	CONFIGRET cr;
+	std::vector<const GUID *> guids = { &GUID_DEVINTERFACE_COMPORT,  &GUID_DEVINTERFACE_MODEM };
+	for (const GUID * guid : guids) {
+		cr = CM_Get_Device_Interface_List_Size(
+			&length,
+			const_cast<GUID*>(guid),
+			nullptr,        // pDeviceID
+			CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
 
-	// Search device set
-	hDevInfo = SetupDiGetClassDevs((struct _GUID *)&GUID_SERENUM_BUS_ENUMERATOR, 0, 0, DIGCF_PRESENT);
-	if (hDevInfo) {
-		int i = 0;
-		TCHAR dataBuf[MAX_PATH + 1];
-		while (TRUE) {
-			ZeroMemory(&DeviceInterfaceData, sizeof(DeviceInterfaceData));
-			DeviceInterfaceData.cbSize = sizeof(DeviceInterfaceData);
-			if (!SetupDiEnumDeviceInfo(hDevInfo, i, &DeviceInterfaceData)) {
-				// SetupDiEnumDeviceInfo failed
-				break;
+		if ((cr != CR_SUCCESS) || (length == 0)) {
+			wprintf(L"Failed to get interface list size of COM ports\n");
+			continue;
+		}
+
+		std::vector<WCHAR> buf(length);
+		cr = CM_Get_Device_Interface_List(
+			const_cast<GUID*>(guid),
+			nullptr,        // pDeviceID
+			buf.data(),
+			static_cast<ULONG>(buf.size()),
+			CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
+
+		if ((cr != CR_SUCCESS) || (length == 0) || !buf[0]) {
+			wprintf(L"Failed to get interface list of COM ports\n");
+			continue;
+		}
+
+		*buf.rbegin() = UNICODE_NULL;
+
+		ULONG index = 0;
+		for (PCWSTR deviceInterface = buf.data();
+			*deviceInterface;
+			deviceInterface += wcslen(deviceInterface) + 1) {
+
+			const DEVPROPKEY propkey = {
+				PKEY_DeviceInterface_Serial_PortName.fmtid,
+				PKEY_DeviceInterface_Serial_PortName.pid
+			};
+			DEVPROPTYPE propertyType;
+			WCHAR portName[512];
+			ULONG propertyBufferSize = sizeof(portName);
+			cr = CM_Get_Device_Interface_Property(
+				deviceInterface,
+				&propkey,
+				&propertyType,
+				reinterpret_cast<BYTE*>(&portName),
+				&propertyBufferSize,
+				0); // ulFlags
+
+
+			SERIAL_DEVICE_INFO info;
+			info.portName = deviceInterface;
+			parseVidPid(info.portName, info);
+
+			propertyBufferSize = sizeof(CurrentDevice);
+			cr = CM_Get_Device_Interface_Property(deviceInterface,
+				&DEVPKEY_Device_InstanceId,
+				&propertyType,
+				(PBYTE)CurrentDevice,
+				&propertyBufferSize,
+				0);
+
+			if (cr != CR_SUCCESS)
+			{
+				wprintf(L"Failed getting the current device\n");
 			}
 
-			if (SetupDiGetDeviceRegistryProperty(hDevInfo, &DeviceInterfaceData, SPDRP_FRIENDLYNAME,
-				&dataType, (PBYTE)dataBuf, sizeof(dataBuf), &actualSize)) {
-
-				TCHAR friendlyName[MAX_PATH + 1];
-				TCHAR shortName[16];
-				wsprintf(friendlyName, L"%s", dataBuf);
-
-				// turn blahblahblah(COM4) into COM4
-
-				TCHAR * begin = nullptr;
-				TCHAR * end = nullptr;
-				begin = wcsstr(dataBuf, L"COM");
-
-				if (begin) {
-					end = wcsstr(begin, L")");
-					if (end) {
-						*end = 0;   // get rid of the )...
-						wcscpy_s(shortName, begin);
-					}
-				}
-				SERIAL_DEVICE_INFO device;
-				device.portName = shortName;
-				device.friendlyName = friendlyName;
-				devices.push_back(device);
+			else if (propertyType != DEVPROP_TYPE_STRING)
+			{
+				wprintf(L"Property is not string\n");
 			}
-			i++;
+			else {
+				info.friendlyName.assign(GetDeviceDescription(CurrentDevice));
+			}
+
+			devices.push_back(info);
+			++index;
 		}
 	}
-	SetupDiDestroyDeviceInfoList(hDevInfo);
 	return devices;
 }
