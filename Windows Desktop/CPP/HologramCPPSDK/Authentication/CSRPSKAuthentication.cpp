@@ -17,16 +17,21 @@ std::wstring CSRPSKAuthentication::buildPayloadString(std::wstring messages, std
 	return L"";
 }
 
-std::wstring CSRPSKAuthentication::buildSMSPayloadString(std::string destination_number, std::wstring message)
+std::wstring CSRPSKAuthentication::buildSMSPayloadString(std::wstring message, std::string destination_number)
 {
 	std::wstring send_data;
 
-	if (!enforceValidDeviceKey()) {
+	if (enforceValidDeviceKey()) {
 		send_data = L"S" + StringToWstring(credentials["devicekey"]);
 		send_data += StringToWstring(destination_number + " ") + message;
 		send_data += L"\r\r";
 	}
 	return send_data;
+}
+
+bool CSRPSKAuthentication::supportsSMS()
+{
+	return true;
 }
 
 void CSRPSKAuthentication::buildAuthString(std::string timestamp, std::string sequence_number)

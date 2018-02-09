@@ -22,7 +22,7 @@ protected:
 		messageBuffer.push_back(payload);
 	}
 	virtual std::string sendMessage(std::wstring message, std::vector<std::wstring> topics) = 0;
-	virtual void sendSMS(std::wstring message, std::vector<std::wstring> topics) = 0;
+	virtual void sendSMS(std::wstring message, std::string destNumber) = 0;
 
 
 	Authentication * authenticator;
