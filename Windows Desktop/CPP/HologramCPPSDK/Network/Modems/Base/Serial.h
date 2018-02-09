@@ -1,6 +1,5 @@
 #pragma once
 #include "../../Utils/Utils.h"
-#include <setupapi.h>
 #include <cfgmgr32.h>
 #include <initguid.h>
 #include <propkey.h>
