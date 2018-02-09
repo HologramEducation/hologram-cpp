@@ -27,7 +27,7 @@ typedef struct _SMS {
 // All functions prepended with of are taken from Openframeworks
 //https://stackoverflow.com/questions/18906027/missing-punctuation-from-c-hex2bin
 static std::string hex2bin(std::string const& s) {
-	if (s.length() % 2 == 0) {
+	if (s.length() % 2 != 0) {
 		return "";
 	}
 

@@ -19,15 +19,17 @@ ModemResult Modem::parseATCommandResult(std::string strATCommand, std::string& s
 {
 	resultArray.clear();
 
-	ofStringReplace(strResult, "\r\nOK\r\n", "OK");
+	ofStringReplace(strResult, "OK\r\n", "OK");
 	ofStringReplace(strResult, "\r\n", ";");
 	ofStringReplace(strResult, "\r", "");
+	ofStringReplace(strResult, ";;", ";");
 
-	if (strResult[0] == ';') {
+	while(strResult[0] == ';') {
 		strResult.erase(0, 1);
 	}
 
 	resultArray = ofSplitString(strResult, ";");
+	
 	std::string result = resultArray.back();
 	resultArray.pop_back();
 	return determineModemResult(result);
@@ -78,10 +80,16 @@ std::string Modem::sendMessage(std::wstring message)
 
 	writeSocket(message);
 
-	while (urcState != SOCKET_SEND_READ) {
+	while (urcState != SOCKET_SEND_READ && urcState != SOCKET_CLOSED ) {
 		checkURC();
 	}
-	return readSocket(socketId, last_read_payload_length);
+	if (urcState == SOCKET_SEND_READ) {
+		return readSocket(socketId, last_read_payload_length);
+	}
+	else {
+		return "";
+	}
+	
 }
 
 std::string Modem::popRecievedMessage()
@@ -194,7 +202,10 @@ std::string Modem::readSocket(int socketID, int bufferLen)
 	sendAndParseATCommand(buffer, result);
 	std::string response;
 	if (result.size() > 0) {
-		response = result[0].substr(1, result[0].size() - 2);
+		if (!result[0].empty()) {
+			std::string atbuffer = buffer;
+			response = result[0].substr(atbuffer.length()+1, bufferLen*2);
+		}
 	}
 
 	response = hex2bin(response);
@@ -259,6 +270,11 @@ void Modem::handleURC(std::string urcString)
 		handleURCListen(urcString);
 		last_read_payload_length = 0;
 		nextState = SOCKET_RECEIVE_READ;
+	}
+	else if (urcString.find("+UUSOCL: ") != std::string::npos) {
+		socketId = urcString.back();
+		last_read_payload_length = 0;
+		nextState = SOCKET_CLOSED;
 	}
 	else {
 

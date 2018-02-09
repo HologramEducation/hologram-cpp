@@ -26,7 +26,8 @@ enum URCState {
 	SOCKET_INIT,
 	SOCKET_WRITE_STATE,
 	SOCKET_RECEIVE_READ,
-	SOCKET_SEND_READ
+	SOCKET_SEND_READ,
+	SOCKET_CLOSED
 };
 
 //Modem class was adapted from the mobile broadband modem class found at
