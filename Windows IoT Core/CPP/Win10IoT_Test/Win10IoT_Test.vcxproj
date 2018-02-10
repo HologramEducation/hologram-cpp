@@ -36,6 +36,7 @@
     <ClInclude Include="Network\Cellular.h" />
     <ClInclude Include="Network\Modems\Base\Modem.h" />
     <ClInclude Include="Network\Modems\Base\Serial.h" />
+    <ClInclude Include="Network\Modems\Nova_R404.h" />
     <ClInclude Include="Network\Modems\Nova_U201.h" />
     <ClInclude Include="Network\NetworkManager.h" />
     <ClInclude Include="Utils\json.hpp" />
@@ -49,6 +50,7 @@
     <ClCompile Include="Network\Cellular.cpp" />
     <ClCompile Include="Network\Modems\Base\Modem.cpp" />
     <ClCompile Include="Network\Modems\Base\Serial.cpp" />
+    <ClCompile Include="Network\Modems\Nova_R404.cpp" />
     <ClCompile Include="Network\Modems\Nova_U201.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
