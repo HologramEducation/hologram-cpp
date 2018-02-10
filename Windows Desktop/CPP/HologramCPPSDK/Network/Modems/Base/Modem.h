@@ -1,7 +1,11 @@
 #pragma once
 #include "Serial.h"
+#ifdef _MSC_VER
+#pragma comment(lib, "rasapi32.lib")
 #include "ras.h"
 #include "raserror.h"
+#endif
+
 #include <deque>
 
 typedef struct _MODEM_INFO {

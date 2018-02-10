@@ -1,9 +1,14 @@
 #pragma once
 #include "../../Utils/Utils.h"
+
+#ifdef _MSC_VER
+#pragma comment(lib, "Cfgmgr32.lib")
 #include <cfgmgr32.h>
 #include <initguid.h>
 #include <propkey.h>
 #include <devpkey.h>
+#endif
+
 
 //Modem GUID {2C7089AA-2E0E-11D1-B114-00C04FC2AAE4}
 DEFINE_GUID(GUID_DEVINTERFACE_MODEM, 0x2C7089AA, 0x2E0E,

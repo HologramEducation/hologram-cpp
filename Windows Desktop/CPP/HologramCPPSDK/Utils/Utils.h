@@ -1,5 +1,4 @@
 #pragma once
-#include <windows.h>
 #include <stdio.h>
 #include <vector>
 #include <locale>
@@ -8,6 +7,11 @@
 #include <sstream>
 #include <iomanip>
 #include <ctime>
+
+#ifdef _MSC_VER
+#include <windows.h>
+
+#endif
 
 typedef struct _LOCATION {
 	time_t date;
