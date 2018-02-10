@@ -2,6 +2,7 @@
 #include "Base\Network.h"
 #include "Modems\Base\Modem.h"
 #include "Modems\Nova_U201.h"
+#include "Modems\Nova_R404.h"
 
 #define DEFAULT_CELLULAR_TIMEOUT 200
 

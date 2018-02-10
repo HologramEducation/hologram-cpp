@@ -10,7 +10,8 @@ public:
 	~CSRPSKAuthentication();
 
 	std::wstring buildPayloadString(std::wstring messages, std::vector<std::wstring> topics, std::string modemType = "", std::string modemId = "", std::string version = "");
-	std::wstring buildSMSPayloadString(std::string destination_number, std::wstring message);
+	virtual std::wstring buildSMSPayloadString(std::wstring message, std::string destination_number);
+	virtual bool supportsSMS();
 
 private:
 	virtual void buildAuthString(std::string timestamp = "", std::string sequence_number = "");

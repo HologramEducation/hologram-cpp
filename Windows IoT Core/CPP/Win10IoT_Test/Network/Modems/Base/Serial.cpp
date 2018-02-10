@@ -55,12 +55,12 @@ bool Serial::read(std::string & buffer, bool waitForBuffer)
 
 	if (waitForBuffer) {
 		if (!SetCommMask(m_hCom, EV_RXCHAR)) {
-			return false;
-		}
+				return false;
+			}
 
-		WaitCommEvent(m_hCom, &dwEvtMask, NULL);  // Wait for the rx
+			WaitCommEvent(m_hCom, &dwEvtMask, NULL);  // Wait for the rx
 	}
-
+	
 	if (!ClearCommError(m_hCom, &dwErrors, &comStat)) {
 		return false;
 	}
@@ -104,62 +104,151 @@ bool Serial::IsInitialized()
 	return (m_hCom && m_hCom != INVALID_HANDLE_VALUE) ? true : false;
 }
 
+//https://stackoverflow.com/questions/7599331/list-usb-device-with-specified-vid-and-pid-without-using-windows-driver-kit
 bool Serial::isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name)
 {
 	WCHAR CurrentDevice[MAX_DEVICE_ID_LEN];
 	ULONG length;
-	CONFIGRET cr = CM_Get_Device_Interface_List_Size(
-		&length,
-		const_cast<GUID*>(&GUID_DEVINTERFACE_COMPORT),
-		nullptr,        // pDeviceID
-		CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
+	CONFIGRET cr;
+	std::vector<const GUID *> guids = { &GUID_DEVINTERFACE_COMPORT,  &GUID_DEVINTERFACE_MODEM };
+	for (const GUID * guid : guids) {
+		cr = CM_Get_Device_Interface_List_Size(
+			&length,
+			const_cast<GUID*>(guid),
+			nullptr,        // pDeviceID
+			CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
 
-	if ((cr != CR_SUCCESS) || (length == 0)) {
-		wprintf(L"Failed to get interface list size of COM ports\n");
-		return false;
+		if ((cr != CR_SUCCESS) || (length == 0)) {
+			wprintf(L"Failed to get interface list size of COM ports\n");
+			return false;
+		}
+
+		std::vector<WCHAR> buf(length);
+		cr = CM_Get_Device_Interface_List(
+			const_cast<GUID*>(guid),
+			nullptr,        // pDeviceID
+			buf.data(),
+			static_cast<ULONG>(buf.size()),
+			CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
+
+		if ((cr != CR_SUCCESS) || (length == 0) || !buf[0]) {
+			wprintf(L"Failed to get interface list of COM ports\n");
+			return false;
+		}
+
+		*buf.rbegin() = UNICODE_NULL;
+
+		ULONG index = 0;
+		for (PCWSTR deviceInterface = buf.data();
+			*deviceInterface;
+			deviceInterface += wcslen(deviceInterface) + 1) {
+
+			const DEVPROPKEY propkey = {
+				PKEY_DeviceInterface_Serial_PortName.fmtid,
+				PKEY_DeviceInterface_Serial_PortName.pid
+			};
+			DEVPROPTYPE propertyType;
+			WCHAR portName[512];
+			ULONG propertyBufferSize = sizeof(portName);
+			cr = CM_Get_Device_Interface_Property(
+				deviceInterface,
+				&propkey,
+				&propertyType,
+				reinterpret_cast<BYTE*>(&portName),
+				&propertyBufferSize,
+				0); // ulFlags
+
+			if (isCorrectDevice(deviceInterface, info, name))
+			{
+				info.portName = deviceInterface;
+
+				propertyBufferSize = sizeof(CurrentDevice);
+				cr = CM_Get_Device_Interface_Property(deviceInterface,
+					&DEVPKEY_Device_InstanceId,
+					&propertyType,
+					(PBYTE)CurrentDevice,
+					&propertyBufferSize,
+					0);
+
+				if (cr != CR_SUCCESS)
+				{
+					wprintf(L"Failed getting the current device\n");
+				}
+				else if (propertyType != DEVPROP_TYPE_STRING)
+				{
+					wprintf(L"Property is not string\n");
+				}
+				else {
+					info.friendlyName.assign(GetDeviceDescription(CurrentDevice));
+
+				}
+				return true;
+			}
+			++index;
+		}
 	}
+	return false;
+}
 
-	std::vector<WCHAR> buf(length);
-	cr = CM_Get_Device_Interface_List(
-		const_cast<GUID*>(&GUID_DEVINTERFACE_COMPORT),
-		nullptr,        // pDeviceID
-		buf.data(),
-		static_cast<ULONG>(buf.size()),
-		CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
+//static functions
 
-	if ((cr != CR_SUCCESS) || (length == 0) || !buf[0]) {
-		wprintf(L"Failed to get interface list of COM ports\n");
-		return false;
-	}
+std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
+	std::vector<SERIAL_DEVICE_INFO> devices;
+	WCHAR CurrentDevice[MAX_DEVICE_ID_LEN];
+	ULONG length;
+	CONFIGRET cr;
+	std::vector<const GUID *> guids = { &GUID_DEVINTERFACE_COMPORT,  &GUID_DEVINTERFACE_MODEM };
+	for (const GUID * guid : guids) {
+		cr = CM_Get_Device_Interface_List_Size(
+			&length,
+			const_cast<GUID*>(guid),
+			nullptr,        // pDeviceID
+			CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
 
-	*buf.rbegin() = UNICODE_NULL;
+		if ((cr != CR_SUCCESS) || (length == 0)) {
+			wprintf(L"Failed to get interface list size of COM ports\n");
+			continue;
+		}
 
-	ULONG index = 0;
-	for (PCWSTR deviceInterface = buf.data();
-		*deviceInterface;
-		deviceInterface += wcslen(deviceInterface) + 1) {
+		std::vector<WCHAR> buf(length);
+		cr = CM_Get_Device_Interface_List(
+			const_cast<GUID*>(guid),
+			nullptr,        // pDeviceID
+			buf.data(),
+			static_cast<ULONG>(buf.size()),
+			CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
 
-		const DEVPROPKEY propkey = {
-			PKEY_DeviceInterface_Serial_PortName.fmtid,
-			PKEY_DeviceInterface_Serial_PortName.pid
-		};
-		DEVPROPTYPE propertyType;
-		WCHAR portName[512];
-		ULONG propertyBufferSize = sizeof(portName);
-		cr = CM_Get_Device_Interface_Property(
-			deviceInterface,
-			&propkey,
-			&propertyType,
-			reinterpret_cast<BYTE*>(&portName),
-			&propertyBufferSize,
-			0); // ulFlags
+		if ((cr != CR_SUCCESS) || (length == 0) || !buf[0]) {
+			wprintf(L"Failed to get interface list of COM ports\n");
+			continue;
+		}
 
-		if (isCorrectDevice(deviceInterface, info, name))
-		{
+		*buf.rbegin() = UNICODE_NULL;
+
+		ULONG index = 0;
+		for (PCWSTR deviceInterface = buf.data();
+			*deviceInterface;
+			deviceInterface += wcslen(deviceInterface) + 1) {
+
+			const DEVPROPKEY propkey = {
+				PKEY_DeviceInterface_Serial_PortName.fmtid,
+				PKEY_DeviceInterface_Serial_PortName.pid
+			};
+			DEVPROPTYPE propertyType;
+			WCHAR portName[512];
+			ULONG propertyBufferSize = sizeof(portName);
+			cr = CM_Get_Device_Interface_Property(
+				deviceInterface,
+				&propkey,
+				&propertyType,
+				reinterpret_cast<BYTE*>(&portName),
+				&propertyBufferSize,
+				0); // ulFlags
+
+
+			SERIAL_DEVICE_INFO info;
 			info.portName = deviceInterface;
-			wprintf(L" for ");
-			wprintf(deviceInterface);
-			wprintf(L"\n");
+			parseVidPid(info.portName, info);
 
 			propertyBufferSize = sizeof(CurrentDevice);
 			cr = CM_Get_Device_Interface_Property(deviceInterface,
@@ -173,111 +262,18 @@ bool Serial::isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name)
 			{
 				wprintf(L"Failed getting the current device\n");
 			}
+
 			else if (propertyType != DEVPROP_TYPE_STRING)
 			{
 				wprintf(L"Property is not string\n");
 			}
 			else {
 				info.friendlyName.assign(GetDeviceDescription(CurrentDevice));
-				
 			}
-			return true;
+
+			devices.push_back(info);
+			++index;
 		}
-		++index;
-	}
-	return false;
-}
-
-//static functions
-std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
-	std::vector<SERIAL_DEVICE_INFO> devices;
-	WCHAR CurrentDevice[MAX_DEVICE_ID_LEN];
-	ULONG length;
-	CONFIGRET cr = CM_Get_Device_Interface_List_Size(
-		&length,
-		const_cast<GUID*>(&GUID_DEVINTERFACE_COMPORT),
-		nullptr,        // pDeviceID
-		CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
-
-	if ((cr != CR_SUCCESS) || (length == 0)) {
-		wprintf(L"Failed to get interface list size of COM ports\n");
-		return devices;
-	}
-
-	std::vector<WCHAR> buf(length);
-	cr = CM_Get_Device_Interface_List(
-		const_cast<GUID*>(&GUID_DEVINTERFACE_COMPORT),
-		nullptr,        // pDeviceID
-		buf.data(),
-		static_cast<ULONG>(buf.size()),
-		CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
-
-	if ((cr != CR_SUCCESS) || (length == 0) || !buf[0]) {
-		wprintf(L"Failed to get interface list of COM ports\n");
-		return devices;
-	}
-
-	*buf.rbegin() = UNICODE_NULL;
-
-	ULONG index = 0;
-	for (PCWSTR deviceInterface = buf.data();
-		*deviceInterface;
-		deviceInterface += wcslen(deviceInterface) + 1) {
-
-		const DEVPROPKEY propkey = {
-			PKEY_DeviceInterface_Serial_PortName.fmtid,
-			PKEY_DeviceInterface_Serial_PortName.pid
-		};
-		DEVPROPTYPE propertyType;
-		WCHAR portName[512];
-		ULONG propertyBufferSize = sizeof(portName);
-		cr = CM_Get_Device_Interface_Property(
-			deviceInterface,
-			&propkey,
-			&propertyType,
-			reinterpret_cast<BYTE*>(&portName),
-			&propertyBufferSize,
-			0); // ulFlags
-
-
-		SERIAL_DEVICE_INFO info;
-		info.portName = deviceInterface;
-		if (!parseVidPid(info.portName, info))
-		{
-			wprintf(L" for ");
-			wprintf(deviceInterface);
-			wprintf(L"\n");
-		}
-		else {
-			wprintf(L"Found: ");
-			wprintf(deviceInterface);
-			wprintf(L"\n");
-		}
-
-
-		propertyBufferSize = sizeof(CurrentDevice);
-		cr = CM_Get_Device_Interface_Property(deviceInterface,
-			&DEVPKEY_Device_InstanceId,
-			&propertyType,
-			(PBYTE)CurrentDevice,
-			&propertyBufferSize,
-			0);
-
-		if (cr != CR_SUCCESS)
-		{
-			wprintf(L"Failed getting the current device\n");
-		}
-
-		else if (propertyType != DEVPROP_TYPE_STRING)
-		{
-			wprintf(L"Property is not string\n");
-		}
-		else {
-			info.friendlyName.assign(GetDeviceDescription(CurrentDevice));
-		}
-
-		devices.push_back(info);
-		++index;
 	}
 	return devices;
 }

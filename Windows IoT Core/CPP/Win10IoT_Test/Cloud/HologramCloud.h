@@ -29,9 +29,7 @@ public:
 	~HologramCloud();
 	void setAuthentication(Authentication * auth);
 	virtual std::string sendMessage(std::wstring message, std::vector<std::wstring> topics);
-	virtual void sendSMS(std::wstring message, std::vector<std::wstring> topics) {};
+	virtual void sendSMS(std::wstring message, std::string destNumber);
 
-private:
-	Authentication * auth;
 };
 

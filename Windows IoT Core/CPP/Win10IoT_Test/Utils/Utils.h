@@ -1,5 +1,4 @@
 #pragma once
-#include <windows.h>
 #include <stdio.h>
 #include <vector>
 #include <locale>
@@ -8,6 +7,11 @@
 #include <sstream>
 #include <iomanip>
 #include <ctime>
+
+#ifdef _MSC_VER
+#include <windows.h>
+
+#endif
 
 typedef struct _LOCATION {
 	time_t date;
@@ -27,7 +31,7 @@ typedef struct _SMS {
 // All functions prepended with of are taken from Openframeworks
 //https://stackoverflow.com/questions/18906027/missing-punctuation-from-c-hex2bin
 static std::string hex2bin(std::string const& s) {
-	if (s.length() % 2 == 0) {
+	if (s.length() % 2 != 0) {
 		return "";
 	}
 
@@ -62,7 +66,7 @@ static std::wstring StringToWstring(std::string source) {
 	return retWstr;
 }
 
-static std::string wStringToString(std::wstring source) {
+static std::string WstringToString(std::wstring source) {
 	char *buffer = new char[source.length() + 1];
 	size_t numChars;
 	wcstombs_s(&numChars, buffer, source.length() + 1, source.c_str(), source.length());

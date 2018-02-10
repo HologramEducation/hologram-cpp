@@ -1,10 +1,18 @@
 #pragma once
 #include "../../Utils/Utils.h"
+
+#ifdef _MSC_VER
+#pragma comment(lib, "Cfgmgr32.lib")
 #include <cfgmgr32.h>
 #include <initguid.h>
 #include <propkey.h>
 #include <devpkey.h>
+#endif
 
+
+//Modem GUID {2C7089AA-2E0E-11D1-B114-00C04FC2AAE4}
+DEFINE_GUID(GUID_DEVINTERFACE_MODEM, 0x2C7089AA, 0x2E0E,
+	0x11D1, 0xB1, 0x14, 0x00, 0xC0, 0x4F, 0xC2, 0xAA, 0xE4);
 
 typedef struct _SERIAL_DEVICE_INFO {
 	_SERIAL_DEVICE_INFO() {}
@@ -27,13 +35,9 @@ public:
 
 	static bool isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name);
 	static std::vector<SERIAL_DEVICE_INFO> getConnectedSerialDevices();
-
-	static SERIAL_DEVICE_INFO deviceInfo;
-
 protected:
 	HANDLE m_hCom;
 	bool IsInitialized();
-
 private:
 	static bool parseVidPid(std::wstring deviceId, SERIAL_DEVICE_INFO & device)
 	{
@@ -45,7 +49,7 @@ private:
 			wprintf(L"Failed to locate the VID");
 			return false;
 		}
-		
+
 		// now the PID 
 		if (ppos == std::wstring::npos) {
 			wprintf(L"Failed to locate the PID");
@@ -66,7 +70,7 @@ private:
 			wprintf(L"Failed to locate the VID");
 			return false;
 		}
-		if (device.vid != deviceId.substr(pos+4, 4)) {
+		if (device.vid != deviceId.substr(pos + 4, 4)) {
 			//not the right device
 			return false;
 		}
@@ -78,7 +82,7 @@ private:
 			return false;
 		}
 
-		if (device.pid != deviceId.substr(pos+4, 4)) {
+		if (device.pid != deviceId.substr(pos + 4, 4)) {
 			//not the right device
 			return false;
 		}

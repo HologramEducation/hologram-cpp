@@ -59,7 +59,13 @@ void Cellular::autoDectectModem()
 			}
 		}
 		if (modemName == "NOVA404") {
-
+			if (Serial::isDeviceConnected(Nova_R404::deviceInfo, L"MI_02")) {
+				modem = new Nova_R404();
+				modem->setupSerialPort(Nova_R404::deviceInfo.portName);
+				modem->initModemSerialMode();
+				modem->populateModemInformation();
+				break;
+			}
 		}
 	}
 }

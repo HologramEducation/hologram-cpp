@@ -23,6 +23,10 @@ public:
 		return StringToWstring(data.dump() + "\r\r");
 	}
 
+
+	virtual std::wstring buildSMSPayloadString(std::wstring message, std::string destination_number) =0;
+	virtual bool supportsSMS() = 0;
+
 protected:
 	std::string buildModemTypeIdString(std::string modemType, std::string modemId) {
 		if (modemType.empty()) {
