@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Authentication">
       <UniqueIdentifier>{53839921-c4af-4343-b656-b5fcc24975db}</UniqueIdentifier>
     </Filter>
@@ -34,6 +30,9 @@
     </Filter>
     <Filter Include="Network\Base">
       <UniqueIdentifier>{49d2d1fc-a515-4360-94c7-7d0dc8ef73a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{0b600dee-4942-430a-b1eb-70880ab564d9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -70,9 +69,6 @@
     <ClInclude Include="Authentication\CSRPSKAuthentication.h">
       <Filter>Authentication</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\json.hpp">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\Utils.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -105,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="Network\Modems\Nova_R404.h">
       <Filter>Network\Modem\Nova</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\Events.h">
+      <Filter>Events</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

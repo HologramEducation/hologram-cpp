@@ -72,15 +72,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)Includes;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)Includes;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)Includes;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)Includes;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -163,6 +167,7 @@
     <ClInclude Include="Cloud\Base\Cloud.h" />
     <ClInclude Include="Cloud\CustomCloud.h" />
     <ClInclude Include="Cloud\HologramCloud.h" />
+    <ClInclude Include="Event\Events.h" />
     <ClInclude Include="Network\Base\Network.h" />
     <ClInclude Include="Network\Cellular.h" />
     <ClInclude Include="Network\Modems\Base\Modem.h" />
@@ -170,7 +175,6 @@
     <ClInclude Include="Network\Modems\Nova_R404.h" />
     <ClInclude Include="Network\Modems\Nova_U201.h" />
     <ClInclude Include="Network\NetworkManager.h" />
-    <ClInclude Include="Utils\json.hpp" />
     <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
