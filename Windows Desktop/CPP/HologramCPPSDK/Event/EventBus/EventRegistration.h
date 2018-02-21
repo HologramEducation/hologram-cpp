@@ -1,7 +1,7 @@
-#ifndef EventRegistration_hpp
-#define EventRegistration_hpp
+#ifndef _EVENT_REGISTRATION_H_
+#define _EVENT_REGISTRATION_H_
 
-#include "HandlerRegistration.hpp"
+#include "HandlerRegistration.h"
 #include <list>
 #include <typeinfo>
 #include <unordered_map>
@@ -21,12 +21,10 @@ public:
      *
      * @param handler The event handler
      * @param registrations The handler collection for this event type
-     * @param sender The registered sender object
      */
-    EventRegistration(void * const handler, std::shared_ptr<std::list<std::shared_ptr<EventRegistration>>> const registrations, ObjectPtr const sender ) :
+    EventRegistration(void * const handler, std::shared_ptr<std::list<std::shared_ptr<EventRegistration>>> const registrations) :
     handler(handler),
     ptrRegistrations(registrations),
-    ptrSender(sender),
     registered(true)
     { }
     
@@ -48,25 +46,13 @@ public:
     
     
     /**
-     * \brief Gets the sender object for this registration
-     *
-     * @return The registered sender object
-     */
-    ObjectPtr getSender() {
-        return ptrSender;
-    }
-    
-    
-    /**
      * \brief Removes an event handler from the registration collection
      *
      * The event handler will no longer receive events for this event type
      */
     virtual void removeHandler() {
         if (registered) {
-            printf("has handlers count: %lu before remove handler.\n", ptrRegistrations->size());
             ptrRegistrations->remove(shared_from_this());
-            printf("has handlers count: %lu after remove handler.\n", ptrRegistrations->size());
             registered = false;
         }
     }
@@ -74,11 +60,10 @@ public:
 private:
     void * const handler;
     std::shared_ptr<std::list<std::shared_ptr<EventRegistration>>> const ptrRegistrations;
-    ObjectPtr ptrSender;
     
     bool registered;
 };
 
 typedef std::shared_ptr<EventRegistration> EventRegistrationPtr;
 
-#endif /* EventRegistration_hpp */
+#endif /* _EVENT_REGISTRATION_H_ */

@@ -20,10 +20,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef _SRC_EVENT_EVENT_HANDLER_HPP_
-#define _SRC_EVENT_EVENT_HANDLER_HPP_
-
-#include "Object.hpp"
+#ifndef _SRC_EVENT_EVENT_HANDLER_H_
+#define _SRC_EVENT_EVENT_HANDLER_H_
 
 #include <typeinfo>
 #include <type_traits>

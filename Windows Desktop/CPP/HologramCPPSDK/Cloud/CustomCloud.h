@@ -1,5 +1,7 @@
 #pragma once
 #include "Base\Cloud.h"
+#include "../Event/EventBus/EventBus.h"
+#include "../Event/Events.h"
 
 #define MAX_RECEIVE_BYTES 1024
 #define MAX_QUEUED_CONNECTIONS 5

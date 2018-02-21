@@ -1,13 +1,11 @@
 #pragma once
-#include "EventBus/Event.hpp"
-#include "EventBus/Object.hpp"
+#include "EventBus/Event.h"
 #include "../Network/NetworkManager.h"
 
 class ConnectionEvent : public Event
 {
 public:
-	ConnectionEvent(ObjectPtr sender, NetworkType network) :
-		Event(sender),
+	ConnectionEvent( NetworkType network) :
 		network(network) {
 		
 	}
@@ -24,8 +22,7 @@ private:
 class DisconnectionEvent : public Event
 {
 public:
-	DisconnectionEvent(ObjectPtr sender, NetworkType network) :
-		Event(sender),
+	DisconnectionEvent( NetworkType network) :
 		network(network) {
 
 	}
@@ -42,15 +39,14 @@ private:
 class MessageSentEvent : public Event
 {
 public:
-	MessageSentEvent(ObjectPtr sender, std::string message, bool source) :
-		Event(sender),
+	MessageSentEvent( std::wstring message, bool source) :
 		message(message),
 		source(source) {
 
 	}
 	~MessageSentEvent() {}
 
-	std::string getMessage() {
+	std::wstring getMessage() {
 		return message;
 	}
 
@@ -59,15 +55,14 @@ public:
 	}
 
 private:
-	std::string message;
+	std::wstring message;
 	bool source;
 };
 
 class MessageRecievedEvent : public Event
 {
 public:
-	MessageRecievedEvent(ObjectPtr sender) :
-		Event(sender) {
+	MessageRecievedEvent(){
 
 	}
 	~MessageRecievedEvent() {}
@@ -76,9 +71,10 @@ public:
 class SMSRecievedEvent : public Event
 {
 public:
-	SMSRecievedEvent(ObjectPtr sender) :
-		Event(sender) {
+	SMSRecievedEvent() {
+
 	}
+
 	~SMSRecievedEvent() {}
 };
 

@@ -20,72 +20,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef _SRC_EVENT_EVENT_HPP_
-#define _SRC_EVENT_EVENT_HPP_
+#include "EventBus.h"
 
-#include "Object.hpp"
+// Declare the static instance since this can't be done in the header file
+std::shared_ptr<EventBus> EventBus::ptrInstance = nullptr;
 
-#include <typeindex>
-#include <typeinfo>
-#include <vector>
-#include <stdexcept>
-
-/**
- * \brief The base event class, all events inherit from this class
- */
-class Event : public Object
-{
-public:
-	/**
-	 * \brief Default constructor
-	 *
-	 * @param pSender The sender of the event
-	 */
-	Event(ObjectPtr pSender) :
-		ptrSender(pSender),
-		canceled(false) {
-	}
-
-
-	/**
-	 * \brief Empty virtual destructor
-	 */
-	virtual ~Event() { }
-
-
-	/**
-	 * \brief Gets the source object for this event
-	 *
-	 * @return The event sender
-	 */
-	ObjectPtr getSender() {
-		return ptrSender;
-	}
-
-
-	/**
-	 * \brief Gets whether the event has been canceled
-	 *
-	 * @return true if the event is canceled
-	 */
-	bool getCanceled() {
-		return canceled;
-	}
-
-
-	/**
-	 * \brief Sets the canceled status for the event
-	 *
-	 * @param canceled Whether the even is canceled or not
-	 */
-	void setCanceled(bool canceled) {
-		this->canceled = canceled;
-	}
-
-private:
-	ObjectPtr  ptrSender;
-	bool canceled;
-
-};
-
-#endif /* _SRC_EVENT_EVENT_HPP_ */

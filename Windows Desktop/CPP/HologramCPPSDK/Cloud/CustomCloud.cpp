@@ -25,6 +25,7 @@ std::string CustomCloud::sendMessage(std::wstring message, int timeout, bool clo
 
 	if (useATSocket) {
 		result = networkManager.getNetwork()->sendMessage(message);
+		EventBus::FireEvent(MessageSentEvent(message, true));
 	}
 	else {
 		result = receiveSendSocket();

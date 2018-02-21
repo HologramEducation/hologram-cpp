@@ -20,45 +20,59 @@
  * THE SOFTWARE.
  */
 
-#ifndef _SRC_EVENT_OBJECT_HPP_
-#define _SRC_EVENT_OBJECT_HPP_
+#ifndef _SRC_EVENT_EVENT_H_
+#define _SRC_EVENT_EVENT_H_
 
-#include <list>
+#include <typeindex>
 #include <typeinfo>
-#include <memory>
-#include <stdio.h>
-
+#include <vector>
+#include <stdexcept>
 
 /**
- * \brief Root class of the type hierarchy
- *
- * All events and event handlers derive from this class
+ * \brief The base event class, all events inherit from this class
  */
-class Object {
+class Event
+{
 public:
 	/**
-	 * \brief Default empty constructor
+	 * \brief Default constructor
+	 *
+	 * @param pSender The sender of the event
 	 */
-	Object() {
-        printf("Object Construct.\n");
-    }
+	Event() :
+		canceled(false) {
+	}
 
 
 	/**
-	 * Empty virtual destructor
+	 * \brief Empty virtual destructor
 	 */
-	virtual ~Object() {
-        printf("Object Destruct.\n");
-    }
+	virtual ~Event() { }
+
 
 
 	/**
-	 * Default empty copy constructor
-	 * @param other The instance to copy from
+	 * \brief Gets whether the event has been canceled
+	 *
+	 * @return true if the event is canceled
 	 */
-	Object (const Object& other) { }
+	bool getCanceled() {
+		return canceled;
+	}
+
+
+	/**
+	 * \brief Sets the canceled status for the event
+	 *
+	 * @param canceled Whether the even is canceled or not
+	 */
+	void setCanceled(bool canceled) {
+		this->canceled = canceled;
+	}
+
+private:
+	bool canceled;
+
 };
 
-typedef std::shared_ptr<Object> ObjectPtr;
-
-#endif /* _SRC_EVENT_OBJECT_HPP_ */
+#endif /* _SRC_EVENT_EVENT_H_ */

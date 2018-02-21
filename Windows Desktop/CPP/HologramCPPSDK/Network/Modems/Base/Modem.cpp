@@ -177,7 +177,7 @@ bool Modem::writeSocket(std::wstring data)
 	setHexMode(true);
 	std::vector<std::string> result;
 	char buffer[4096];
-	sprintf_s(buffer, "AT+USOWR=%d,%d,\"%s\"", socketId, data.length(), ToHex(WstringToString(data)).c_str());
+	sprintf_s(buffer, "AT+USOWR=%d,%zd,\"%s\"", socketId, data.length(), ToHex(WstringToString(data)).c_str());
 	if (sendAndParseATCommand(buffer, result) != MODEM_OK) {
 		//do something? notify or what
 	}

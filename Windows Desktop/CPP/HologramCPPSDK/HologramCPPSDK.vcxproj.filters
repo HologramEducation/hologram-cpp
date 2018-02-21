@@ -34,6 +34,9 @@
     <Filter Include="Events">
       <UniqueIdentifier>{0b600dee-4942-430a-b1eb-70880ab564d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Events\EventBus">
+      <UniqueIdentifier>{2d997d63-d0d6-4ff1-8c3d-980f13cfc7d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -60,6 +63,9 @@
     </ClCompile>
     <ClCompile Include="Network\Modems\Nova_R404.cpp">
       <Filter>Network\Modem\Nova</Filter>
+    </ClCompile>
+    <ClCompile Include="Event\EventBus\EventBus.cpp">
+      <Filter>Events\EventBus</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -104,6 +110,21 @@
     </ClInclude>
     <ClInclude Include="Event\Events.h">
       <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\EventBus\Event.h">
+      <Filter>Events\EventBus</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\EventBus\EventBus.h">
+      <Filter>Events\EventBus</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\EventBus\EventHandler.h">
+      <Filter>Events\EventBus</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\EventBus\EventRegistration.h">
+      <Filter>Events\EventBus</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\EventBus\HandlerRegistration.h">
+      <Filter>Events\EventBus</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

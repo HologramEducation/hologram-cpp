@@ -20,8 +20,21 @@
  * THE SOFTWARE.
  */
 
-#include "EventBus.hpp"
+#ifndef _SRC_EVENT_HANDLER_REGISTRATION_H_
+#define _SRC_EVENT_HANDLER_REGISTRATION_H_
 
-// Declare the static instance since this can't be done in the header file
-std::shared_ptr<EventBus> EventBus::ptrInstance = nullptr;
+#include <memory>
 
+/**
+ * \brief Interface that that allows event handlers to be removed from the EventBus
+ */
+class HandlerRegistration {
+public:
+	virtual ~HandlerRegistration() { }
+
+	virtual void removeHandler() = 0;
+};
+
+typedef std::shared_ptr<HandlerRegistration> HandlerRegistrationPtr;
+
+#endif /* _SRC_EVENT_HANDLER_REGISTRATION_H_ */
