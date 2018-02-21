@@ -84,6 +84,7 @@ std::string Modem::sendMessage(std::wstring message)
 		checkURC();
 	}
 	if (urcState == SOCKET_SEND_READ) {
+		EventBus::FireEvent(MessageRecievedEvent());
 		return readSocket(socketId, last_read_payload_length);
 	}
 	else {

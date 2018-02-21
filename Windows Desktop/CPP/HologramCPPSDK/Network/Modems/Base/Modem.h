@@ -6,6 +6,9 @@
 #include "raserror.h"
 #endif
 
+#include "../../Event/EventBus/EventBus.h"
+#include "../../Event/Events.h"
+
 #include <deque>
 
 typedef struct _MODEM_INFO {

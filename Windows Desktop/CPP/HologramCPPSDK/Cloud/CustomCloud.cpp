@@ -29,6 +29,7 @@ std::string CustomCloud::sendMessage(std::wstring message, int timeout, bool clo
 	}
 	else {
 		result = receiveSendSocket();
+		EventBus::FireEvent(MessageSentEvent(message, false));
 	}
 
 	if (closeSocket) {
