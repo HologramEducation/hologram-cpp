@@ -56,6 +56,8 @@ bool Modem::sendATCommand(std::string strATCommand, std::string& strOutput, unsi
 		return false;
 	}
 
+	checkURC();
+
 	strATCommand = strATCommand + "\r\n";
 	setTimeout(waitTime);
 	write(strATCommand);
@@ -162,7 +164,7 @@ bool Modem::connectSocket(std::string host, int port)
 	std::vector<std::string> result;
 	char buffer[1024];
 	sprintf_s(buffer, "AT+USOCO=%d,\"%s\",%d", socketId, host.c_str(), port);
-	return sendAndParseATCommand(buffer, result, 5000) == MODEM_OK;
+	return sendAndParseATCommand(buffer, result, 20000) == MODEM_OK;
 }
 
 bool Modem::listenSocket(int port)
@@ -179,7 +181,7 @@ bool Modem::writeSocket(std::wstring data)
 	std::vector<std::string> result;
 	char buffer[4096];
 	sprintf_s(buffer, "AT+USOWR=%d,%zd,\"%s\"", socketId, data.length(), ToHex(WstringToString(data)).c_str());
-	if (sendAndParseATCommand(buffer, result) != MODEM_OK) {
+	if (sendAndParseATCommand(buffer, result, 10000) != MODEM_OK) {
 		//do something? notify or what
 	}
 	setHexMode(false);

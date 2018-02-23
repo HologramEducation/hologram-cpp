@@ -1,5 +1,6 @@
 #pragma once
 #include "Base\Modem.h"
+
 class Nova_R404 : public Modem
 {
 public:

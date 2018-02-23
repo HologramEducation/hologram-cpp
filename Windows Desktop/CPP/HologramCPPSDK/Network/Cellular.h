@@ -26,6 +26,7 @@ public:
 	}
 	virtual bool connectSocket(std::string host, int port) {
 		bool status = modem->connectSocket(host, port);
+		//This delay is required as recommended in the uBlox spec sheet.
 		Sleep(2000);
 		return status;
 	}
