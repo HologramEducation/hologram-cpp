@@ -1,7 +1,5 @@
 #include "Cellular.h"
 
-
-
 Cellular::Cellular()
 {
 	supportedModems.push_back("E303");
@@ -22,6 +20,7 @@ bool Cellular::connect(int timeout)
 {
 	if (modem->connect()) {
 		connectionState = CLOUD_CONNECTED;
+		EventBus::FireEvent(ConnectionEvent(NetworkType::CELLULAR));
 		return true;
 	}
 	return false;
@@ -31,6 +30,7 @@ bool Cellular::disconnect()
 {
 	modem->disconnect();
 	connectionState = CLOUD_DISCONNECTED;
+	EventBus::FireEvent(DisconnectionEvent(NetworkType::CELLULAR));
 	return true;
 }
 
@@ -53,7 +53,7 @@ void Cellular::autoDectectModem()
 			if (Serial::isDeviceConnected(Nova_U201::deviceInfo, L"MI_02")) {
 				modem = new Nova_U201();
 				modem->setupSerialPort(Nova_U201::deviceInfo.portName);
-				modem->initModemSerialMode(); 
+				modem->initModemSerialMode();
 				modem->populateModemInformation();
 				break;
 			}
