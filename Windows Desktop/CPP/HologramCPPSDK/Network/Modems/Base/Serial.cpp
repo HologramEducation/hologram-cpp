@@ -55,12 +55,12 @@ bool Serial::read(std::string & buffer, bool waitForBuffer)
 
 	if (waitForBuffer) {
 		if (!SetCommMask(m_hCom, EV_RXCHAR)) {
-				return false;
-			}
+			return false;
+		}
 
-			WaitCommEvent(m_hCom, &dwEvtMask, NULL);  // Wait for the rx
+		WaitCommEvent(m_hCom, &dwEvtMask, NULL);  // Wait for the rx
 	}
-	
+
 	if (!ClearCommError(m_hCom, &dwErrors, &comStat)) {
 		return false;
 	}

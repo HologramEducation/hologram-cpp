@@ -5,9 +5,9 @@
 class ConnectionEvent : public Event
 {
 public:
-	ConnectionEvent( NetworkType network) :
+	ConnectionEvent(NetworkType network) :
 		network(network) {
-		
+
 	}
 	~ConnectionEvent() {};
 
@@ -22,7 +22,7 @@ private:
 class DisconnectionEvent : public Event
 {
 public:
-	DisconnectionEvent( NetworkType network) :
+	DisconnectionEvent(NetworkType network) :
 		network(network) {
 
 	}
@@ -39,7 +39,7 @@ private:
 class MessageSentEvent : public Event
 {
 public:
-	MessageSentEvent( std::wstring message, bool source) :
+	MessageSentEvent(std::wstring message, bool source) :
 		message(message),
 		source(source) {
 
@@ -62,7 +62,7 @@ private:
 class MessageRecievedEvent : public Event
 {
 public:
-	MessageRecievedEvent(){
+	MessageRecievedEvent() {
 
 	}
 	~MessageRecievedEvent() {}
