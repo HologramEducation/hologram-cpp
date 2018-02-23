@@ -52,7 +52,7 @@ public:
 	 */
 	static std::shared_ptr<EventBus> const GetInstance() {
 		if (ptrInstance == nullptr) {
-			static std::shared_ptr<EventBus> ptrInstance(new EventBus);
+			ptrInstance = std::shared_ptr<EventBus>(new EventBus());
 		}
 
 		return ptrInstance;
