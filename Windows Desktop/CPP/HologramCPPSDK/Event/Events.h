@@ -1,6 +1,6 @@
 #pragma once
 #include "EventBus/Event.h"
-#include "../Network/NetworkManager.h"
+#include "../Network/Base/Network.h"
 
 class ConnectionEvent : public Event
 {

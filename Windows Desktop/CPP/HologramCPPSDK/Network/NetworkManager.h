@@ -5,13 +5,6 @@
 
 #define DEFAULT_NETWORK_TIMEOUT  200
 
-enum NetworkType {
-	WIFI,
-	CELLULAR,
-	BLE,
-	ETHERNET
-};
-
 class NetworkManager
 {
 public:

@@ -1,6 +1,13 @@
 #pragma once
 #include "../../Utils/Utils.h"
 
+enum NetworkType {
+	WIFI,
+	CELLULAR,
+	BLE,
+	ETHERNET
+};
+
 enum ConnectionState {
 	CLOUD_DISCONNECTED,
 	CLOUD_CONNECTED,
