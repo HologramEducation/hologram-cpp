@@ -84,6 +84,7 @@ std::string Modem::sendMessage(std::wstring message)
 
 	while (urcState != SOCKET_SEND_READ && urcState != SOCKET_CLOSED ) {
 		checkURC();
+		write("");
 	}
 	if (urcState == SOCKET_SEND_READ) {
 		EventBus::FireEvent(MessageRecievedEvent());
