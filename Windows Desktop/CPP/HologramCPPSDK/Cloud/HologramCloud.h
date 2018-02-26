@@ -19,7 +19,7 @@ enum HOLOGRAM_ERROR_CODES {
 	ERR_INTERNAL, // An internal error occurred
 	ERR_METADATA, // Metadata was formatted incorrectly
 	ERR_TOPICINVALID, // Topic was formatted incorrectly
-	ERR_UNKNOWN // Unknown error
+	ERR_UNKNOWN = -1// Unknown error
 };
 
 class HologramCloud : public CustomCloud
@@ -28,8 +28,8 @@ public:
 	HologramCloud(std::map<std::string, std::string> credentials, bool enable_inbound = false, NetworkType type = CELLULAR, Authentication * auth = NULL);
 	~HologramCloud();
 	void setAuthentication(Authentication * auth);
-	virtual std::string sendMessage(std::wstring message, std::vector<std::wstring> topics);
 	virtual void sendSMS(std::wstring message, std::string destNumber);
-
+	virtual std::string sendMessage(std::wstring message, std::vector<std::wstring> topics);
+	HOLOGRAM_ERROR_CODES parseResultString(std::string result);
 };
 

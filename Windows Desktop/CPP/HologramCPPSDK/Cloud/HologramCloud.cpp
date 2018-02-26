@@ -42,6 +42,24 @@ std::string HologramCloud::sendMessage(std::wstring message, std::vector<std::ws
 	return result;
 }
 
+HOLOGRAM_ERROR_CODES HologramCloud::parseResultString(std::string result)
+{
+	int code = 0;
+	if (dynamic_cast<CSRPSKAuthentication*>(authenticator)) {
+		try {
+			json jsonresult = json::parse(result);
+			code = jsonresult[0];
+		}
+		catch (json::parse_error pe) {
+			return ERR_UNKNOWN;
+		}
+	}
+	else {
+
+	}
+	return static_cast<HOLOGRAM_ERROR_CODES>(code);
+}
+
 void HologramCloud::sendSMS(std::wstring message, std::string destNumber)
 {
 	if (authenticator->supportsSMS() && message.length() <= MAX_SMS_LENGTH && destNumber[0] == '+') {
