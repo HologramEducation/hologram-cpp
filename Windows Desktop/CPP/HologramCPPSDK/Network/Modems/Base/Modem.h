@@ -11,6 +11,8 @@
 
 #include <deque>
 
+#define RETRY_DELAY 50  // 50 millisecond delay to avoid spinning loops
+
 typedef struct _MODEM_INFO {
 	std::wstring Manufacturer;
 	std::wstring Model;
@@ -37,9 +39,6 @@ enum URCState {
 	SOCKET_CLOSED
 };
 
-//Modem class was adapted from the mobile broadband modem class found at
-//https://github.com/northbright/WinUtil
-
 class Modem : public Serial {
 public:
 	Modem();
@@ -56,7 +55,7 @@ public:
 	virtual void initModemSerialMode() = 0;
 
 	//Hologram
-	std::string sendMessage(std::wstring message);
+	virtual std::string sendMessage(std::wstring message);
 
 	//Cellular
 	bool connect();
@@ -87,9 +86,8 @@ public:
 	virtual void handleURCListen(std::string urcString) = 0;
 
 	//SMS
-	bool popRecievedSMS();
+	SMS popRecievedSMS();
 	bool setSMSConfiguration();
-	bool enableSMS(bool state);
 
 	//MISC
 	void setHexMode(bool state);
@@ -123,16 +121,17 @@ public:
 	MODEM_INFO modemInfo;
 protected:
 	bool checkRegistered(std::string atCommand);
+	void parsePDU(std::string header, std::string pdu, SMS * sms, int & index);
 	std::string name;
+	URCState urcState;
+	int last_read_payload_length;
+	unsigned char socketId;
 private:
 	HRASCONN hRasConn;
 	RASCONNSTATE connState;
 	RASCONNSTATUS rasConnStatus;
 	std::wstring profileName;
-
-	unsigned char socketId;
-	URCState urcState;
-	int last_read_payload_length;
+	
 	std::deque<std::string> socketBuffer;
 
 	ModemResult determineModemResult(std::string result);

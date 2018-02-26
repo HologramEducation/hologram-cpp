@@ -84,7 +84,7 @@ std::string Modem::sendMessage(std::wstring message)
 
 	while (urcState != SOCKET_SEND_READ && urcState != SOCKET_CLOSED ) {
 		checkURC();
-		write("");
+		Sleep(RETRY_DELAY);
 	}
 	if (urcState == SOCKET_SEND_READ) {
 		EventBus::FireEvent(MessageRecievedEvent());
@@ -93,7 +93,6 @@ std::string Modem::sendMessage(std::wstring message)
 	else {
 		return "";
 	}
-	
 }
 
 std::string Modem::popRecievedMessage()
@@ -284,6 +283,32 @@ void Modem::handleURC(std::string urcString)
 
 	}
 	urcState = nextState;
+}
+
+SMS Modem::popRecievedSMS()
+{
+	checkURC();
+	std::vector<std::string> result;
+	if (sendAndParseATCommand("AT+CMGL?", result, 20000) == MODEM_OK) {
+		int oldestIndex = 0, currentIndex = 0;
+		SMS * oldest, * current;
+		for (int i = 0; i < result.size()-1;i++) {
+			parsePDU(result[i], result[i + 1], current, currentIndex);
+			if (current != NULL) {
+				if (oldest == NULL || current->timestamp < oldest->timestamp) {
+					oldest = new SMS(*current);
+					oldestIndex = currentIndex;
+					if (oldestIndex > 0) {
+						char buffer[32];
+						sprintf_s(buffer, "AT+CMGD=%d", oldestIndex);
+						sendATCommand(buffer);
+						return SMS(*oldest);
+					}
+				}
+			}
+		}
+	}
+	return SMS();
 }
 
 bool Modem::setSMSConfiguration()
@@ -520,6 +545,39 @@ bool Modem::checkRegistered(std::string atCommand)
 		return parts[1] == "5" || parts[1] == "1";
 	}
 	return false;
+}
+
+void Modem::parsePDU(std::string header, std::string pdu, SMS * sms, int & index)
+{
+	try :
+		if not header.startswith("+CMGL: ") :
+			return None, None
+
+			index, stat, alpha, length = header[7:].split(',')
+
+			// parse PDU
+			smsc_len = int(pdu[0:2], 16)
+
+			// smsc_number_type = int(pdu[2:4], 16)
+// if smsc_number_type != 0x81 and smsc_number_type != 0x91: return (-2, hex(smsc_number_type))
+			offset = smsc_len * 2 + 3
+
+			sender, offset = self._parse_sender(pdu, offset)
+
+			if pdu[offset:offset + 4] != '0000' :
+				return None, None
+
+				offset += 4
+
+				timestamp, offset = self._parse_timestamp(pdu, offset)
+				message, offset = self._parse_message(pdu, offset)
+
+				return SMS(sender, timestamp, message), index
+
+				except ValueError as e :
+	self.logger.error(repr(e))
+
+		return None, None
 }
 
 ModemResult Modem::determineModemResult(std::string result)
