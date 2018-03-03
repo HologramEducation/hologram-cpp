@@ -73,22 +73,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(IncludePath)</IncludePath>
-    <SourcePath>$(SourcePath)</SourcePath>
+    <SourcePath>$(SolutionPath)/../HologramSDK/src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(IncludePath)</IncludePath>
-    <SourcePath>$(SourcePath)</SourcePath>
+    <SourcePath>$(SolutionPath)/../HologramSDK/src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(IncludePath)</IncludePath>
-    <SourcePath>$(SourcePath)</SourcePath>
+    <SourcePath>$(SolutionPath)/../HologramSDK/src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(IncludePath)</IncludePath>
-    <SourcePath>$(SourcePath)</SourcePath>
+    <SourcePath>$(SolutionPath)/../HologramSDK/src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -96,8 +96,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)../HologramSDK/includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -111,8 +111,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)../HologramSDK/includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,8 +128,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)../HologramSDK/includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,8 +147,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)../HologramSDK/includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,37 +159,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Authentication\CSRPSKAuthentication.cpp" />
-    <ClCompile Include="Cloud\CustomCloud.cpp" />
-    <ClCompile Include="Cloud\HologramCloud.cpp" />
-    <ClCompile Include="Event\EventBus\EventBus.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Authentication\CSRPSKAuthentication.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Cloud\CustomCloud.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Cloud\HologramCloud.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Event\EventBus\EventBus.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Cellular.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Modem.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Serial.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Nova_R404.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Nova_U201.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Network\Cellular.cpp" />
-    <ClCompile Include="Network\Modems\Base\Modem.cpp" />
-    <ClCompile Include="Network\Modems\Base\Serial.cpp" />
-    <ClCompile Include="Network\Modems\Nova_R404.cpp" />
-    <ClCompile Include="Network\Modems\Nova_U201.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Authentication\Base\Authentication.h" />
-    <ClInclude Include="Authentication\CSRPSKAuthentication.h" />
-    <ClInclude Include="Cloud\Base\Cloud.h" />
-    <ClInclude Include="Cloud\CustomCloud.h" />
-    <ClInclude Include="Cloud\HologramCloud.h" />
-    <ClInclude Include="Event\EventBus\Event.h" />
-    <ClInclude Include="Event\EventBus\EventBus.h" />
-    <ClInclude Include="Event\EventBus\EventHandler.h" />
-    <ClInclude Include="Event\EventBus\EventRegistration.h" />
-    <ClInclude Include="Event\EventBus\HandlerRegistration.h" />
-    <ClInclude Include="Event\Events.h" />
-    <ClInclude Include="Network\Base\Network.h" />
-    <ClInclude Include="Network\Cellular.h" />
-    <ClInclude Include="Network\Modems\Base\Modem.h" />
-    <ClInclude Include="Network\Modems\Base\Serial.h" />
-    <ClInclude Include="Network\Modems\Nova_R404.h" />
-    <ClInclude Include="Network\Modems\Nova_U201.h" />
-    <ClInclude Include="Network\NetworkManager.h" />
-    <ClInclude Include="Utils\Utils.h" />
+    <ClInclude Include="..\HologramSDK\src\Authentication\Base\Authentication.h" />
+    <ClInclude Include="..\HologramSDK\src\Authentication\CSRPSKAuthentication.h" />
+    <ClInclude Include="..\HologramSDK\src\Cloud\Base\Cloud.h" />
+    <ClInclude Include="..\HologramSDK\src\Cloud\CustomCloud.h" />
+    <ClInclude Include="..\HologramSDK\src\Cloud\HologramCloud.h" />
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\Event.h" />
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\EventBus.h" />
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\EventHandler.h" />
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\EventRegistration.h" />
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\HandlerRegistration.h" />
+    <ClInclude Include="..\HologramSDK\src\Event\Events.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Base\Network.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Cellular.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Modem.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Serial.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Nova_R404.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Nova_U201.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\NetworkManager.h" />
+    <ClInclude Include="..\HologramSDK\src\Utils\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
