@@ -37,7 +37,6 @@ public:
 	/**
 	 * \brief Default constructor
 	 *
-	 * @param pSender The sender of the event
 	 */
 	Event() :
 		canceled(false) {

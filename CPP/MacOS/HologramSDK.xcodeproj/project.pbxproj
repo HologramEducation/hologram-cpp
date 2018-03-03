@@ -7,7 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F2D421C3204A1AF00089CDEA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2D421C2204A1AF00089CDEA /* main.cpp */; };
+		F2C7CBCD204A57FF0084E889 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBCC204A57FF0084E889 /* main.cpp */; };
+		F2C7CBD0204A59BC0084E889 /* EventBus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBCF204A59BB0084E889 /* EventBus.cpp */; };
+		F2C7CBD3204A5A000084E889 /* CustomCloud.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBD1204A5A000084E889 /* CustomCloud.cpp */; };
+		F2C7CBD4204A5A000084E889 /* HologramCloud.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBD2204A5A000084E889 /* HologramCloud.cpp */; };
+		F2C7CBD6204A5C2B0084E889 /* CSRPSKAuthentication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBD5204A5C2B0084E889 /* CSRPSKAuthentication.cpp */; };
+		F2C7CBD9204A5C450084E889 /* Cellular.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBD8204A5C450084E889 /* Cellular.cpp */; };
+		F2C7CBDC204A5C530084E889 /* Nova_U201.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBDA204A5C530084E889 /* Nova_U201.cpp */; };
+		F2C7CBDD204A5C530084E889 /* Nova_R404.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBDB204A5C530084E889 /* Nova_R404.cpp */; };
+		F2C7CBE0204A5C660084E889 /* Modem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBDE204A5C660084E889 /* Modem.cpp */; };
+		F2C7CBE1204A5C660084E889 /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBDF204A5C660084E889 /* Serial.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,13 +32,22 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F2C7CBC7204A57F30084E889 /* Authentication */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Authentication; path = ../HologramSDK/src/Authentication; sourceTree = "<group>"; };
+		F2C7CBC8204A57F30084E889 /* Network */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Network; path = ../HologramSDK/src/Network; sourceTree = "<group>"; };
+		F2C7CBC9204A57F30084E889 /* Cloud */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Cloud; path = ../HologramSDK/src/Cloud; sourceTree = "<group>"; };
+		F2C7CBCA204A57F30084E889 /* Utils */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Utils; path = ../HologramSDK/src/Utils; sourceTree = "<group>"; };
+		F2C7CBCB204A57F30084E889 /* Event */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Event; path = ../HologramSDK/src/Event; sourceTree = "<group>"; };
+		F2C7CBCC204A57FF0084E889 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		F2C7CBCF204A59BB0084E889 /* EventBus.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = EventBus.cpp; path = ../HologramSDK/src/Event/EventBus/EventBus.cpp; sourceTree = "<group>"; };
+		F2C7CBD1204A5A000084E889 /* CustomCloud.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = CustomCloud.cpp; path = ../HologramSDK/src/Cloud/CustomCloud.cpp; sourceTree = "<group>"; };
+		F2C7CBD2204A5A000084E889 /* HologramCloud.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = HologramCloud.cpp; path = ../HologramSDK/src/Cloud/HologramCloud.cpp; sourceTree = "<group>"; };
+		F2C7CBD5204A5C2B0084E889 /* CSRPSKAuthentication.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = CSRPSKAuthentication.cpp; path = ../HologramSDK/src/Authentication/CSRPSKAuthentication.cpp; sourceTree = "<group>"; };
+		F2C7CBD8204A5C450084E889 /* Cellular.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Cellular.cpp; path = ../HologramSDK/src/Network/Cellular.cpp; sourceTree = "<group>"; };
+		F2C7CBDA204A5C530084E889 /* Nova_U201.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Nova_U201.cpp; path = ../HologramSDK/src/Network/Modems/Nova_U201.cpp; sourceTree = "<group>"; };
+		F2C7CBDB204A5C530084E889 /* Nova_R404.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Nova_R404.cpp; path = ../HologramSDK/src/Network/Modems/Nova_R404.cpp; sourceTree = "<group>"; };
+		F2C7CBDE204A5C660084E889 /* Modem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Modem.cpp; path = ../HologramSDK/src/Network/Modems/Base/Modem.cpp; sourceTree = "<group>"; };
+		F2C7CBDF204A5C660084E889 /* Serial.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Serial.cpp; path = ../HologramSDK/src/Network/Modems/Base/Serial.cpp; sourceTree = "<group>"; };
 		F2D421BF204A1AEF0089CDEA /* HologramSDK */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HologramSDK; sourceTree = BUILT_PRODUCTS_DIR; };
-		F2D421C2204A1AF00089CDEA /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = main.cpp; sourceTree = "<group>"; };
-		F2D421C9204A1B530089CDEA /* Utils */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Utils; sourceTree = "<group>"; };
-		F2D421CA204A1B530089CDEA /* Cloud */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Cloud; sourceTree = "<group>"; };
-		F2D421CB204A1B530089CDEA /* Event */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Event; sourceTree = "<group>"; };
-		F2D421CC204A1B530089CDEA /* Authentication */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Authentication; sourceTree = "<group>"; };
-		F2D421CD204A1B530089CDEA /* Network */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Network; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,7 +64,21 @@
 		F2D421B6204A1AEF0089CDEA = {
 			isa = PBXGroup;
 			children = (
-				F2D421C1204A1AEF0089CDEA /* HologramSDK */,
+				F2C7CBDE204A5C660084E889 /* Modem.cpp */,
+				F2C7CBDF204A5C660084E889 /* Serial.cpp */,
+				F2C7CBDB204A5C530084E889 /* Nova_R404.cpp */,
+				F2C7CBDA204A5C530084E889 /* Nova_U201.cpp */,
+				F2C7CBD8204A5C450084E889 /* Cellular.cpp */,
+				F2C7CBD5204A5C2B0084E889 /* CSRPSKAuthentication.cpp */,
+				F2C7CBD1204A5A000084E889 /* CustomCloud.cpp */,
+				F2C7CBD2204A5A000084E889 /* HologramCloud.cpp */,
+				F2C7CBCF204A59BB0084E889 /* EventBus.cpp */,
+				F2C7CBCC204A57FF0084E889 /* main.cpp */,
+				F2C7CBC7204A57F30084E889 /* Authentication */,
+				F2C7CBC9204A57F30084E889 /* Cloud */,
+				F2C7CBCB204A57F30084E889 /* Event */,
+				F2C7CBC8204A57F30084E889 /* Network */,
+				F2C7CBCA204A57F30084E889 /* Utils */,
 				F2D421C0204A1AEF0089CDEA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -57,19 +89,6 @@
 				F2D421BF204A1AEF0089CDEA /* HologramSDK */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		F2D421C1204A1AEF0089CDEA /* HologramSDK */ = {
-			isa = PBXGroup;
-			children = (
-				F2D421CC204A1B530089CDEA /* Authentication */,
-				F2D421CA204A1B530089CDEA /* Cloud */,
-				F2D421CB204A1B530089CDEA /* Event */,
-				F2D421CD204A1B530089CDEA /* Network */,
-				F2D421C9204A1B530089CDEA /* Utils */,
-				F2D421C2204A1AF00089CDEA /* main.cpp */,
-			);
-			path = HologramSDK;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -129,7 +148,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F2D421C3204A1AF00089CDEA /* main.cpp in Sources */,
+				F2C7CBE0204A5C660084E889 /* Modem.cpp in Sources */,
+				F2C7CBE1204A5C660084E889 /* Serial.cpp in Sources */,
+				F2C7CBDC204A5C530084E889 /* Nova_U201.cpp in Sources */,
+				F2C7CBDD204A5C530084E889 /* Nova_R404.cpp in Sources */,
+				F2C7CBD9204A5C450084E889 /* Cellular.cpp in Sources */,
+				F2C7CBD6204A5C2B0084E889 /* CSRPSKAuthentication.cpp in Sources */,
+				F2C7CBD3204A5A000084E889 /* CustomCloud.cpp in Sources */,
+				F2C7CBD4204A5A000084E889 /* HologramCloud.cpp in Sources */,
+				F2C7CBD0204A59BC0084E889 /* EventBus.cpp in Sources */,
+				F2C7CBCD204A57FF0084E889 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,7 +270,9 @@
 		F2D421C7204A1AF00089CDEA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = "../HologramSDK/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -250,7 +280,9 @@
 		F2D421C8204A1AF00089CDEA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = "../HologramSDK/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

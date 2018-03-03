@@ -71,8 +71,8 @@ public:
 	 *
 	 * @param e The event to dispatch
 	 */
-	void dispatch(Event & e) {
-		onEvent(dynamic_cast<T &>(e));
+	void dispatch(const Event & e) {
+		onEvent(const_cast<T &>(e));
 	}
 };
 

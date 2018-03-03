@@ -1,12 +1,14 @@
 #pragma once
-#include "Base\Modem.h"
-class Nova_U201 : public Modem
+#include "Base/Modem.h"
+
+class Nova_R404 : public Modem
 {
 public:
-	Nova_U201();
-	~Nova_U201();
+	Nova_R404();
+	~Nova_R404();
 
-	virtual bool createSocket();
+	virtual std::string sendMessage(std::wstring message);
+
 	virtual void setNetworkRegistrationStatus();
 	virtual void initModemSerialMode();
 	virtual bool isRegistered();

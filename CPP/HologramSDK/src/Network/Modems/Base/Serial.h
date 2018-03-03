@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Utils/Utils.h"
+#include "../../../Utils/Utils.h"
 
 #ifdef _MSC_VER
 #pragma comment(lib, "Cfgmgr32.lib")
@@ -7,12 +7,11 @@
 #include <initguid.h>
 #include <propkey.h>
 #include <devpkey.h>
-#endif
-
 
 //Modem GUID {2C7089AA-2E0E-11D1-B114-00C04FC2AAE4}
 DEFINE_GUID(GUID_DEVINTERFACE_MODEM, 0x2C7089AA, 0x2E0E,
 	0x11D1, 0xB1, 0x14, 0x00, 0xC0, 0x4F, 0xC2, 0xAA, 0xE4);
+#endif
 
 typedef struct _SERIAL_DEVICE_INFO {
 	_SERIAL_DEVICE_INFO() {}
@@ -28,7 +27,7 @@ typedef struct _SERIAL_DEVICE_INFO {
 
 class Serial {
 public:
-	bool setupSerialPort(std::wstring port, DWORD baud = 115200);
+	bool setupSerialPort(std::wstring port, unsigned int baud = 115200);
 	bool write(std::string message);
 	bool read(std::string &buffer, bool waitForBuffer = false);
 	void setTimeout(int timeout);
@@ -36,8 +35,9 @@ public:
 	static bool isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name);
 	static std::vector<SERIAL_DEVICE_INFO> getConnectedSerialDevices();
 protected:
-	HANDLE m_hCom;
 	bool IsInitialized();
+#ifdef _MSC_VER
+    HANDLE m_hCom;
 private:
 	static bool parseVidPid(std::wstring deviceId, SERIAL_DEVICE_INFO & device)
 	{
@@ -124,4 +124,5 @@ private:
 			0);
 		return DeviceDesc;
 	}
+#endif
 };

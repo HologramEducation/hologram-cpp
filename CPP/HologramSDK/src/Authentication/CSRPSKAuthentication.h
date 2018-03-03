@@ -1,5 +1,5 @@
 #pragma once
-#include "Base\Authentication.h"
+#include "Base/Authentication.h"
 
 #define DEVICE_KEY_LEN  8
 

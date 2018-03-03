@@ -2,16 +2,22 @@
 
 Modem::Modem()
 {
+#ifdef _MSC_VER
 	m_hCom = NULL;
+#ifdef USERAS
 	hRasConn = NULL;
+#endif
+#endif
 	urcState = SOCKET_INIT;
 }
 
 Modem::~Modem()
 {
+#ifdef _MSC_VER
 	if (m_hCom && m_hCom != INVALID_HANDLE_VALUE) {
 		CloseHandle(m_hCom);
 	}
+#endif
 	disconnect();
 }
 
@@ -84,7 +90,8 @@ std::string Modem::sendMessage(std::wstring message)
 
 	while (urcState != SOCKET_SEND_READ && urcState != SOCKET_CLOSED ) {
 		checkURC();
-		Sleep(RETRY_DELAY);
+        std::chrono::milliseconds timespan(RETRY_DELAY);
+        std::this_thread::sleep_for(timespan);
 	}
 	if (urcState == SOCKET_SEND_READ) {
 		EventBus::FireEvent(MessageRecievedEvent());
@@ -163,7 +170,7 @@ bool Modem::connectSocket(std::string host, int port)
 {
 	std::vector<std::string> result;
 	char buffer[1024];
-	sprintf_s(buffer, "AT+USOCO=%d,\"%s\",%d", socketId, host.c_str(), port);
+	snprintf(buffer, 1024, "AT+USOCO=%d,\"%s\",%d", socketId, host.c_str(), port);
 	return sendAndParseATCommand(buffer, result, 20000) == MODEM_OK;
 }
 
@@ -171,7 +178,7 @@ bool Modem::listenSocket(int port)
 {
 	std::vector<std::string> result;
 	char buffer[1024];
-	sprintf_s(buffer, "AT+USOLI=%d,%d", socketId, port);
+	snprintf(buffer, 1024, "AT+USOLI=%d,%d", socketId, port);
 	return sendAndParseATCommand(buffer, result, 5000) == MODEM_OK;
 }
 
@@ -180,7 +187,7 @@ bool Modem::writeSocket(std::wstring data)
 	setHexMode(true);
 	std::vector<std::string> result;
 	char buffer[4096];
-	sprintf_s(buffer, "AT+USOWR=%d,%zd,\"%s\"", socketId, data.length(), ToHex(WstringToString(data)).c_str());
+	snprintf(buffer, 4096, "AT+USOWR=%d,%zd,\"%s\"", socketId, data.length(), toHex(WstringToString(data)).c_str());
 	if (sendAndParseATCommand(buffer, result, 10000) != MODEM_OK) {
 		//do something? notify or what
 	}
@@ -201,7 +208,7 @@ std::string Modem::readSocket(int socketID, int bufferLen)
 	setHexMode(true);
 	std::vector<std::string> result;
 	char buffer[4096];
-	sprintf_s(buffer, "AT+USORD=%d,%d", socketID, bufferLen);
+	snprintf(buffer, 4096, "AT+USORD=%d,%d", socketID, bufferLen);
 	sendAndParseATCommand(buffer, result);
 	std::string response;
 	if (result.size() > 0) {
@@ -211,7 +218,7 @@ std::string Modem::readSocket(int socketID, int bufferLen)
 		}
 	}
 
-	response = hex2bin(response);
+	response = fromHex(response);
 
 	setHexMode(false);
 	return response;
@@ -300,7 +307,7 @@ SMS Modem::popRecievedSMS()
 					oldestIndex = currentIndex;
 					if (oldestIndex > 0) {
 						char buffer[32];
-						sprintf_s(buffer, "AT+CMGD=%d", oldestIndex);
+						snprintf(buffer, 32, "AT+CMGD=%d", oldestIndex);
 						sendATCommand(buffer);
 						return SMS(*oldest);
 					}
@@ -324,6 +331,92 @@ void Modem::setHexMode(bool state)
 	sendATCommand("AT+UDCONF=1," + mode);
 }
 
+bool Modem::connect()
+{
+#ifdef USERAS
+	// Dial a RAS entry in synchronous mode
+	hRasConn = NULL;
+	RASDIALPARAMS rasDialParams;
+
+	// Setup the RASDIALPARAMS structure for the entry we want
+	// to dial
+	memset(&rasDialParams, 0, sizeof(RASDIALPARAMS));
+
+	rasDialParams.dwSize = sizeof(RASDIALPARAMS);
+	wsprintf(rasDialParams.szEntryName, profileName.c_str());
+
+	//auto retval = RasDial(NULL, NULL, &rasDialParams, 0L, (LPVOID)RasDialCallbackFunc, &hRasConn);
+	auto retval = RasDial(NULL, NULL, &rasDialParams, 0L, NULL, &hRasConn);
+	if (retval != SUCCESS) {
+		wprintf(L"Encountered errer " + retval);
+		return FALSE;
+	}
+#endif
+	return true;
+}
+
+bool Modem::setTimezoneConfiguration()
+{
+	bool zoneSync = sendATCommand("AT+CTZU=1");
+	bool zoneURC = sendATCommand("AT+CTZR=1");
+	return zoneSync & zoneURC;
+}
+
+bool Modem::checkRegistered(std::string atCommand)
+{
+	std::vector<std::string> result;
+	if (sendAndParseATCommand(atCommand, result) == MODEM_OK) {
+		std::vector<std::string> parts = ofSplitString(result.back().substr(result.back().find(":")), ",");
+		if (parts.size() < 2) {
+			return false;
+		}
+		return parts[1] == "5" || parts[1] == "1";
+	}
+	return false;
+}
+
+void Modem::parsePDU(std::string header, std::string pdu, SMS * sms, int & index)
+{
+//	try :
+//		if not header.startswith("+CMGL: ") :
+//			return None, None
+//
+//			index, stat, alpha, length = header[7:].split(',')
+//
+//			// parse PDU
+//			smsc_len = int(pdu[0:2], 16)
+//
+//			// smsc_number_type = int(pdu[2:4], 16)
+//// if smsc_number_type != 0x81 and smsc_number_type != 0x91: return (-2, hex(smsc_number_type))
+//			offset = smsc_len * 2 + 3
+//
+//			sender, offset = self._parse_sender(pdu, offset)
+//
+//			if pdu[offset:offset + 4] != '0000' :
+//				return None, None
+//
+//				offset += 4
+//
+//				timestamp, offset = self._parse_timestamp(pdu, offset)
+//				message, offset = self._parse_message(pdu, offset)
+//
+//				return SMS(sender, timestamp, message), index
+//
+//				except ValueError as e :
+//	self.logger.error(repr(e))
+//
+//		return None, None
+}
+
+ModemResult Modem::determineModemResult(std::string result)
+{
+	if (result == "OK") {
+		return MODEM_OK;
+	}
+	return MODEM_ERROR;
+}
+
+#ifdef USERAS
 bool Modem::setupRASConnection(std::wstring modemName, std::wstring connName)
 {
 	wchar_t tchNewEntry[MAX_PATH + 1] = TEXT("\0");
@@ -370,36 +463,6 @@ bool Modem::setupRASConnection(std::wstring modemName, std::wstring connName)
 	return true;
 }
 
-bool Modem::connect()
-{
-	// Dial a RAS entry in synchronous mode
-	hRasConn = NULL;
-	RASDIALPARAMS rasDialParams;
-
-	// Setup the RASDIALPARAMS structure for the entry we want
-	// to dial
-	memset(&rasDialParams, 0, sizeof(RASDIALPARAMS));
-
-	rasDialParams.dwSize = sizeof(RASDIALPARAMS);
-	wsprintf(rasDialParams.szEntryName, profileName.c_str());
-
-	//auto retval = RasDial(NULL, NULL, &rasDialParams, 0L, (LPVOID)RasDialCallbackFunc, &hRasConn);
-	auto retval = RasDial(NULL, NULL, &rasDialParams, 0L, NULL, &hRasConn);
-	if (retval != SUCCESS) {
-		wprintf(L"Encountered errer " + retval);
-		return FALSE;
-	}
-	return true;
-}
-
-bool Modem::setTimezoneConfiguration()
-{
-	bool zoneSync = sendATCommand("AT+CTZU=1");
-	bool zoneURC = sendATCommand("AT+CTZR=1");
-	return zoneSync & zoneURC;
-}
-
-//static functions
 std::vector<LPRASDEVINFO> Modem::getConnectedModems() {
 
 	DWORD dwCb = 0;
@@ -532,60 +595,6 @@ Done:
 	{
 		LocalFree(pRasEntry);
 	}
-}
-
-bool Modem::checkRegistered(std::string atCommand)
-{
-	std::vector<std::string> result;
-	if (sendAndParseATCommand(atCommand, result) == MODEM_OK) {
-		std::vector<std::string> parts = ofSplitString(result.back().substr(result.back().find(":")), ",");
-		if (parts.size() < 2) {
-			return false;
-		}
-		return parts[1] == "5" || parts[1] == "1";
-	}
-	return false;
-}
-
-void Modem::parsePDU(std::string header, std::string pdu, SMS * sms, int & index)
-{
-	try :
-		if not header.startswith("+CMGL: ") :
-			return None, None
-
-			index, stat, alpha, length = header[7:].split(',')
-
-			// parse PDU
-			smsc_len = int(pdu[0:2], 16)
-
-			// smsc_number_type = int(pdu[2:4], 16)
-// if smsc_number_type != 0x81 and smsc_number_type != 0x91: return (-2, hex(smsc_number_type))
-			offset = smsc_len * 2 + 3
-
-			sender, offset = self._parse_sender(pdu, offset)
-
-			if pdu[offset:offset + 4] != '0000' :
-				return None, None
-
-				offset += 4
-
-				timestamp, offset = self._parse_timestamp(pdu, offset)
-				message, offset = self._parse_message(pdu, offset)
-
-				return SMS(sender, timestamp, message), index
-
-				except ValueError as e :
-	self.logger.error(repr(e))
-
-		return None, None
-}
-
-ModemResult Modem::determineModemResult(std::string result)
-{
-	if (result == "OK") {
-		return MODEM_OK;
-	}
-	return MODEM_ERROR;
 }
 
 void Modem::determineOFlags(DWORD flag)
@@ -778,3 +787,4 @@ void Modem::determineO2Flags(DWORD flag)
 		printf_s("RASEO2_IsPrivateNetwork\n");
 	}
 }
+#endif

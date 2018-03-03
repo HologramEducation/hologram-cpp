@@ -1,6 +1,6 @@
 #pragma once
-#include "Base\Network.h"
-#include "Modems\Base\Modem.h"
+#include "Base/Network.h"
+#include "Modems/Base/Modem.h"
 #include "Cellular.h"
 
 #define DEFAULT_NETWORK_TIMEOUT  200

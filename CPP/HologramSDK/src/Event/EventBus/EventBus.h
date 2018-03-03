@@ -94,7 +94,7 @@ public:
 	 *
 	 * @param e The event to fire
 	 */
-	static void FireEvent(Event & e) {
+	static void FireEvent(const Event & e) {
 		std::shared_ptr<EventBus> pInstance = GetInstance();
 
 		std::shared_ptr<std::list<EventRegistrationPtr>> pRegistrations = pInstance->handlers[typeid(e)];

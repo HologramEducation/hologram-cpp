@@ -22,7 +22,8 @@ std::string Nova_R404::sendMessage(std::wstring message)
 	while (urcState != SOCKET_SEND_READ && urcState != SOCKET_CLOSED) {
 		checkURC();
 		write("");
-		Sleep(RETRY_DELAY);
+        std::chrono::milliseconds timespan(RETRY_DELAY);
+        std::this_thread::sleep_for(timespan);
 	}
 	if (urcState == SOCKET_SEND_READ) {
 		EventBus::FireEvent(MessageRecievedEvent());

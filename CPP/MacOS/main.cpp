@@ -1,4 +1,4 @@
-#include "Cloud\HologramCloud.h"
+#include "Cloud/HologramCloud.h"
 #include <iostream>
 
 class EventListener : public EventHandler<MessageRecievedEvent>,  public EventHandler<MessageSentEvent>, public EventHandler<ConnectionEvent>
