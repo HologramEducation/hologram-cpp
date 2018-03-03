@@ -9,6 +9,7 @@
 #include <ctime>
 
 #ifdef _MSC_VER
+//#define USERAS 1
 #include <windows.h>
 
 #endif
@@ -30,7 +31,7 @@ typedef struct _SMS {
 
 // All functions prepended with of are taken from Openframeworks
 //https://stackoverflow.com/questions/18906027/missing-punctuation-from-c-hex2bin
-static std::string hex2bin(std::string const& s) {
+static std::string fromHex(std::string const& s) {
 	if (s.length() % 2 != 0) {
 		return "";
 	}
@@ -47,7 +48,7 @@ static std::string hex2bin(std::string const& s) {
 	return sOut;
 }
 
-static std::string ToHex(const std::string& s)
+static std::string toHex(const std::string& s)
 {
 	std::ostringstream ret;
 
@@ -73,37 +74,6 @@ static std::string WstringToString(std::wstring source) {
 	std::string retStr = buffer;
 	delete[] buffer;
 	return retStr;
-}
-
-static bool StringToWstring(unsigned int nCodePage, const std::string& str, std::wstring& wstr)
-{
-	bool fRet = false;
-	wchar_t* pBuffer = NULL;
-	size_t nSize = 0;
-
-	if (str.empty())
-		return false;
-
-	nSize = str.size();
-	pBuffer = new wchar_t[nSize + 1];
-	if (!pBuffer)
-		return false;
-
-	memset(pBuffer, 0, sizeof(wchar_t) * (nSize + 1));
-
-	if (!MultiByteToWideChar(nCodePage, 0, str.c_str(), nSize, pBuffer, nSize + 1))
-		goto END;
-
-	wstr = pBuffer;
-
-	// Done
-	fRet = true;
-
-END:
-	if (pBuffer)
-		delete[] pBuffer;
-
-	return fRet;
 }
 
 //--------------------------------------------------

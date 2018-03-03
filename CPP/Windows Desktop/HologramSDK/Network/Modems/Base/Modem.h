@@ -1,5 +1,6 @@
 #pragma once
 #include "Serial.h"
+
 #ifdef _MSC_VER
 #pragma comment(lib, "rasapi32.lib")
 #include "ras.h"
@@ -59,6 +60,13 @@ public:
 
 	//Cellular
 	bool connect();
+	void disconnect() {
+#ifdef USERAS
+		if (hRasConn != NULL) {
+			RasHangUp(hRasConn);
+		}
+#endif
+	}
 	bool setTimezoneConfiguration();
 	virtual void setNetworkRegistrationStatus() = 0;
 	std::string popRecievedMessage();
@@ -96,6 +104,9 @@ public:
 	}
 	virtual void populateModemInformation() = 0;
 
+#ifdef _MSC_VER
+
+#ifdef USERAS
 	//RAS Stuff
 	bool setupRASConnection(std::wstring modemName, std::wstring connName);
 
@@ -105,18 +116,29 @@ public:
 		return rasConnStatus;
 	}
 
-	void disconnect() {
-		if (hRasConn != NULL) {
-			RasHangUp(hRasConn);
-		}
-	}
-
 	RASCONNSTATE getConnectionState() {
 		return connState;
 	}
 
 	static std::vector<LPRASDEVINFO> getConnectedModems();
 	static void getConnectionProfiles();
+
+private:
+	HRASCONN hRasConn;
+	RASCONNSTATE connState;
+	RASCONNSTATUS rasConnStatus;
+
+	void updateConnectionStatus() {
+		rasConnStatus.dwSize = sizeof(RASCONNSTATUS);
+		RasGetConnectStatus(hRasConn, &rasConnStatus);
+		connState = rasConnStatus.rasconnstate;
+	}
+
+	static void determineOFlags(DWORD flag);
+	static void determineO2Flags(DWORD flag);
+#endif
+
+#endif
 
 	MODEM_INFO modemInfo;
 protected:
@@ -127,22 +149,10 @@ protected:
 	int last_read_payload_length;
 	unsigned char socketId;
 private:
-	HRASCONN hRasConn;
-	RASCONNSTATE connState;
-	RASCONNSTATUS rasConnStatus;
 	std::wstring profileName;
 	
 	std::deque<std::string> socketBuffer;
 
 	ModemResult determineModemResult(std::string result);
-
-	void updateConnectionStatus() {
-		rasConnStatus.dwSize = sizeof(RASCONNSTATUS);
-		RasGetConnectStatus(hRasConn, &rasConnStatus);
-		connState = rasConnStatus.rasconnstate;
-	}
-
-	static void determineOFlags(DWORD flag);
-	static void determineO2Flags(DWORD flag);
 };
 

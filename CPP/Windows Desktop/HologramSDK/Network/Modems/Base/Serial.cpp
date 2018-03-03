@@ -3,6 +3,7 @@
 
 bool Serial::setupSerialPort(std::wstring port, DWORD baud)
 {
+#ifdef _MSC_VER
 	std::string strResult;
 	DCB dcb = { 0 };
 
@@ -22,12 +23,13 @@ bool Serial::setupSerialPort(std::wstring port, DWORD baud)
 		return false;
 
 	PurgeComm(m_hCom, PURGE_TXCLEAR | PURGE_TXABORT | PURGE_RXCLEAR | PURGE_RXABORT);
-
+#endif
 	return true;
 }
 
 bool Serial::write(std::string message)
 {
+#ifdef _MSC_VER
 	std::cout << message << std::endl;
 
 	DWORD dwOut = 0;
@@ -42,11 +44,14 @@ bool Serial::write(std::string message)
 	}
 
 	WaitCommEvent(m_hCom, &dwEvtMask, NULL);  // Wait tx operation done.
+#endif
+
 	return true;
 }
 
 bool Serial::read(std::string & buffer, bool waitForBuffer)
 {
+#ifdef _MSC_VER
 	DWORD dwOut = 0;
 	DWORD dwEvtMask = 0;
 	char* pBuffer = NULL;
@@ -85,28 +90,34 @@ bool Serial::read(std::string & buffer, bool waitForBuffer)
 
 	buffer = pBuffer;
 	std::cout << buffer << std::endl;
+#endif
 
 	return true;
 }
 
 void Serial::setTimeout(int timeout)
 {
+#ifdef _MSC_VER
 	COMMTIMEOUTS timeouts;
 	GetCommTimeouts(m_hCom, &timeouts);
 	timeouts.ReadIntervalTimeout = 50;
 	timeouts.ReadTotalTimeoutConstant = timeout;
 	timeouts.ReadTotalTimeoutMultiplier = 50;
 	SetCommTimeouts(m_hCom, &timeouts);
+#endif
 }
 
 bool Serial::IsInitialized()
 {
+#ifdef _MSC_VER
 	return (m_hCom && m_hCom != INVALID_HANDLE_VALUE) ? true : false;
+#endif
 }
 
 //https://stackoverflow.com/questions/7599331/list-usb-device-with-specified-vid-and-pid-without-using-windows-driver-kit
 bool Serial::isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name)
 {
+#ifdef _MSC_VER
 	WCHAR CurrentDevice[MAX_DEVICE_ID_LEN];
 	ULONG length;
 	CONFIGRET cr;
@@ -187,6 +198,7 @@ bool Serial::isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name)
 			++index;
 		}
 	}
+#endif
 	return false;
 }
 
@@ -194,6 +206,7 @@ bool Serial::isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name)
 
 std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
 	std::vector<SERIAL_DEVICE_INFO> devices;
+#ifdef _MSC_VER
 	WCHAR CurrentDevice[MAX_DEVICE_ID_LEN];
 	ULONG length;
 	CONFIGRET cr;
@@ -275,5 +288,6 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
 			++index;
 		}
 	}
+#endif
 	return devices;
 }
