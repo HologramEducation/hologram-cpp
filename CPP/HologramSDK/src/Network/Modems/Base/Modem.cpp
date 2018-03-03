@@ -298,7 +298,7 @@ SMS Modem::popRecievedSMS()
 	std::vector<std::string> result;
 	if (sendAndParseATCommand("AT+CMGL?", result, 20000) == MODEM_OK) {
 		int oldestIndex = 0, currentIndex = 0;
-		SMS * oldest, * current;
+		SMS * oldest = NULL, * current = NULL;
 		for (int i = 0; i < result.size()-1;i++) {
 			parsePDU(result[i], result[i + 1], current, currentIndex);
 			if (current != NULL) {
