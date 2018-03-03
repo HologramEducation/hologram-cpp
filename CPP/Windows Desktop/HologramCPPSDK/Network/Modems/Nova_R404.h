@@ -7,6 +7,8 @@ public:
 	Nova_R404();
 	~Nova_R404();
 
+	virtual std::string sendMessage(std::wstring message);
+
 	virtual void setNetworkRegistrationStatus();
 	virtual void initModemSerialMode();
 	virtual bool isRegistered();

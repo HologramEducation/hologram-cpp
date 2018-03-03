@@ -9,5 +9,6 @@
     <DeploymentDirectory>c:\deploy</DeploymentDirectory>
     <RemoteDebuggerDeployDebugCppRuntime>false</RemoteDebuggerDeployDebugCppRuntime>
     <DebuggerFlavor>WindowsRemoteDebugger</DebuggerFlavor>
+    <RemoteDebuggerCommandArguments>"kMxeK*iL" "K&amp;AKwdWB" "+14144290173"</RemoteDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

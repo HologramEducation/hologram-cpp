@@ -13,6 +13,26 @@ Nova_R404::~Nova_R404()
 {
 }
 
+std::string Nova_R404::sendMessage(std::wstring message)
+{
+	urcState = SOCKET_INIT;
+
+	writeSocket(message);
+
+	while (urcState != SOCKET_SEND_READ && urcState != SOCKET_CLOSED) {
+		checkURC();
+		write("");
+		Sleep(RETRY_DELAY);
+	}
+	if (urcState == SOCKET_SEND_READ) {
+		EventBus::FireEvent(MessageRecievedEvent());
+		return readSocket(socketId, last_read_payload_length);
+	}
+	else {
+		return "";
+	}
+}
+
 void Nova_R404::setNetworkRegistrationStatus()
 {
 	sendATCommand("AT+CEREG=2");
