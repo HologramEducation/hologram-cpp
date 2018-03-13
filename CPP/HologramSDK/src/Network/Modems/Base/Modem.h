@@ -1,7 +1,7 @@
 #pragma once
 #include "Serial.h"
 
-#ifdef _MSC_VER
+#ifdef TARGET_WIN32
 #pragma comment(lib, "rasapi32.lib")
 #include "ras.h"
 #include "raserror.h"
@@ -104,7 +104,9 @@ public:
 	}
 	virtual void populateModemInformation() = 0;
 
-#ifdef _MSC_VER
+	MODEM_INFO modemInfo;
+
+#ifdef TARGET_WIN32
 
 #ifdef USERAS
 	//RAS Stuff
@@ -127,6 +129,7 @@ private:
 	HRASCONN hRasConn;
 	RASCONNSTATE connState;
 	RASCONNSTATUS rasConnStatus;
+	std::wstring profileName;
 
 	void updateConnectionStatus() {
 		rasConnStatus.dwSize = sizeof(RASCONNSTATUS);
@@ -139,18 +142,17 @@ private:
 #endif
 
 #endif
-
-	MODEM_INFO modemInfo;
 protected:
 	bool checkRegistered(std::string atCommand);
 	void parsePDU(std::string header, std::string pdu, SMS * sms, int & index);
+	std::wstring parseSender(std::string pdu, int & offset);
+	time_t parseTimestamp(std::string pdu, int & offset);
+	std::wstring parseMessage(std::string pdu, int & offset);
 	std::string name;
 	URCState urcState;
 	int last_read_payload_length;
 	unsigned char socketId;
-private:
-	std::wstring profileName;
-	
+private:	
 	std::deque<std::string> socketBuffer;
 
 	ModemResult determineModemResult(std::string result);

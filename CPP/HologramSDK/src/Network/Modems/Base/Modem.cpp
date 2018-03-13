@@ -2,21 +2,26 @@
 
 Modem::Modem()
 {
-#ifdef _MSC_VER
+#ifdef TARGET_WIN32
 	m_hCom = NULL;
 #ifdef USERAS
 	hRasConn = NULL;
 #endif
+#else
+	fd = -1;
 #endif
 	urcState = SOCKET_INIT;
 }
 
 Modem::~Modem()
 {
-#ifdef _MSC_VER
+#ifdef TARGET_WIN32
 	if (m_hCom && m_hCom != INVALID_HANDLE_VALUE) {
 		CloseHandle(m_hCom);
 	}
+#else
+	tcsetattr(fd, TCSANOW, &oldoptions);
+	::close(fd);
 #endif
 	disconnect();
 }
@@ -30,12 +35,12 @@ ModemResult Modem::parseATCommandResult(std::string strATCommand, std::string& s
 	ofStringReplace(strResult, "\r", "");
 	ofStringReplace(strResult, ";;", ";");
 
-	while(strResult[0] == ';') {
+	while (strResult[0] == ';') {
 		strResult.erase(0, 1);
 	}
 
 	resultArray = ofSplitString(strResult, ";");
-	
+
 	std::string result = resultArray.back();
 	resultArray.pop_back();
 	return determineModemResult(result);
@@ -74,11 +79,11 @@ bool Modem::sendATCommand(std::string strATCommand, std::string& strOutput, unsi
 ModemResult Modem::sendAndParseATCommand(std::string command, std::vector<std::string>& resultArray, unsigned int waitTIme)
 {
 	std::string strOutput;
-	
+
 	if (!sendATCommand(command, strOutput, waitTIme)) {
 		return MODEM_ERROR;
 	}
-	
+
 	return parseATCommandResult(command, strOutput, resultArray);
 }
 
@@ -88,10 +93,10 @@ std::string Modem::sendMessage(std::wstring message)
 
 	writeSocket(message);
 
-	while (urcState != SOCKET_SEND_READ && urcState != SOCKET_CLOSED ) {
+	while (urcState != SOCKET_SEND_READ && urcState != SOCKET_CLOSED) {
 		checkURC();
-        std::chrono::milliseconds timespan(RETRY_DELAY);
-        std::this_thread::sleep_for(timespan);
+		std::chrono::milliseconds timespan(RETRY_DELAY);
+		std::this_thread::sleep_for(timespan);
 	}
 	if (urcState == SOCKET_SEND_READ) {
 		EventBus::FireEvent(MessageRecievedEvent());
@@ -214,7 +219,7 @@ std::string Modem::readSocket(int socketID, int bufferLen)
 	if (result.size() > 0) {
 		if (!result[0].empty()) {
 			std::string atbuffer = buffer;
-			response = result[0].substr(atbuffer.length()+1, bufferLen*2);
+			response = result[0].substr(atbuffer.length() + 1, bufferLen * 2);
 		}
 	}
 
@@ -298,8 +303,8 @@ SMS Modem::popRecievedSMS()
 	std::vector<std::string> result;
 	if (sendAndParseATCommand("AT+CMGL?", result, 20000) == MODEM_OK) {
 		int oldestIndex = 0, currentIndex = 0;
-		SMS * oldest = NULL, * current = NULL;
-		for (int i = 0; i < result.size()-1;i++) {
+		SMS * oldest = NULL, *current = NULL;
+		for (int i = 0; i < result.size() - 1; i++) {
 			parsePDU(result[i], result[i + 1], current, currentIndex);
 			if (current != NULL) {
 				if (oldest == NULL || current->timestamp < oldest->timestamp) {
@@ -345,7 +350,6 @@ bool Modem::connect()
 	rasDialParams.dwSize = sizeof(RASDIALPARAMS);
 	wsprintf(rasDialParams.szEntryName, profileName.c_str());
 
-	//auto retval = RasDial(NULL, NULL, &rasDialParams, 0L, (LPVOID)RasDialCallbackFunc, &hRasConn);
 	auto retval = RasDial(NULL, NULL, &rasDialParams, 0L, NULL, &hRasConn);
 	if (retval != SUCCESS) {
 		wprintf(L"Encountered errer " + retval);
@@ -377,35 +381,101 @@ bool Modem::checkRegistered(std::string atCommand)
 
 void Modem::parsePDU(std::string header, std::string pdu, SMS * sms, int & index)
 {
-//	try :
-//		if not header.startswith("+CMGL: ") :
-//			return None, None
-//
-//			index, stat, alpha, length = header[7:].split(',')
-//
-//			// parse PDU
-//			smsc_len = int(pdu[0:2], 16)
-//
-//			// smsc_number_type = int(pdu[2:4], 16)
-//// if smsc_number_type != 0x81 and smsc_number_type != 0x91: return (-2, hex(smsc_number_type))
-//			offset = smsc_len * 2 + 3
-//
-//			sender, offset = self._parse_sender(pdu, offset)
-//
-//			if pdu[offset:offset + 4] != '0000' :
-//				return None, None
-//
-//				offset += 4
-//
-//				timestamp, offset = self._parse_timestamp(pdu, offset)
-//				message, offset = self._parse_message(pdu, offset)
-//
-//				return SMS(sender, timestamp, message), index
-//
-//				except ValueError as e :
-//	self.logger.error(repr(e))
-//
-//		return None, None
+	if (header.length() > 7 && header.substr(0, 7) == "+CMGL: ") {
+		std::vector<std::string> headers = ofSplitString(header.substr(7), ",");
+		if (headers.size() > 3) {
+			std::string stat, alpha, length;
+			index = stoi(headers.at(0));
+			stat = headers.at(1);
+			alpha = headers.at(2);
+			length = headers.at(3);
+
+
+			// parse PDU
+			unsigned char hexVal = fromHex(pdu.substr(0, 2))[0];
+			int smsc_len = int(hexVal); //convert from hex to int
+
+			// smsc_number_type = int(pdu[2:4], 16)
+			// if smsc_number_type != 0x81 and smsc_number_type != 0x91: return (-2, hex(smsc_number_type))
+			int offset = smsc_len * 2 + 3;
+
+			std::wstring sender = parseSender(pdu, offset);
+
+			if (pdu.substr(offset, 4) == "0000") {
+				offset += 4;
+
+				time_t timestamp = parseTimestamp(pdu, offset);
+				std::wstring message = parseMessage(pdu, offset);
+
+				sms = new SMS(sender, timestamp, message);
+			}
+		}
+	}
+}
+
+std::wstring Modem::parseSender(std::string pdu, int & offset)
+{
+	int sms_deliver = int(((unsigned char)fromHex(pdu.substr(offset, 1))[0]));
+	std::wstring sender;
+	if ((sms_deliver & 0x03) == 0) {
+		offset += 1;
+		int sender_len = int(((unsigned char)fromHex(pdu.substr(offset, 2))[0]));
+		offset += 2;
+		int sender_number_type = int(((unsigned char)fromHex(pdu.substr(offset, 2))[0]));
+		offset += 2;
+		int sender_read = sender_len;
+		if ((sender_read & 1) != 0)
+			sender_read += 1;
+		std::string sender_raw = pdu.substr(offset, sender_read);
+		if ((sender_number_type & 0x50) == 0x50) {
+			//GSM - 7
+			sender = convertGSM7to8bit(sender_raw, sender_len * 4 / 7);
+		}
+		else {
+			//switch every pair of characters
+			sender = StringToWstring(switchCharPairs(sender_raw));
+		}
+		if ((sender_read & 1) != 0) {
+			sender = sender.substr(0, sender.length() - 1);
+		}
+		offset += sender_read;
+	}
+	return sender;
+}
+
+time_t Modem::parseTimestamp(std::string pdu, int & offset)
+{
+	std::tm tm;
+	std::string timestamp_raw = pdu.substr(offset, 14);
+	//switch every pair of characters
+	std::string timestamp = switchCharPairs(timestamp_raw);
+	std::istringstream ss(timestamp);
+	
+	//datetime is given in this format '%y%m%d%H%M%S' 
+	ss >> std::get_time(&tm, "%y%m%d%H%M%S");
+	time_t unixTm = mktime(&tm);
+
+	int tz_byte = int(((unsigned char)fromHex(pdu.substr(timestamp.length() - 2))[0]));
+	int tz_bcd = ((tz_byte & 0x70) >> 4) * 10 + (tz_byte & 0x0F);
+
+	int delta = 60 * 15 * tz_bcd; //15 minute intervals because there are weird timezones
+
+	// adjust to UTC from Service Center timestamp
+	if ((tz_byte & 0x80) == 0x80) {
+		unixTm += delta;
+	}
+	else {
+		unixTm -= delta;
+	}
+	return unixTm;
+}
+
+std::wstring Modem::parseMessage(std::string pdu, int & offset)
+{
+	offset += 14;
+	int msg_len = int(((unsigned char)fromHex(pdu.substr(offset, 2))[0]));
+	offset += 2;
+	return convertGSM7to8bit(pdu.substr(offset), msg_len);
 }
 
 ModemResult Modem::determineModemResult(std::string result)
@@ -426,7 +496,7 @@ bool Modem::setupRASConnection(std::wstring modemName, std::wstring connName)
 	// Validate the entry name
 	if (RasValidateEntryName(NULL, tchNewEntry) != ERROR_ALREADY_EXISTS) {
 
-		// Set up the RASENTRY structure. Use the country/area codes
+		// Set up the RASENTRY structure
 		RASENTRY rasEntry;
 		DWORD dwResult = 0;
 		memset(&rasEntry, 0, sizeof(RASENTRY));
@@ -457,7 +527,36 @@ bool Modem::setupRASConnection(std::wstring modemName, std::wstring connName)
 		}
 	}
 	else {
-		//get the current settings and make sure they are right here
+		// update the current settings and make sure they are right
+		// Set up the RASENTRY structure
+		RASENTRY rasEntry;
+		DWORD dwResult = 0;
+		memset(&rasEntry, 0, sizeof(RASENTRY));
+
+		rasEntry.dwSize = sizeof(RASENTRY);
+		wsprintf(rasEntry.szDeviceName, modemName.c_str());
+		wsprintf(rasEntry.szDeviceType, RASDT_Modem);
+		wsprintf(rasEntry.szLocalPhoneNumber, TEXT("*99***1#"));
+		rasEntry.dwFramingProtocol = RASFP_Ppp;
+		rasEntry.dwType = RASET_Phone;
+		rasEntry.dwfNetProtocols = RASNP_Ip;
+		rasEntry.dwEncryptionType = ET_Optional;
+		rasEntry.dwfOptions = RASEO_IpHeaderCompression | RASEO_RemoteDefaultGateway | RASEO_SwCompression | RASEO_ModemLights;
+		rasEntry.dwfOptions2 = RASEO2_SecureFileAndPrint | RASEO2_SecureClientForMSNet | RASEO2_DontUseRasCredentials | RASEO2_Internet | RASEO2_DisableNbtOverIP | RASEO2_IPv6RemoteDefaultGateway;
+
+		// Create the entry
+		dwResult = RasSetEntryProperties(NULL, tchNewEntry, &rasEntry,
+			sizeof(RASENTRY), NULL, 0);
+
+		// Check for any errors
+		if (dwResult != 0) {
+			TCHAR tchError[256] = TEXT("\0");
+
+			// Print out the error
+			wsprintf(tchError, TEXT("Could not create entry -- Error %ld"),
+				dwResult);
+			return false;
+		}
 	}
 	connState = RASCS_Disconnected;
 	return true;
