@@ -73,6 +73,7 @@ void Nova_U201::populateModemInformation()
 		modemInfo.Model = StringToWstring(result[0]);
 	}
 	if (sendAndParseATCommand("AT+CCID?", result) == MODEM_OK) {
+		ofStringReplace(result[0], "+CCID: ", "");
 		modemInfo.ICCID = StringToWstring(result[0]);
 	}
 }
