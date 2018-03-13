@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <cstdio>
 #include <vector>
 #include <locale>
@@ -10,10 +10,22 @@
 #include <cstdlib>
 #include <chrono>
 #include <thread>
+#include <map>
 
-#ifdef _MSC_VER
-//#define USERAS 1
+#if defined( __WIN32__ ) || defined( _WIN32 )
+#define TARGET_LINUX//TARGET_WIN32
+#define _CRT_SECURE_NO_WARNINGS
+#define USERAS 1
 #include <windows.h>
+#elif defined( __APPLE_CC__)
+#define TARGET_OSX
+#elif defined (__ANDROID__)
+#define TARGET_ANDROID
+#elif defined(__ARMEL__)
+#define TARGET_LINUX
+#define TARGET_LINUX_ARM
+#else
+#define TARGET_LINUX
 #endif
 
 typedef struct _LOCATION {
@@ -26,10 +38,28 @@ typedef struct _LOCATION {
 }LOCATION;
 
 typedef struct _SMS {
+	_SMS(std::wstring sender, time_t timestamp, std::wstring message) :
+		sender(sender), timestamp(timestamp), message(message) {
+
+	}
+	_SMS() {}
 	std::wstring sender;
 	time_t timestamp;
 	std::wstring message;
 }SMS;
+
+const std::wstring GSM = L"@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞ ÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà";
+static std::map<char, wchar_t> EXT = { 
+	{ 0x40, L'|' }, 
+	{ 0x14, L'^' }, 
+	{ 0x65, L'€' }, 
+	{ 0x28, L'{' }, 
+	{ 0x29, L'}' }, 
+	{ 0x3C, L'[' }, 
+	{ 0x3D, L'~' }, 
+	{ 0x3E, L']' }, 
+	{ 0x2F, L'\\'} 
+};
 
 // All functions prepended with of are taken from Openframeworks
 //https://stackoverflow.com/questions/18906027/missing-punctuation-from-c-hex2bin
@@ -55,28 +85,74 @@ static std::string toHex(const std::string& s)
 	std::ostringstream ret;
 
 	for (std::string::size_type i = 0; i < s.length(); ++i)
-		ret << std::hex << std::setfill('0') << std::setw(2) <<  std::nouppercase << (int)s[i];
+		ret << std::hex << std::setfill('0') << std::setw(2) << std::nouppercase << (int)s[i];
 
 	return ret.str();
 }
 
+static wchar_t gsm7toChar(char gsmChar, bool & inExtended) {
+	if (inExtended) {
+		inExtended = false;
+		if (EXT.count(gsmChar) > 0) {
+			return EXT[gsmChar];
+		}
+	}
+	else if (gsmChar == 0x1B) {
+		inExtended = true;
+		return ' ';
+	}
+	else if (gsmChar < GSM.length())
+		return GSM[gsmChar];
+	return ' ';
+}
+
+static std::wstring convertGSM7to8bit(std::string message, int msg_len) {
+	int last = 0;
+	int current = 0;
+	int i = 0;
+	std::wstring msg;
+	bool inExt = false;
+	for (int count = 0; count < msg_len; count++) {
+		int offset = count % 8;
+		last = current;
+		if (offset < 7) {
+			current = int(((unsigned char)fromHex(message.substr(i * 2, 2))[0]));
+			i += 1;
+			char gsmChar = (last >> (8 - offset)) | (current << offset);
+			msg += gsm7toChar(gsmChar & 0x7F, inExt);
+		}
+	}
+	return msg;
+}
+
+static std::string switchCharPairs(std::string strToSwap) {
+	std::string swappedString;
+	if (strToSwap.length() % 2 == 0) {
+		for (int i = 0; i < strToSwap.length(); i += 2) {
+			std::string swapPair = strToSwap.substr(i, 2);
+			swappedString += swapPair[1] + swapPair[0];
+		}
+	}
+	return swappedString;
+}
+
 static std::wstring StringToWstring(std::string source) {
-	wchar_t *wbuffer = new wchar_t[source.length() + 1];
-	mbstowcs(wbuffer, source.c_str(), source.length());
+	wchar_t *wbuffer = (wchar_t *)malloc((source.length() + 1) * sizeof(wchar_t));
+	size_t len = mbstowcs(wbuffer, source.c_str(), source.length());
 	std::wstring retWstr = wbuffer;
 	delete[] wbuffer;
-	return retWstr;
+	return retWstr.substr(0, len);
 }
 
 static std::string WstringToString(std::wstring source) {
 	char *buffer = new char[source.length() + 1];
-	wcstombs(buffer, source.c_str(), source.length());
+	size_t len = wcstombs(buffer, source.c_str(), source.length());
 	std::string retStr = buffer;
 	delete[] buffer;
-	return retStr;
+	return retStr.substr(0, len);
 }
 
-//--------------------------------------------------
+//--------------------Openframeworks String Manipulation ------------------------------
 static std::string ofTrimFront(const std::string & src, const std::string& locale) {
 	auto dst = src;
 	std::locale loc = std::locale(locale.c_str());

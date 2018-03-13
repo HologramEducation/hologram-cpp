@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../Utils/Utils.h"
 
-#ifdef _MSC_VER
+#ifdef TARGET_WIN32
 #pragma comment(lib, "Cfgmgr32.lib")
 #include <cfgmgr32.h>
 #include <initguid.h>
@@ -11,6 +11,13 @@
 //Modem GUID {2C7089AA-2E0E-11D1-B114-00C04FC2AAE4}
 DEFINE_GUID(GUID_DEVINTERFACE_MODEM, 0x2C7089AA, 0x2E0E,
 	0x11D1, 0xB1, 0x14, 0x00, 0xC0, 0x4F, 0xC2, 0xAA, 0xE4);
+#else
+#include <termios.h>
+#include <sys/ioctl.h>
+#include <getopt.h>
+#include <dirent.h>
+#include <errno.h>
+#include <fstream>
 #endif
 
 typedef struct _SERIAL_DEVICE_INFO {
@@ -34,16 +41,13 @@ public:
 
 	static bool isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name);
 	static std::vector<SERIAL_DEVICE_INFO> getConnectedSerialDevices();
-protected:
-	bool IsInitialized();
-#ifdef _MSC_VER
-    HANDLE m_hCom;
 private:
-	static bool parseVidPid(std::wstring deviceId, SERIAL_DEVICE_INFO & device)
+	static bool parseVidPid(std::wstring device, SERIAL_DEVICE_INFO & deviceInfo)
 	{
+#ifdef TARGET_WINDOWS
 		// parse out the VID number
-		std::string::size_type vpos = deviceId.find(L"VID_");
-		std::string::size_type ppos = deviceId.find(L"PID_");
+		std::string::size_type vpos = device.find(L"VID_");
+		std::string::size_type ppos = device.find(L"PID_");
 
 		if (vpos == std::wstring::npos) {
 			wprintf(L"Failed to locate the VID");
@@ -56,12 +60,25 @@ private:
 			return false;
 		}
 
-		device.vid = deviceId.substr(vpos, 4);
-		device.pid = deviceId.substr(ppos, 4);
-
+		deviceInfo.vid = device.substr(vpos, 4);
+		deviceInfo.pid = device.substr(ppos, 4);
+#else
+		std::string line;
+		std::ifstream infile(device+L"idVendor");
+		std::getline(infile, line);
+		deviceInfo.vid = StringToWstring(line);
+		
+		infile = std::ifstream (device+L"idProduct");
+		std::getline(infile, line);
+		deviceInfo.pid = StringToWstring(line);
+#endif
 		return true;
 	}
-
+protected:
+	bool IsInitialized();
+#ifdef TARGET_WIN32
+	HANDLE m_hCom;
+private:
 	static bool isCorrectDevice(std::wstring deviceId, SERIAL_DEVICE_INFO device, std::wstring name)
 	{
 		// parse out the VID number
@@ -124,5 +141,9 @@ private:
 			0);
 		return DeviceDesc;
 	}
+#else
+protected:
+	int fd; 
+	struct termios oldoptions;
 #endif
 };
