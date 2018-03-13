@@ -2,10 +2,12 @@
 
 Cellular::Cellular()
 {
-	supportedModems.push_back("E303");
-	supportedModems.push_back("MS2131");
 	supportedModems.push_back("NOVA201");
 	supportedModems.push_back("NOVA404");
+	supportedModems.push_back("E303");
+	supportedModems.push_back("MS2131");
+	
+	
 
 	connectionState = CLOUD_DISCONNECTED;
 }
@@ -52,7 +54,15 @@ void Cellular::autoDectectModem()
 		if (modemName == "NOVA201") {
 			if (Serial::isDeviceConnected(Nova_U201::deviceInfo, L"MI_02")) {
 				modem = new Nova_U201();
-				modem->setupSerialPort(Nova_U201::deviceInfo.portName);
+				modem->setupSerialPort(Nova_U201::deviceInfo.portName);				
+#ifdef USERAS
+				for (auto device : Modem::getConnectedModems()) {
+					if (wcsstr(device->szDeviceName, L"AT DATA")) {
+						modem->setupRASConnection(device->szDeviceName, TEXT("Hologram Cellular Connection"));
+						break;
+					}
+				}
+#endif
 				modem->initModemSerialMode();
 				modem->populateModemInformation();
 				break;
@@ -62,6 +72,14 @@ void Cellular::autoDectectModem()
 			if (Serial::isDeviceConnected(Nova_R404::deviceInfo, L"MI_02")) {
 				modem = new Nova_R404();
 				modem->setupSerialPort(Nova_R404::deviceInfo.portName);
+#ifdef USERAS
+				for (auto device : Modem::getConnectedModems()) {
+					if (wcsstr(device->szDeviceName, L"Qualcomm HS-USB Modem") != nullptr) {
+						modem->setupRASConnection(device->szDeviceName, TEXT("Hologram Cellular Connection"));
+						break;
+					}
+				}
+#endif
 				modem->initModemSerialMode();
 				modem->populateModemInformation();
 				break;
