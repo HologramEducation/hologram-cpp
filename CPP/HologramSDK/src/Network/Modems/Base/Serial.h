@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../Utils/Utils.h"
 
-#ifdef TARGET_WIN32
+#ifdef TARGET_WINDOWS
 #pragma comment(lib, "Cfgmgr32.lib")
 #include <cfgmgr32.h>
 #include <initguid.h>
@@ -44,7 +44,7 @@ public:
 private:
 	static bool parseVidPid(std::wstring device, SERIAL_DEVICE_INFO & deviceInfo)
 	{
-#ifdef TARGET_WIN32
+#ifdef TARGET_WINDOWS
 		// parse out the VID number
 		std::string::size_type vpos = device.find(L"VID_");
 		std::string::size_type ppos = device.find(L"PID_");
@@ -76,7 +76,7 @@ private:
 	}
 protected:
 	bool IsInitialized();
-#ifdef TARGET_WIN32
+#ifdef TARGET_WINDOWS
 	HANDLE m_hCom;
 private:
 	static bool isCorrectDevice(std::wstring deviceId, SERIAL_DEVICE_INFO device, std::wstring name)

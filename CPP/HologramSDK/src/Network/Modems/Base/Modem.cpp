@@ -2,7 +2,7 @@
 
 Modem::Modem()
 {
-#ifdef TARGET_WIN32
+#ifdef TARGET_WINDOWS
 	m_hCom = NULL;
 #ifdef USERAS
 	hRasConn = NULL;
@@ -15,7 +15,7 @@ Modem::Modem()
 
 Modem::~Modem()
 {
-#ifdef TARGET_WIN32
+#ifdef TARGET_WINDOWS
 	if (m_hCom && m_hCom != INVALID_HANDLE_VALUE) {
 		CloseHandle(m_hCom);
 	}

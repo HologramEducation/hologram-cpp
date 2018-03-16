@@ -52,7 +52,11 @@ void Cellular::autoDectectModem()
 
 		}
 		if (modemName == "NOVA201") {
+#ifdef TARGET_WINDOWS
 			if (Serial::isDeviceConnected(Nova_U201::deviceInfo, L"MI_02")) {
+#else
+			if (Serial::isDeviceConnected(Nova_R404::deviceInfo, L"2")) {
+#endif
 				modem = new Nova_U201();
 				modem->setupSerialPort(Nova_U201::deviceInfo.portName);				
 #ifdef USERAS
@@ -62,6 +66,10 @@ void Cellular::autoDectectModem()
 						break;
 					}
 				}
+#elif defined(IOTCORE)
+				//IoT Core PPP code
+#else
+				//linux ppp code
 #endif
 				modem->initModemSerialMode();
 				modem->populateModemInformation();
@@ -69,7 +77,11 @@ void Cellular::autoDectectModem()
 			}
 		}
 		if (modemName == "NOVA404") {
+#ifdef TARGET_WINDOWS
 			if (Serial::isDeviceConnected(Nova_R404::deviceInfo, L"MI_02")) {
+#else
+			if (Serial::isDeviceConnected(Nova_R404::deviceInfo, L"2")) {
+#endif
 				modem = new Nova_R404();
 				modem->setupSerialPort(Nova_R404::deviceInfo.portName);
 #ifdef USERAS
@@ -79,6 +91,10 @@ void Cellular::autoDectectModem()
 						break;
 					}
 				}
+#elif defined(IOTCORE)
+				//IoT Core PPP code
+#else
+				//linux ppp code
 #endif
 				modem->initModemSerialMode();
 				modem->populateModemInformation();

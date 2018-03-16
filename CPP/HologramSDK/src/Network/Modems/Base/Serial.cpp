@@ -3,7 +3,7 @@
 
 bool Serial::setupSerialPort(std::wstring port, unsigned int baud)
 {
-#ifdef TARGET_WIN32
+#ifdef TARGET_WINDOWS
 	std::string strResult;
 	DCB dcb = { 0 };
 
@@ -107,7 +107,7 @@ bool Serial::setupSerialPort(std::wstring port, unsigned int baud)
 
 bool Serial::write(std::string message)
 {
-#ifdef TARGET_WIN32
+#ifdef TARGET_WINDOWS
 	std::cout << message << std::endl;
 
 	DWORD dwOut = 0;
@@ -136,7 +136,7 @@ bool Serial::write(std::string message)
 
 bool Serial::read(std::string & buffer, bool waitForBuffer)
 {
-#ifdef TARGET_WIN32
+#ifdef TARGET_WINDOWS
 	DWORD dwOut = 0;
 	DWORD dwEvtMask = 0;
 	char* pBuffer = NULL;
@@ -196,7 +196,7 @@ bool Serial::read(std::string & buffer, bool waitForBuffer)
 
 void Serial::setTimeout(int timeout)
 {
-#ifdef TARGET_WIN32
+#ifdef TARGET_WINDOWS
 	COMMTIMEOUTS timeouts;
 	GetCommTimeouts(m_hCom, &timeouts);
 	timeouts.ReadIntervalTimeout = 50;
@@ -210,7 +210,7 @@ void Serial::setTimeout(int timeout)
 
 bool Serial::IsInitialized()
 {
-#ifdef TARGET_WIN32
+#ifdef TARGET_WINDOWS
 	return (m_hCom && m_hCom != INVALID_HANDLE_VALUE) ? true : false;
 #endif
     return false;
@@ -219,7 +219,7 @@ bool Serial::IsInitialized()
 //https://stackoverflow.com/questions/7599331/list-usb-device-with-specified-vid-and-pid-without-using-windows-driver-kit
 bool Serial::isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name)
 {
-#ifdef TARGET_WIN32
+#ifdef TARGET_WINDOWS
 	WCHAR CurrentDevice[MAX_DEVICE_ID_LEN];
 	ULONG length;
 	CONFIGRET cr;
@@ -301,7 +301,11 @@ bool Serial::isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name)
 		}
 	}
 #else
-
+	for (auto device : getConnectedSerialDevices()) {
+		if (device.pid == info.pid && device.vid == info.vid) {
+			
+		}
+	}
 #endif
 	return false;
 }
@@ -310,7 +314,7 @@ bool Serial::isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name)
 
 std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
 	std::vector<SERIAL_DEVICE_INFO> devices;
-#ifdef TARGET_WIN32
+#ifdef TARGET_WINDOWS
 	WCHAR CurrentDevice[MAX_DEVICE_ID_LEN];
 	ULONG length;
 	CONFIGRET cr;
@@ -421,7 +425,7 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
 		//for each device
 		struct dirent *entry;
 		while ((entry = readdir(dir)) != nullptr) {
-			deviceName = (char *)entry->d_name;
+			deviceName = entry->d_name;
 
 			//we go through the prefixes
 			for (int k = 0; k < (int)prefixMatch.size(); k++) {
@@ -432,7 +436,7 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
 						SERIAL_DEVICE_INFO info;
 						info.portName = StringToWstring("/dev/" + deviceName);
 						parseVidPid(info.portName, info);
-						devices.push_back(info);// ofSerialDeviceInfo("/dev/" + deviceName, deviceName, deviceCount));
+						devices.push_back(info);
 						deviceCount++;
 						break;
 					}

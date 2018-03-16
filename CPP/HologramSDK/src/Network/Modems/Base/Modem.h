@@ -1,7 +1,7 @@
 #pragma once
 #include "Serial.h"
 
-#ifdef TARGET_WIN32
+#ifdef TARGET_WINDOWS
 #pragma comment(lib, "rasapi32.lib")
 #include "ras.h"
 #include "raserror.h"
@@ -106,7 +106,7 @@ public:
 
 	MODEM_INFO modemInfo;
 
-#ifdef TARGET_WIN32
+#ifdef TARGET_WINDOWS
 
 #ifdef USERAS
 	//RAS Stuff
