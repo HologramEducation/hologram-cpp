@@ -71,8 +71,12 @@ bool Modem::sendATCommand(std::string strATCommand, std::string& strOutput, unsi
 
 	strATCommand = strATCommand + "\r\n";
 	setTimeout(waitTime);
-	write(strATCommand);
-	read(strOutput, true);
+	if (write(strATCommand)) {
+		read(strOutput, true);
+	}
+	else {
+		return false;
+	}
 	return true;
 }
 

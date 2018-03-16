@@ -60,15 +60,15 @@ private:
 			return false;
 		}
 
-		deviceInfo.vid = device.substr(vpos, 4);
-		deviceInfo.pid = device.substr(ppos, 4);
+		deviceInfo.vid = device.substr(vpos+4, 4);
+		deviceInfo.pid = device.substr(ppos+4, 4);
 #else
 		std::string line;
-		std::ifstream infile(device+L"idVendor");
+		std::ifstream infile(WstringToString(device+L"idVendor"));
 		std::getline(infile, line);
 		deviceInfo.vid = StringToWstring(line);
 		
-		infile = std::ifstream (device+L"idProduct");
+		infile = std::ifstream(WstringToString(device+L"idProduct"));
 		std::getline(infile, line);
 		deviceInfo.pid = StringToWstring(line);
 #endif
@@ -145,5 +145,7 @@ private:
 protected:
 	int fd; 
 	struct termios oldoptions;
+private:
+	bool initialized;
 #endif
 };
