@@ -47,3 +47,5 @@ Windows IoT Core/CPP/Win10IoT_Test/Debug
 *.DS_Store
 CPP/Windows Desktop/x64
 CPP/Windows IoT Core/ARM
+CPP/Linux/obj
+CPP/Linux/bin
