@@ -13,7 +13,7 @@
 #include <map>
 
 #if defined( __WIN32__ ) || defined( _WIN32 )
-#define TARGET_LINUX//TARGET_WIN32
+#define TARGET_WIN32
 #define _CRT_SECURE_NO_WARNINGS
 #define USERAS 1
 #include <windows.h>
