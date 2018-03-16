@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HologramSDK", "HologramSDK.vcxproj", "{A1E36754-D59B-4DB1-BB72-FC1E62AA975A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|ARM = Release|ARM
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1E36754-D59B-4DB1-BB72-FC1E62AA975A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{A1E36754-D59B-4DB1-BB72-FC1E62AA975A}.Debug|ARM.Build.0 = Debug|ARM
+		{A1E36754-D59B-4DB1-BB72-FC1E62AA975A}.Debug|x64.ActiveCfg = Debug|x64
+		{A1E36754-D59B-4DB1-BB72-FC1E62AA975A}.Debug|x64.Build.0 = Debug|x64
+		{A1E36754-D59B-4DB1-BB72-FC1E62AA975A}.Debug|x86.ActiveCfg = Debug|x86
+		{A1E36754-D59B-4DB1-BB72-FC1E62AA975A}.Debug|x86.Build.0 = Debug|x86
+		{A1E36754-D59B-4DB1-BB72-FC1E62AA975A}.Release|ARM.ActiveCfg = Release|ARM
+		{A1E36754-D59B-4DB1-BB72-FC1E62AA975A}.Release|ARM.Build.0 = Release|ARM
+		{A1E36754-D59B-4DB1-BB72-FC1E62AA975A}.Release|x64.ActiveCfg = Release|x64
+		{A1E36754-D59B-4DB1-BB72-FC1E62AA975A}.Release|x64.Build.0 = Release|x64
+		{A1E36754-D59B-4DB1-BB72-FC1E62AA975A}.Release|x86.ActiveCfg = Release|x86
+		{A1E36754-D59B-4DB1-BB72-FC1E62AA975A}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {519AA999-6B53-4F19-870A-4638B325E228}
+	EndGlobalSection
+EndGlobal

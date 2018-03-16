@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{a1e36754-d59b-4db1-bb72-fc1e62aa975a}</ProjectGuid>
+    <Keyword>Linux</Keyword>
+    <RootNamespace>HologramSDK</RootNamespace>
+    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
+    <ApplicationType>Linux</ApplicationType>
+    <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
+    <TargetLinuxPlatform>Generic</TargetLinuxPlatform>
+    <LinuxProjectType>{D51BCBC9-82E9-4017-911E-C93873C4EA2B}</LinuxProjectType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ExcludePath>..\HologramSDK\src;$(ExcludePath)</ExcludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ExcludePath>..\HologramSDK\src;$(ExcludePath)</ExcludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ExcludePath>..\HologramSDK\src;$(ExcludePath)</ExcludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ExcludePath>..\HologramSDK\src;$(ExcludePath)</ExcludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <ExcludePath>..\HologramSDK\src;$(ExcludePath)</ExcludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <ExcludePath>..\HologramSDK\src;$(ExcludePath)</ExcludePath>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClCompile Include="..\HologramSDK\src\Authentication\CSRPSKAuthentication.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Cloud\CustomCloud.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Cloud\HologramCloud.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Event\EventBus\EventBus.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Cellular.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Modem.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Serial.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Nova_R404.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Nova_U201.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\HologramSDK\src\Authentication\Base\Authentication.h" />
+    <ClInclude Include="..\HologramSDK\src\Authentication\CSRPSKAuthentication.h" />
+    <ClInclude Include="..\HologramSDK\src\Cloud\Base\Cloud.h" />
+    <ClInclude Include="..\HologramSDK\src\Cloud\CustomCloud.h" />
+    <ClInclude Include="..\HologramSDK\src\Cloud\HologramCloud.h" />
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\Event.h" />
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\EventBus.h" />
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\EventHandler.h" />
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\EventRegistration.h" />
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\HandlerRegistration.h" />
+    <ClInclude Include="..\HologramSDK\src\Event\Events.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Base\Network.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Cellular.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Modem.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Serial.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Nova_R404.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Nova_U201.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\NetworkManager.h" />
+    <ClInclude Include="..\HologramSDK\src\Utils\Utils.h" />
+  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\HologramSDK\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\HologramSDK\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\HologramSDK\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\HologramSDK\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\HologramSDK\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\HologramSDK\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Cellular.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Nova_R404.cpp">
+      <Filter>Network\Modem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Nova_U201.cpp">
+      <Filter>Network\Modem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Serial.cpp">
+      <Filter>Network\Modem\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Modem.cpp">
+      <Filter>Network\Modem\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Cloud\CustomCloud.cpp">
+      <Filter>Cloud</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Cloud\HologramCloud.cpp">
+      <Filter>Cloud</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Event\EventBus\EventBus.cpp">
+      <Filter>Event\EventBus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Authentication\CSRPSKAuthentication.cpp">
+      <Filter>Authentication</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{40366a00-d870-4a01-864a-f14d297aa142}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{d6de7407-1b8d-4a07-92f8-eb552ffb4ef9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Base">
+      <UniqueIdentifier>{5b1b115a-a78d-4cae-ad24-f586733cd739}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Modem">
+      <UniqueIdentifier>{b659728c-52e8-42e1-8ec1-3f07b71aa111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Modem\Base">
+      <UniqueIdentifier>{05041422-6e20-494f-9ee2-4e6d84c1b429}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cloud">
+      <UniqueIdentifier>{9ec5f0df-8f7e-42da-aa79-28a35efd59a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{b369bafd-48af-402b-b413-5b28bda13cb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event\EventBus">
+      <UniqueIdentifier>{291652bf-7ecf-4dc5-bc0a-72f708be7080}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Authentication">
+      <UniqueIdentifier>{10844f04-8489-4d23-9a6f-2c4d82646305}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cloud\Base">
+      <UniqueIdentifier>{bace43c3-7588-4943-832a-f3921df436b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Authentication\Base">
+      <UniqueIdentifier>{ff3e4f9b-903f-4827-b93f-90025ddbc339}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\HologramSDK\src\Utils\Utils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Network\NetworkManager.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Network\Cellular.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Network\Base\Network.h">
+      <Filter>Network\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Nova_U201.h">
+      <Filter>Network\Modem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Nova_R404.h">
+      <Filter>Network\Modem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Serial.h">
+      <Filter>Network\Modem\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Modem.h">
+      <Filter>Network\Modem\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Cloud\CustomCloud.h">
+      <Filter>Cloud</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Cloud\HologramCloud.h">
+      <Filter>Cloud</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Event\Events.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\EventRegistration.h">
+      <Filter>Event\EventBus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\Event.h">
+      <Filter>Event\EventBus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\EventBus.h">
+      <Filter>Event\EventBus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\EventHandler.h">
+      <Filter>Event\EventBus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Authentication\CSRPSKAuthentication.h">
+      <Filter>Authentication</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\HandlerRegistration.h">
+      <Filter>Event\EventBus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Cloud\Base\Cloud.h">
+      <Filter>Cloud\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Authentication\Base\Authentication.h">
+      <Filter>Authentication\Base</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
