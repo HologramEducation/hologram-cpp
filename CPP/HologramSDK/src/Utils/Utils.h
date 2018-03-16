@@ -14,8 +14,9 @@
 
 #if defined( __WIN32__ ) || defined( _WIN32 )
 #define TARGET_WIN32
-#define _CRT_SECURE_NO_WARNINGS
+#ifndef IOTCORE
 #define USERAS 1
+#endif
 #include <windows.h>
 #elif defined( __APPLE_CC__)
 #define TARGET_OSX
@@ -90,7 +91,7 @@ static std::string toHex(const std::string& s)
 	return ret.str();
 }
 
-static wchar_t gsm7toChar(char gsmChar, bool & inExtended) {
+static wchar_t gsm7toChar(unsigned char gsmChar, bool & inExtended) {
 	if (inExtended) {
 		inExtended = false;
 		if (EXT.count(gsmChar) > 0) {
@@ -128,7 +129,7 @@ static std::wstring convertGSM7to8bit(std::string message, int msg_len) {
 static std::string switchCharPairs(std::string strToSwap) {
 	std::string swappedString;
 	if (strToSwap.length() % 2 == 0) {
-		for (int i = 0; i < strToSwap.length(); i += 2) {
+		for (unsigned int i = 0; i < strToSwap.length(); i += 2) {
 			std::string swapPair = strToSwap.substr(i, 2);
 			swappedString += swapPair[1] + swapPair[0];
 		}

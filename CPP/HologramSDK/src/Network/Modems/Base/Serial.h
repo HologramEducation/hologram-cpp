@@ -44,7 +44,7 @@ public:
 private:
 	static bool parseVidPid(std::wstring device, SERIAL_DEVICE_INFO & deviceInfo)
 	{
-#ifdef TARGET_WINDOWS
+#ifdef TARGET_WIN32
 		// parse out the VID number
 		std::string::size_type vpos = device.find(L"VID_");
 		std::string::size_type ppos = device.find(L"PID_");

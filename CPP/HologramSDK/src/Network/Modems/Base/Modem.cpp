@@ -304,7 +304,7 @@ SMS Modem::popRecievedSMS()
 	if (sendAndParseATCommand("AT+CMGL?", result, 20000) == MODEM_OK) {
 		int oldestIndex = 0, currentIndex = 0;
 		SMS * oldest = NULL, *current = NULL;
-		for (int i = 0; i < result.size() - 1; i++) {
+		for (unsigned int i = 0; i < result.size() - 1; i++) {
 			parsePDU(result[i], result[i + 1], current, currentIndex);
 			if (current != NULL) {
 				if (oldest == NULL || current->timestamp < oldest->timestamp) {
