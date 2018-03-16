@@ -36,92 +36,92 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\HologramSDK\src\Utils\Utils.h">
+    <ClInclude Include="..\HologramSDK\src\Utils\Utils.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Network\Modems\Base\Serial.h">
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Modem.h">
       <Filter>Network\Modem\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Network\Modems\Base\Modem.h">
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Serial.h">
       <Filter>Network\Modem\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Network\Modems\Nova_U201.h">
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Nova_U201.h">
       <Filter>Network\Modem</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Network\Modems\Nova_R404.h">
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Nova_R404.h">
       <Filter>Network\Modem</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Cloud\HologramCloud.h">
-      <Filter>Cloud</Filter>
+    <ClInclude Include="..\HologramSDK\src\Network\Base\Network.h">
+      <Filter>Network\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Cloud\CustomCloud.h">
-      <Filter>Cloud</Filter>
+    <ClInclude Include="..\HologramSDK\src\Network\NetworkManager.h">
+      <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Cloud\Base\Cloud.h">
-      <Filter>Cloud\Base</Filter>
+    <ClInclude Include="..\HologramSDK\src\Network\Cellular.h">
+      <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Authentication\Base\Authentication.h">
+    <ClInclude Include="..\HologramSDK\src\Authentication\Base\Authentication.h">
       <Filter>Authentication\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Authentication\CSRPSKAuthentication.h">
+    <ClInclude Include="..\HologramSDK\src\Authentication\CSRPSKAuthentication.h">
       <Filter>Authentication</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Event\Events.h">
+    <ClInclude Include="..\HologramSDK\src\Cloud\CustomCloud.h">
+      <Filter>Cloud</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Cloud\HologramCloud.h">
+      <Filter>Cloud</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Cloud\Base\Cloud.h">
+      <Filter>Cloud\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Event\Events.h">
       <Filter>Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Event\EventBus\Event.h">
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\Event.h">
       <Filter>Event\EventBus</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Event\EventBus\EventBus.h">
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\EventBus.h">
       <Filter>Event\EventBus</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Event\EventBus\EventHandler.h">
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\EventHandler.h">
       <Filter>Event\EventBus</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Event\EventBus\EventRegistration.h">
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\EventRegistration.h">
       <Filter>Event\EventBus</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Event\EventBus\HandlerRegistration.h">
+    <ClInclude Include="..\HologramSDK\src\Event\EventBus\HandlerRegistration.h">
       <Filter>Event\EventBus</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Network\Cellular.h">
-      <Filter>Network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Network\NetworkManager.h">
-      <Filter>Network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\HologramSDK\src\Network\Base\Network.h">
-      <Filter>Network\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\HologramSDK\src\Network\Modems\Base\Serial.cpp">
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Modem.cpp">
       <Filter>Network\Modem\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\HologramSDK\src\Network\Modems\Base\Modem.cpp">
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Serial.cpp">
       <Filter>Network\Modem\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\HologramSDK\src\Network\Modems\Nova_R404.cpp">
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Nova_R404.cpp">
       <Filter>Network\Modem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\HologramSDK\src\Network\Modems\Nova_U201.cpp">
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Nova_U201.cpp">
       <Filter>Network\Modem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\HologramSDK\src\Cloud\HologramCloud.cpp">
-      <Filter>Cloud</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\HologramSDK\src\Cloud\CustomCloud.cpp">
-      <Filter>Cloud</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\HologramSDK\src\Authentication\CSRPSKAuthentication.cpp">
-      <Filter>Authentication</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\HologramSDK\src\Event\EventBus\EventBus.cpp">
-      <Filter>Event\EventBus</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\HologramSDK\src\Network\Cellular.cpp">
+    <ClCompile Include="..\HologramSDK\src\Network\Cellular.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Authentication\CSRPSKAuthentication.cpp">
+      <Filter>Authentication</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Cloud\CustomCloud.cpp">
+      <Filter>Cloud</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Cloud\HologramCloud.cpp">
+      <Filter>Cloud</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Event\EventBus\EventBus.cpp">
+      <Filter>Event\EventBus</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
