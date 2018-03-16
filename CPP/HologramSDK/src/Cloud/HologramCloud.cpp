@@ -26,7 +26,7 @@ std::string HologramCloud::sendMessage(std::wstring message, std::vector<std::ws
 {
 	if (!isReadyToSend()) {
 		addPayloadToBuffer(message);
-		return std::string();
+		return json::array({ static_cast<int>(ERR_NOTCONNECTED) }).dump();
 	}
 
 	std::wstring encodedMessage;

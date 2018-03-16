@@ -19,6 +19,7 @@ enum HOLOGRAM_ERROR_CODES {
 	ERR_INTERNAL, // An internal error occurred
 	ERR_METADATA, // Metadata was formatted incorrectly
 	ERR_TOPICINVALID, // Topic was formatted incorrectly
+	ERR_NOTCONNECTED, // The Network is not connected
 	ERR_UNKNOWN = -1// Unknown error
 };
 
