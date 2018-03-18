@@ -24,7 +24,7 @@ bool Serial::setupSerialPort(std::wstring port, unsigned int baud)
 
 	PurgeComm(m_hCom, PURGE_TXCLEAR | PURGE_TXABORT | PURGE_RXCLEAR | PURGE_RXABORT);
 #else
-	fd = open(port.c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK);
+    fd = ::open(WstringToString(port).c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK);
 	if (fd == -1) {
 		return false;
 	}
@@ -124,7 +124,7 @@ bool Serial::write(std::string message)
 
 	WaitCommEvent(m_hCom, &dwEvtMask, NULL);  // Wait tx operation done.
 #else
-	int numWritten = write(fd, message.data(), message.length());
+    ssize_t numWritten = ::write(fd, message.data(), message.length());
 	if (numWritten <= 0) {
 		if (errno == EAGAIN) {
 			return false;
@@ -183,7 +183,9 @@ bool Serial::read(std::string & buffer, bool waitForBuffer)
 	if (!length) {
 		return false;
 	}
-	int nRead = read(fd, buffer, length);
+    char buf[length+1];
+    ssize_t nRead = ::read(fd, buf, length);
+    buffer = buf;
 	if (nRead < 0) {
 		if (errno == EAGAIN)
 			return false;
@@ -343,12 +345,10 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
 	std::string deviceName = "";
 
 	if (dir != nullptr) {
-		int deviceCount = 0;
 		//for each device
 		struct dirent *entry;
 		while ((entry = readdir(dir)) != nullptr) {
 			deviceName = entry->d_name;
-
 			//we go through the prefixes
 			for (int k = 0; k < (int)prefixMatch.size(); k++) {
 				//if the device name is longer than the prefix
@@ -359,7 +359,6 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
 						info.portName = StringToWstring("/dev/" + deviceName);
 						parseVidPid(info.portName, info);
 						devices.push_back(info);
-						deviceCount++;
 						break;
 					}
 				}

@@ -18,6 +18,7 @@ DEFINE_GUID(GUID_DEVINTERFACE_MODEM, 0x2C7089AA, 0x2E0E,
 #include <dirent.h>
 #include <errno.h>
 #include <fstream>
+#include <fcntl.h>
 #endif
 
 typedef struct _SERIAL_DEVICE_INFO {
@@ -64,11 +65,11 @@ private:
 		deviceInfo.pid = device.substr(ppos+4, 4);
 #else
 		std::string line;
-		std::ifstream infile(WstringToString(device+L"idVendor"));
+		std::ifstream infile(WstringToString(device+L"/idVendor"));
 		std::getline(infile, line);
 		deviceInfo.vid = StringToWstring(line);
 		
-		infile = std::ifstream(WstringToString(device+L"idProduct"));
+		infile = std::ifstream(WstringToString(device+L"/idProduct"));
 		std::getline(infile, line);
 		deviceInfo.pid = StringToWstring(line);
 #endif
