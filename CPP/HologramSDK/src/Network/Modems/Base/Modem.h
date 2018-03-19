@@ -7,6 +7,10 @@
 #include "raserror.h"
 #endif
 
+#ifndef USERAS
+#include "PPP/PPP.h"
+#endif
+
 #include "../../../Event/EventBus/EventBus.h"
 #include "../../../Event/Events.h"
 
@@ -139,6 +143,8 @@ private:
 
 	static void determineOFlags(DWORD flag);
 	static void determineO2Flags(DWORD flag);
+#else
+	PPP ppp;
 #endif
 
 #endif
