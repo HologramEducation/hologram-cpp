@@ -320,11 +320,157 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
 			++index;
 		}
 	}
+#elif defined(TARGET_MACOS)
+    kern_return_t kr;
+    io_service_t device;
+    IOCFPlugInInterface **plugInInterface = NULL;
+    CFMutableDictionaryRef matchingDict;
+    io_iterator_t iter;
+    
+    // Serial devices are instances of class IOSerialBSDClient.
+    // Create a matching dictionary to find those instances.
+    matchingDict = IOServiceMatching(kIOSerialBSDServiceValue);
+    if (matchingDict == NULL) {
+        printf("IOServiceMatching returned a NULL dictionary.\n");
+    }
+    else {
+        // Look for devices that claim to be modems.
+        CFDictionarySetValue(matchingDict,
+                             CFSTR(kIOSerialBSDTypeKey),
+                             CFSTR(kIOSerialBSDAllTypes));
+        
+        // Each serial device object has a property with key
+        // kIOSerialBSDTypeKey and a value that is one of kIOSerialBSDAllTypes,
+        // kIOSerialBSDModemType, or kIOSerialBSDRS232Type. You can experiment with the
+        // matching by changing the last parameter in the above call to CFDictionarySetValue.
+        
+        // As shipped, this sample is only interested in modems,
+        // so add this property to the CFDictionary we're matching on.
+        // This will find devices that advertise themselves as modems,
+        // such as built-in and USB modems. However, this match won't find serial modems.
+    }
+    
+    // Get an iterator across all matching devices.
+    kr = IOServiceGetMatchingServices(kIOMasterPortDefault, matchingDict, &iter);
+    
+    /* iterate */
+    while ((device = IOIteratorNext(iter)))
+    {
+        SERIAL_DEVICE_INFO info;
+        io_name_t deviceName;
+        io_string_t path;
+        CFTypeRef deviceNameAsCFString;
+        CFTypeRef bsdPathAsCFString;
+        UInt16 vendorId;
+        UInt16 productId;
+        
+        // Get the callout device's path (/dev/cu.xxxxx). The callout device should almost always be
+        // used: the dialin device (/dev/tty.xxxxx) would be used when monitoring a serial port for
+        // incoming calls, e.g. a fax listener.
+        
+        bsdPathAsCFString = IORegistryEntryCreateCFProperty(device,
+                                                            CFSTR(kIOCalloutDeviceKey),
+                                                            kCFAllocatorDefault,
+                                                            0);
+        if (bsdPathAsCFString) {
+            // Convert the path from a CFString to a C (NUL-terminated) string for use
+            // with the POSIX open() call.
+            
+            Boolean result = CFStringGetCString((CFStringRef)bsdPathAsCFString, path, sizeof(path), kCFStringEncodingUTF8);
+            
+            if(result){
+                info.portName = StringToWstring(path);
+            }
+            
+            CFRelease(bsdPathAsCFString);
+        }
+        
+        io_name_t pathname;
+        while(std::strncmp(pathname, "IOUSBInterface", 14) != 0){
+            IOObjectGetClass(device, pathname);
+            io_registry_entry_t parent;
+            Boolean result = IORegistryEntryGetParentEntry(device, kIOServicePlane, &parent);
+            if(result){
+                break;
+            }
+            device = parent;
+        }
+        
+        // Get the USB device's name.
+        kr = IORegistryEntryGetName(device, deviceName);
+        if(KERN_SUCCESS != kr) {
+            deviceName[0] = '\0';
+        }
+        
+        deviceNameAsCFString = CFStringCreateWithCString(kCFAllocatorDefault, deviceName, kCFStringEncodingASCII);
+        
+        
+        if(deviceNameAsCFString) {
+            Boolean result;
+            
+            // Convert from a CFString to a C (NUL-terminated)
+            result = CFStringGetCString((CFStringRef)deviceNameAsCFString,
+                                        deviceName,
+                                        sizeof(deviceName),
+                                        kCFStringEncodingUTF8);
+            
+            if(result) {
+                info.friendlyName = StringToWstring(deviceName);
+            }
+            
+            CFRelease(deviceNameAsCFString);
+        }
+        // we need to create an IOUSBDeviceInterface for our device. This will create the necessary
+        // connections between our userland application and the kernel object for the USB Device.
+        SInt32 score;
+        kr = IOCreatePlugInInterfaceForService(device, kIOUSBDeviceUserClientTypeID, kIOCFPlugInInterfaceID, &plugInInterface, &score);
+        
+        if((kIOReturnSuccess != kr) || !plugInInterface) {
+            fprintf(stderr, "Failed getting plugin interface with error: 0x%08x.\n", kr);
+            continue;
+        }
+        
+        IOUSBDeviceInterface** deviceInterface;
+        
+        // Use the plugin interface to retrieve the device interface.
+        HRESULT res = (*plugInInterface)->QueryInterface(plugInInterface, CFUUIDGetUUIDBytes(kIOUSBDeviceInterfaceID), (LPVOID*) &deviceInterface);
+        
+        // Now done with the plugin interface.
+        (*plugInInterface)->Release(plugInInterface);
+        
+        if(res || deviceInterface == NULL) {
+            fprintf(stderr, "QueryInterface returned %d.\n", (int) res);
+            continue;
+        }
+        
+        // Now that we have the IOUSBDeviceInterface, we can call the routines in IOUSBLib.h.        
+        kr = (*deviceInterface)->GetDeviceVendor(deviceInterface, &vendorId);
+        if(KERN_SUCCESS != kr) {
+            fprintf(stderr, "GetDeviceVendor returned 0x%08x.\n", kr);
+            continue;
+        }
+        info.vid = StringToWstring(toHex(vendorId));
+        
+        kr = (*deviceInterface)->GetDeviceProduct(deviceInterface, &productId);
+        if(KERN_SUCCESS != kr) {
+            fprintf(stderr, "GetDeviceProduct returned 0x%08x.\n", kr);
+            continue;
+        }
+        info.pid = StringToWstring(toHex(productId));
+        
+        devices.push_back(info);
+        
+        /* And free the reference taken before continuing to the next item */
+        IOObjectRelease(device);
+    }
+    
+    /* Done, release the iterator */
+    IOObjectRelease(iter);
 #else
 	std::vector<std::string> prefixMatch;
 
 #ifdef TARGET_OSX
-
+//we do this natively above but this also works
 	prefixMatch.push_back("cu.");
 	prefixMatch.push_back("tty.");
 

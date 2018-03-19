@@ -17,6 +17,8 @@
 		F2C7CBDD204A5C530084E889 /* Nova_R404.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBDB204A5C530084E889 /* Nova_R404.cpp */; };
 		F2C7CBE0204A5C660084E889 /* Modem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBDE204A5C660084E889 /* Modem.cpp */; };
 		F2C7CBE1204A5C660084E889 /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBDF204A5C660084E889 /* Serial.cpp */; };
+		F2CEB4B7205F016000E3B015 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2CEB4B6205F015F00E3B015 /* IOKit.framework */; };
+		F2CEB4B9205F016A00E3B015 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2CEB4B8205F016A00E3B015 /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,6 +49,8 @@
 		F2C7CBDB204A5C530084E889 /* Nova_R404.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Nova_R404.cpp; path = ../HologramSDK/src/Network/Modems/Nova_R404.cpp; sourceTree = "<group>"; };
 		F2C7CBDE204A5C660084E889 /* Modem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Modem.cpp; path = ../HologramSDK/src/Network/Modems/Base/Modem.cpp; sourceTree = "<group>"; };
 		F2C7CBDF204A5C660084E889 /* Serial.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Serial.cpp; path = ../HologramSDK/src/Network/Modems/Base/Serial.cpp; sourceTree = "<group>"; };
+		F2CEB4B6205F015F00E3B015 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		F2CEB4B8205F016A00E3B015 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		F2D421BF204A1AEF0089CDEA /* HologramSDK */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HologramSDK; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -55,12 +59,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F2CEB4B9205F016A00E3B015 /* CoreFoundation.framework in Frameworks */,
+				F2CEB4B7205F016000E3B015 /* IOKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F2CEB4B5205F015F00E3B015 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F2CEB4B8205F016A00E3B015 /* CoreFoundation.framework */,
+				F2CEB4B6205F015F00E3B015 /* IOKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		F2D421B6204A1AEF0089CDEA = {
 			isa = PBXGroup;
 			children = (
@@ -80,6 +95,7 @@
 				F2C7CBC8204A57F30084E889 /* Network */,
 				F2C7CBCA204A57F30084E889 /* Utils */,
 				F2D421C0204A1AEF0089CDEA /* Products */,
+				F2CEB4B5205F015F00E3B015 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};

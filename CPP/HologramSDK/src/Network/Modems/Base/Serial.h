@@ -12,6 +12,15 @@
 DEFINE_GUID(GUID_DEVINTERFACE_MODEM, 0x2C7089AA, 0x2E0E,
 	0x11D1, 0xB1, 0x14, 0x00, 0xC0, 0x4F, 0xC2, 0xAA, 0xE4);
 #else
+#ifdef TARGET_MACOS
+#include <CoreFoundation/CoreFoundation.h>
+
+#include <IOKit/IOKitLib.h>
+#include <IOKit/IOCFPlugIn.h>
+#include <IOKit/usb/IOUSBLib.h>
+#include <IOKit/serial/IOSerialKeys.h>
+
+#endif
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <getopt.h>
