@@ -32,7 +32,7 @@ std::string HologramCloud::sendMessage(std::wstring message, std::vector<std::ws
 	std::wstring encodedMessage;
 	if (networkManager.getNetworkType() == CELLULAR) {
 		Modem * modem = ((Cellular *) networkManager.getNetwork())->modem;
-		encodedMessage = authenticator->buildPayloadString(message, topics, modem->getName(), WstringToString(modem->modemInfo.Model), VERSION);
+		encodedMessage = authenticator->buildPayloadString(message, topics, modem->getName(), fromWString(modem->modemInfo.Model), VERSION);
 	}
 	else {
 		encodedMessage = authenticator->buildPayloadString(message, topics, "", "", VERSION);

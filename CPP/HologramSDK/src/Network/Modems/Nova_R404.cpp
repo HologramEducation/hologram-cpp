@@ -84,19 +84,19 @@ void Nova_R404::populateModemInformation()
 		for (auto entry : result)
 		{
 			if (entry.find("Manufacturer: ") != std::string::npos)
-				modemInfo.Manufacturer = StringToWstring(entry.substr(strlen("Manufacturer: ")));
+				modemInfo.Manufacturer = toWString(entry.substr(strlen("Manufacturer: ")));
 			else if (entry.find("Model: ") != std::string::npos)
-				modemInfo.Model = StringToWstring(entry.substr(strlen("Model: ")));
+				modemInfo.Model = toWString(entry.substr(strlen("Model: ")));
 			else if (entry.find("Revision: ") != std::string::npos)
-				modemInfo.Revision = StringToWstring(entry.substr(strlen("Revision: ")));
+				modemInfo.Revision = toWString(entry.substr(strlen("Revision: ")));
 			else if (entry.find("SVN: ") != std::string::npos)
-				modemInfo.SVN = StringToWstring(entry.substr(strlen("SVN: ")));
+				modemInfo.SVN = toWString(entry.substr(strlen("SVN: ")));
 			else if (entry.find("IMEI: ") != std::string::npos)
-				modemInfo.IMEI = StringToWstring(entry.substr(strlen("IMEI: ")));
+				modemInfo.IMEI = toWString(entry.substr(strlen("IMEI: ")));
 		}
 	}
 
 	if (sendAndParseATCommand("AT+CCID?", result) == MODEM_OK) {
-		modemInfo.ICCID = StringToWstring(result[0]);
+		modemInfo.ICCID = toWString(result[0]);
 	}
 }

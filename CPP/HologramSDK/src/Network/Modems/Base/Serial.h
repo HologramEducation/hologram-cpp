@@ -74,13 +74,13 @@ private:
 		deviceInfo.pid = device.substr(ppos+4, 4);
 #else
 		std::string line;
-		std::ifstream infile(WstringToString(device+L"/idVendor"));
+		std::ifstream infile(fromWString(device+L"/idVendor"));
 		std::getline(infile, line);
-		deviceInfo.vid = StringToWstring(line);
+		deviceInfo.vid = toWString(line);
 		
-		infile = std::ifstream(WstringToString(device+L"/idProduct"));
+		infile = std::ifstream(fromWString(device+L"/idProduct"));
 		std::getline(infile, line);
-		deviceInfo.pid = StringToWstring(line);
+		deviceInfo.pid = toWString(line);
 #endif
 		return true;
 	}

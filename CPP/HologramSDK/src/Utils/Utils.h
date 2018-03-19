@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <cstdio>
 #include <vector>
 #include <locale>
@@ -15,11 +15,11 @@
 #if defined( __WIN32__ ) || defined( _WIN32 )
 #define TARGET_WINDOWS
 #ifndef IOTCORE
-#define USERAS 1
+//#define USERAS 1
 #endif
 #include <windows.h>
 #elif defined( __APPLE_CC__)
-#define TARGET_OSX
+#define TARGET_MACOS
 #elif defined (__ANDROID__)
 #define TARGET_ANDROID
 #elif defined(__ARMEL__)
@@ -86,11 +86,18 @@ static std::string toHex(const std::string& s)
 	std::ostringstream ret;
 
 	for (std::string::size_type i = 0; i < s.length(); ++i)
-		ret << std::hex << std::setfill('0') << std::setw(2) << std::nouppercase << (int)s[i];
+		ret << std::hex << std::setfill('0') << std::setw(4) << std::nouppercase << (int)s[i];
 
 	return ret.str();
 }
 
+static std::string toHex(const int i)
+{
+    std::stringstream ret;
+    ret << std::hex << std::setfill('0') << std::setw(2) << i;
+    
+    return ret.str();
+}
 static wchar_t gsm7toChar(unsigned char gsmChar, bool & inExtended) {
 	if (inExtended) {
 		inExtended = false;
@@ -137,7 +144,7 @@ static std::string switchCharPairs(std::string strToSwap) {
 	return swappedString;
 }
 
-static std::wstring StringToWstring(std::string source) {
+static std::wstring toWString(std::string source) {
 	wchar_t *wbuffer = (wchar_t *)malloc((source.length() + 1) * sizeof(wchar_t));
 	size_t len = mbstowcs(wbuffer, source.c_str(), source.length());
 	std::wstring retWstr = wbuffer;
@@ -145,7 +152,7 @@ static std::wstring StringToWstring(std::string source) {
 	return retWstr.substr(0, len);
 }
 
-static std::string WstringToString(std::wstring source) {
+static std::string fromWString(std::wstring source) {
 	char *buffer = new char[source.length() + 1];
 	size_t len = wcstombs(buffer, source.c_str(), source.length());
 	std::string retStr = buffer;

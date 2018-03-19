@@ -19,7 +19,7 @@ public:
 
 		buildMessageString(messages);
 
-		return StringToWstring(data.dump() + "\r\r");
+		return toWString(data.dump() + "\r\r");
 	}
 
 

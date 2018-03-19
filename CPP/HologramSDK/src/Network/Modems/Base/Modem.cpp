@@ -196,7 +196,7 @@ bool Modem::writeSocket(std::wstring data)
 	setHexMode(true);
 	std::vector<std::string> result;
 	char buffer[4096];
-	snprintf(buffer, 4096, "AT+USOWR=%d,%zd,\"%s\"", socketId, data.length(), toHex(WstringToString(data)).c_str());
+	snprintf(buffer, 4096, "AT+USOWR=%d,%zd,\"%s\"", socketId, data.length(), toHex(fromWString(data)).c_str());
 	if (sendAndParseATCommand(buffer, result, 10000) != MODEM_OK) {
 		//do something? notify or what
 	}
@@ -359,6 +359,8 @@ bool Modem::connect()
 		wprintf(L"Encountered errer " + retval);
 		return FALSE;
 	}
+#else
+	//we need to get the addresses and ports somehow
 #endif
 	return true;
 }
@@ -437,7 +439,7 @@ std::wstring Modem::parseSender(std::string pdu, int & offset)
 		}
 		else {
 			//switch every pair of characters
-			sender = StringToWstring(switchCharPairs(sender_raw));
+			sender = toWString(switchCharPairs(sender_raw));
 		}
 		if ((sender_read & 1) != 0) {
 			sender = sender.substr(0, sender.length() - 1);

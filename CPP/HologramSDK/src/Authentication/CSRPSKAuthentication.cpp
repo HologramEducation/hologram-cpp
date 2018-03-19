@@ -22,8 +22,8 @@ std::wstring CSRPSKAuthentication::buildSMSPayloadString(std::wstring message, s
 	std::wstring send_data;
 
 	if (enforceValidDeviceKey()) {
-		send_data = L"S" + StringToWstring(credentials["devicekey"]);
-		send_data += StringToWstring(destination_number + " ") + message;
+		send_data = L"S" + toWString(credentials["devicekey"]);
+		send_data += toWString(destination_number + " ") + message;
 		send_data += L"\r\r";
 	}
 	return send_data;
@@ -48,12 +48,12 @@ void CSRPSKAuthentication::buildTopicString(std::vector<std::wstring> topics)
 {
 	json topicArray = json::array();
 	for (std::wstring topic : topics) {
-		topicArray.push_back(WstringToString(topic));
+		topicArray.push_back(fromWString(topic));
 	}
 	data["t"] = topicArray;
 }
 
 void CSRPSKAuthentication::buildMessageString(std::wstring messages)
 {
-	data["d"] = WstringToString(messages);
+	data["d"] = fromWString(messages);
 }

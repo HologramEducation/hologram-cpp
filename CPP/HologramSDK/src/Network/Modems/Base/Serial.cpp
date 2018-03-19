@@ -24,7 +24,7 @@ bool Serial::setupSerialPort(std::wstring port, unsigned int baud)
 
 	PurgeComm(m_hCom, PURGE_TXCLEAR | PURGE_TXABORT | PURGE_RXCLEAR | PURGE_RXABORT);
 #else
-    fd = ::open(WstringToString(port).c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK);
+    fd = ::open(fromWString(port).c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK);
 	if (fd == -1) {
 		return false;
 	}
@@ -379,7 +379,7 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
             Boolean result = CFStringGetCString((CFStringRef)bsdPathAsCFString, path, sizeof(path), kCFStringEncodingUTF8);
             
             if(result){
-                info.portName = StringToWstring(path);
+                info.portName = toWString(path);
             }
             
             CFRelease(bsdPathAsCFString);
@@ -415,7 +415,7 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
                                         kCFStringEncodingUTF8);
             
             if(result) {
-                info.friendlyName = StringToWstring(deviceName);
+                info.friendlyName = toWString(deviceName);
             }
             
             CFRelease(deviceNameAsCFString);
@@ -449,14 +449,14 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
             fprintf(stderr, "GetDeviceVendor returned 0x%08x.\n", kr);
             continue;
         }
-        info.vid = StringToWstring(toHex(vendorId));
+        info.vid = toWString(toHex(vendorId));
         
         kr = (*deviceInterface)->GetDeviceProduct(deviceInterface, &productId);
         if(KERN_SUCCESS != kr) {
             fprintf(stderr, "GetDeviceProduct returned 0x%08x.\n", kr);
             continue;
         }
-        info.pid = StringToWstring(toHex(productId));
+        info.pid = toWString(toHex(productId));
         
         devices.push_back(info);
         
