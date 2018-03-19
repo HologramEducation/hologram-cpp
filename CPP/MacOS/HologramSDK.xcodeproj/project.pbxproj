@@ -19,6 +19,7 @@
 		F2C7CBE1204A5C660084E889 /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBDF204A5C660084E889 /* Serial.cpp */; };
 		F2CEB4B7205F016000E3B015 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2CEB4B6205F015F00E3B015 /* IOKit.framework */; };
 		F2CEB4B9205F016A00E3B015 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2CEB4B8205F016A00E3B015 /* CoreFoundation.framework */; };
+		F2CEB4BC205F778C00E3B015 /* PPP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2CEB4BB205F778C00E3B015 /* PPP.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -51,6 +52,7 @@
 		F2C7CBDF204A5C660084E889 /* Serial.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Serial.cpp; path = ../HologramSDK/src/Network/Modems/Base/Serial.cpp; sourceTree = "<group>"; };
 		F2CEB4B6205F015F00E3B015 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		F2CEB4B8205F016A00E3B015 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		F2CEB4BB205F778C00E3B015 /* PPP.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PPP.cpp; path = ../HologramSDK/src/Network/Modems/Base/PPP/PPP.cpp; sourceTree = "<group>"; };
 		F2D421BF204A1AEF0089CDEA /* HologramSDK */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HologramSDK; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -79,6 +81,7 @@
 		F2D421B6204A1AEF0089CDEA = {
 			isa = PBXGroup;
 			children = (
+				F2CEB4BB205F778C00E3B015 /* PPP.cpp */,
 				F2C7CBDE204A5C660084E889 /* Modem.cpp */,
 				F2C7CBDF204A5C660084E889 /* Serial.cpp */,
 				F2C7CBDB204A5C530084E889 /* Nova_R404.cpp */,
@@ -164,6 +167,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F2CEB4BC205F778C00E3B015 /* PPP.cpp in Sources */,
 				F2C7CBE0204A5C660084E889 /* Modem.cpp in Sources */,
 				F2C7CBE1204A5C660084E889 /* Serial.cpp in Sources */,
 				F2C7CBDC204A5C530084E889 /* Nova_U201.cpp in Sources */,

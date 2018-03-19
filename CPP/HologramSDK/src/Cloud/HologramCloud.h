@@ -29,8 +29,8 @@ public:
 	HologramCloud(std::map<std::string, std::string> credentials, bool enable_inbound = false, NetworkType type = CELLULAR, Authentication * auth = NULL);
 	~HologramCloud();
 	void setAuthentication(Authentication * auth);
-	virtual void sendSMS(std::wstring message, std::string destNumber);
-	virtual std::string sendMessage(std::wstring message, std::vector<std::wstring> topics);
+	virtual void sendSMS(std::string message, std::string destNumber);
+	virtual std::string sendMessage(std::string message, std::vector<std::string> topics);
 	HOLOGRAM_ERROR_CODES parseResultString(std::string result);
 };
 

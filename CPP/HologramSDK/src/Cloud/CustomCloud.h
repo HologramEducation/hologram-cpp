@@ -16,7 +16,7 @@ public:
 	~CustomCloud();
 
 	bool isReadyToSend();
-	std::string sendMessage(std::wstring message, int timeout = SEND_TIMEOUT, bool closeSocket = true);
+	std::string sendMessage(std::string message, int timeout = SEND_TIMEOUT, bool closeSocket = true);
 	void openSendSocket(int timeout = SEND_TIMEOUT);
 	void closeSendSocket();
 	std::string receiveSendSocket(unsigned int maxBytesRead = MAX_RECEIVE_BYTES);

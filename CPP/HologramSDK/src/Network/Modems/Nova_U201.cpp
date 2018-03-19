@@ -67,13 +67,13 @@ void Nova_U201::populateModemInformation()
 {
 	std::vector<std::string> result;
 	if (sendAndParseATCommand("AT+CIMI", result) == MODEM_OK) {
-		modemInfo.IMEI = toWString(result[0]);
+		modemInfo.IMEI = result[0];
 	}
 	if (sendAndParseATCommand("AT+CGMM", result) == MODEM_OK) {
-		modemInfo.Model = toWString(result[0]);
+		modemInfo.Model = result[0];
 	}
 	if (sendAndParseATCommand("AT+CCID?", result) == MODEM_OK) {
 		ofStringReplace(result[0], "+CCID: ", "");
-		modemInfo.ICCID = toWString(result[0]);
+		modemInfo.ICCID = result[0];
 	}
 }

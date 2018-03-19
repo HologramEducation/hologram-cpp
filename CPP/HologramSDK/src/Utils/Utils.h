@@ -39,17 +39,17 @@ typedef struct _LOCATION {
 }LOCATION;
 
 typedef struct _SMS {
-	_SMS(std::wstring sender, time_t timestamp, std::wstring message) :
+	_SMS(std::string sender, time_t timestamp, std::string message) :
 		sender(sender), timestamp(timestamp), message(message) {
 
 	}
 	_SMS() {}
-	std::wstring sender;
+	std::string sender;
 	time_t timestamp;
-	std::wstring message;
+	std::string message;
 }SMS;
 
-const std::wstring GSM = L"@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞ ÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà";
+const std::string GSM = "@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞ ÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà";
 static std::map<char, wchar_t> EXT = { 
 	{ 0x40, L'|' }, 
 	{ 0x14, L'^' }, 
@@ -114,11 +114,11 @@ static wchar_t gsm7toChar(unsigned char gsmChar, bool & inExtended) {
 	return ' ';
 }
 
-static std::wstring convertGSM7to8bit(std::string message, int msg_len) {
+static std::string convertGSM7to8bit(std::string message, int msg_len) {
 	int last = 0;
 	int current = 0;
 	int i = 0;
-	std::wstring msg;
+	std::string msg;
 	bool inExt = false;
 	for (int count = 0; count < msg_len; count++) {
 		int offset = count % 8;

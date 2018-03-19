@@ -13,7 +13,7 @@ Nova_R404::~Nova_R404()
 {
 }
 
-std::string Nova_R404::sendMessage(std::wstring message)
+std::string Nova_R404::sendMessage(std::string message)
 {
 	urcState = SOCKET_INIT;
 
@@ -84,19 +84,19 @@ void Nova_R404::populateModemInformation()
 		for (auto entry : result)
 		{
 			if (entry.find("Manufacturer: ") != std::string::npos)
-				modemInfo.Manufacturer = toWString(entry.substr(strlen("Manufacturer: ")));
+				modemInfo.Manufacturer = entry.substr(strlen("Manufacturer: "));
 			else if (entry.find("Model: ") != std::string::npos)
-				modemInfo.Model = toWString(entry.substr(strlen("Model: ")));
+				modemInfo.Model = entry.substr(strlen("Model: "));
 			else if (entry.find("Revision: ") != std::string::npos)
-				modemInfo.Revision = toWString(entry.substr(strlen("Revision: ")));
+				modemInfo.Revision = entry.substr(strlen("Revision: "));
 			else if (entry.find("SVN: ") != std::string::npos)
-				modemInfo.SVN = toWString(entry.substr(strlen("SVN: ")));
+				modemInfo.SVN = entry.substr(strlen("SVN: "));
 			else if (entry.find("IMEI: ") != std::string::npos)
-				modemInfo.IMEI = toWString(entry.substr(strlen("IMEI: ")));
+				modemInfo.IMEI = entry.substr(strlen("IMEI: "));
 		}
 	}
 
 	if (sendAndParseATCommand("AT+CCID?", result) == MODEM_OK) {
-		modemInfo.ICCID = toWString(result[0]);
+		modemInfo.ICCID = result[0];
 	}
 }

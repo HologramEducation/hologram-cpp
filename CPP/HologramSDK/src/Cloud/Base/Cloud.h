@@ -18,16 +18,16 @@ protected:
 		networkManager = NetworkManager(network);
 
 	}
-	void addPayloadToBuffer(std::wstring payload) {
+	void addPayloadToBuffer(std::string payload) {
 		messageBuffer.push_back(payload);
 	}
-	virtual std::string sendMessage(std::wstring message, std::vector<std::wstring> topics) = 0;
-	virtual void sendSMS(std::wstring message, std::string destNumber) = 0;
+	virtual std::string sendMessage(std::string message, std::vector<std::string> topics) = 0;
+	virtual void sendSMS(std::string message, std::string destNumber) = 0;
 
 
 	Authentication * authenticator;
 	int sendPort, recvPort;
 	std::string sendHost, recvHost;
-	std::vector<std::wstring> messageBuffer;
+	std::vector<std::string> messageBuffer;
 	NetworkManager networkManager;
 };

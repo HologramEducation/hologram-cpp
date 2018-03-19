@@ -39,14 +39,14 @@ private:
 class MessageSentEvent : public Event
 {
 public:
-	MessageSentEvent(std::wstring message, bool source) :
+	MessageSentEvent(std::string message, bool source) :
 		message(message),
 		source(source) {
 
 	}
 	~MessageSentEvent() {}
 
-	std::wstring getMessage() {
+	std::string getMessage() {
 		return message;
 	}
 
@@ -55,7 +55,7 @@ public:
 	}
 
 private:
-	std::wstring message;
+	std::string message;
 	bool source;
 };
 

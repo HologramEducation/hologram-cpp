@@ -22,17 +22,17 @@ void HologramCloud::setAuthentication(Authentication * auth)
 	this->authenticator = auth;
 }
 
-std::string HologramCloud::sendMessage(std::wstring message, std::vector<std::wstring> topics)
+std::string HologramCloud::sendMessage(std::string message, std::vector<std::string> topics)
 {
 	if (!isReadyToSend()) {
 		addPayloadToBuffer(message);
 		return json::array({ static_cast<int>(ERR_NOTCONNECTED) }).dump();
 	}
 
-	std::wstring encodedMessage;
+	std::string encodedMessage;
 	if (networkManager.getNetworkType() == CELLULAR) {
 		Modem * modem = ((Cellular *) networkManager.getNetwork())->modem;
-		encodedMessage = authenticator->buildPayloadString(message, topics, modem->getName(), fromWString(modem->modemInfo.Model), VERSION);
+		encodedMessage = authenticator->buildPayloadString(message, topics, modem->getName(), modem->modemInfo.Model, VERSION);
 	}
 	else {
 		encodedMessage = authenticator->buildPayloadString(message, topics, "", "", VERSION);
@@ -60,10 +60,10 @@ HOLOGRAM_ERROR_CODES HologramCloud::parseResultString(std::string result)
 	return static_cast<HOLOGRAM_ERROR_CODES>(code);
 }
 
-void HologramCloud::sendSMS(std::wstring message, std::string destNumber)
+void HologramCloud::sendSMS(std::string message, std::string destNumber)
 {
 	if (authenticator->supportsSMS() && message.length() <= MAX_SMS_LENGTH && destNumber[0] == '+') {
-		std::wstring encodedMessage = authenticator->buildSMSPayloadString(message, destNumber);
+		std::string encodedMessage = authenticator->buildSMSPayloadString(message, destNumber);
 		std::string result = CustomCloud::sendMessage(encodedMessage);
 	}
 }

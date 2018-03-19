@@ -9,15 +9,15 @@ public:
 	CSRPSKAuthentication(std::map<std::string, std::string> credentials);
 	~CSRPSKAuthentication();
 
-	std::wstring buildPayloadString(std::wstring messages, std::vector<std::wstring> topics, std::string modemType = "", std::string modemId = "", std::string version = "");
-	virtual std::wstring buildSMSPayloadString(std::wstring message, std::string destination_number);
+	std::string buildPayloadString(std::string message, std::vector<std::string> topics, std::string modemType = "", std::string modemId = "", std::string version = "");
+	virtual std::string buildSMSPayloadString(std::string message, std::string destination_number);
 	virtual bool supportsSMS();
 
 private:
 	virtual void buildAuthString(std::string timestamp = "", std::string sequence_number = "");
 	virtual void buildMetadataString(std::string modemType, std::string modemId, std::string version);
-	virtual void buildTopicString(std::vector<std::wstring> topics);
-	virtual void buildMessageString(std::wstring messages);
+	virtual void buildTopicString(std::vector<std::string> topics);
+	virtual void buildMessageString(std::string messages);
 
 	bool enforceValidDeviceKey() {
 		if (credentials.find("devicekey") == credentials.end()) {

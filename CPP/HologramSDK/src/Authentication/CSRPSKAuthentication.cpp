@@ -9,22 +9,22 @@ CSRPSKAuthentication::~CSRPSKAuthentication()
 {
 }
 
-std::wstring CSRPSKAuthentication::buildPayloadString(std::wstring messages, std::vector<std::wstring> topics, std::string modemType, std::string modemId, std::string version)
+std::string CSRPSKAuthentication::buildPayloadString(std::string messages, std::vector<std::string> topics, std::string modemType, std::string modemId, std::string version)
 {
 	if (enforceValidDeviceKey()) {
 		return Authentication::buildPayloadString(messages, topics, modemType, modemId, version);
 	}
-	return L"";
+	return "";
 }
 
-std::wstring CSRPSKAuthentication::buildSMSPayloadString(std::wstring message, std::string destination_number)
+std::string CSRPSKAuthentication::buildSMSPayloadString(std::string message, std::string destination_number)
 {
-	std::wstring send_data;
+	std::string send_data;
 
 	if (enforceValidDeviceKey()) {
-		send_data = L"S" + toWString(credentials["devicekey"]);
-		send_data += toWString(destination_number + " ") + message;
-		send_data += L"\r\r";
+		send_data = "S" + credentials["devicekey"];
+		send_data += destination_number + " " + message;
+		send_data += "\r\r";
 	}
 	return send_data;
 }
@@ -44,16 +44,16 @@ void CSRPSKAuthentication::buildMetadataString(std::string modemType, std::strin
 	data["m"] = "\x01" + buildModemTypeIdString(modemType, modemId) + "-" + version;
 }
 
-void CSRPSKAuthentication::buildTopicString(std::vector<std::wstring> topics)
+void CSRPSKAuthentication::buildTopicString(std::vector<std::string> topics)
 {
 	json topicArray = json::array();
-	for (std::wstring topic : topics) {
-		topicArray.push_back(fromWString(topic));
+	for (std::string topic : topics) {
+		topicArray.push_back(topic);
 	}
 	data["t"] = topicArray;
 }
 
-void CSRPSKAuthentication::buildMessageString(std::wstring messages)
+void CSRPSKAuthentication::buildMessageString(std::string messages)
 {
-	data["d"] = fromWString(messages);
+	data["d"] = messages;
 }

@@ -9,7 +9,7 @@ using json = nlohmann::json;
 class Authentication {
 public:
 
-	std::wstring buildPayloadString(std::wstring messages, std::vector<std::wstring> topics, std::string modemType = "", std::string modemId = "", std::string version = "") {
+	std::string buildPayloadString(std::string messages, std::vector<std::string> topics, std::string modemType = "", std::string modemId = "", std::string version = "") {
 		buildAuthString();
 		buildMetadataString(modemType, modemId, version); //type nova id sara
 
@@ -19,11 +19,11 @@ public:
 
 		buildMessageString(messages);
 
-		return toWString(data.dump() + "\r\r");
+		return data.dump() + "\r\r";
 	}
 
 
-	virtual std::wstring buildSMSPayloadString(std::wstring message, std::string destination_number) =0;
+	virtual std::string buildSMSPayloadString(std::string message, std::string destination_number) =0;
 	virtual bool supportsSMS() = 0;
 
 protected:
@@ -45,8 +45,8 @@ protected:
 
 	virtual void buildAuthString(std::string timestamp = "", std::string sequence_number = "") = 0;
 	virtual void buildMetadataString(std::string modemType, std::string modemId, std::string version) = 0;
-	virtual void buildTopicString(std::vector<std::wstring> topics) = 0;
-	virtual void buildMessageString(std::wstring messages) = 0;
+	virtual void buildTopicString(std::vector<std::string> topics) = 0;
+	virtual void buildMessageString(std::string messages) = 0;
 
 	std::map<std::string, std::string> credentials;
 	json data;

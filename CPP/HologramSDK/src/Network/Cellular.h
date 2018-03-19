@@ -15,7 +15,7 @@ public:
 	virtual bool connect(int timeout = DEFAULT_CELLULAR_TIMEOUT);
 	virtual bool disconnect();
 	virtual bool reconnect();
-	virtual std::string sendMessage(std::wstring message) {
+	virtual std::string sendMessage(std::string message) {
 		return modem->sendMessage(message);
 	}
 	virtual bool openReceiveSocket(int recv_port) {
@@ -34,7 +34,7 @@ public:
 	virtual bool listenSocket(int port) {
 		return modem->listenSocket(port);
 	}
-	virtual bool writeSocket(std::wstring data) {
+	virtual bool writeSocket(std::string data) {
 		return modem->writeSocket(data);
 	}
 	virtual bool closeSocket() {
