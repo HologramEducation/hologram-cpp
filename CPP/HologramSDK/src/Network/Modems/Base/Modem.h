@@ -1,15 +1,6 @@
 #pragma once
 #include "Serial.h"
-
-#ifdef TARGET_WINDOWS
-#pragma comment(lib, "rasapi32.lib")
-#include "ras.h"
-#include "raserror.h"
-#endif
-
-#ifndef USERAS
 #include "PPP/PPP.h"
-#endif
 
 #include "../../../Event/EventBus/EventBus.h"
 #include "../../../Event/Events.h"
@@ -19,13 +10,13 @@
 #define RETRY_DELAY 50  // 50 millisecond delay to avoid spinning loops
 
 typedef struct _MODEM_INFO {
-	std::wstring Manufacturer;
-	std::wstring Model;
-	std::wstring Revision;
-	std::wstring SVN;
-	std::wstring IMEI;
-	std::wstring ICCID;
-	std::wstring Mode;
+	std::string Manufacturer;
+	std::string Model;
+	std::string Revision;
+	std::string SVN;
+	std::string IMEI;
+	std::string ICCID;
+	std::string Mode;
 }MODEM_INFO;
 
 enum ModemResult {
@@ -60,16 +51,12 @@ public:
 	virtual void initModemSerialMode() = 0;
 
 	//Hologram
-	virtual std::string sendMessage(std::wstring message);
+	virtual std::string sendMessage(std::string message);
 
 	//Cellular
 	bool connect();
 	void disconnect() {
-#ifdef USERAS
-		if (hRasConn != NULL) {
-			RasHangUp(hRasConn);
-		}
-#endif
+
 	}
 	bool setTimezoneConfiguration();
 	virtual void setNetworkRegistrationStatus() = 0;
@@ -86,7 +73,7 @@ public:
 	virtual bool createSocket();
 	bool connectSocket(std::string host, int port);
 	bool listenSocket(int port);
-	bool writeSocket(std::wstring data);
+	bool writeSocket(std::string data);
 	std::string readSocket(int socketID, int bufferLen);
 	bool closeSocket(int socketID);
 
@@ -110,50 +97,13 @@ public:
 
 	MODEM_INFO modemInfo;
 
-#ifdef TARGET_WINDOWS
-
-#ifdef USERAS
-	//RAS Stuff
-	bool setupRASConnection(std::wstring modemName, std::wstring connName);
-
-	RASCONNSTATUS getConnectionStatus() {
-		rasConnStatus.dwSize = sizeof(RASCONNSTATUS);
-		RasGetConnectStatus(hRasConn, &rasConnStatus);
-		return rasConnStatus;
-	}
-
-	RASCONNSTATE getConnectionState() {
-		return connState;
-	}
-
-	static std::vector<LPRASDEVINFO> getConnectedModems();
-	static void getConnectionProfiles();
-
-private:
-	HRASCONN hRasConn;
-	RASCONNSTATE connState;
-	RASCONNSTATUS rasConnStatus;
-	std::wstring profileName;
-
-	void updateConnectionStatus() {
-		rasConnStatus.dwSize = sizeof(RASCONNSTATUS);
-		RasGetConnectStatus(hRasConn, &rasConnStatus);
-		connState = rasConnStatus.rasconnstate;
-	}
-
-	static void determineOFlags(DWORD flag);
-	static void determineO2Flags(DWORD flag);
-#else
 	PPP ppp;
-#endif
-
-#endif
 protected:
 	bool checkRegistered(std::string atCommand);
 	void parsePDU(std::string header, std::string pdu, SMS * sms, int & index);
-	std::wstring parseSender(std::string pdu, int & offset);
+	std::string parseSender(std::string pdu, int & offset);
 	time_t parseTimestamp(std::string pdu, int & offset);
-	std::wstring parseMessage(std::string pdu, int & offset);
+	std::string parseMessage(std::string pdu, int & offset);
 	std::string name;
 	URCState urcState;
 	int last_read_payload_length;
