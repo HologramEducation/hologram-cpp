@@ -37,6 +37,21 @@
     <Filter Include="Events\EventBus">
       <UniqueIdentifier>{2d997d63-d0d6-4ff1-8c3d-980f13cfc7d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Network\Modem\Base\Serial">
+      <UniqueIdentifier>{fa397793-5357-44ae-8ee0-0a6ae7681098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Modem\Base\IP">
+      <UniqueIdentifier>{988f78ca-76a1-4552-bca0-05ed692dabca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Modem\Base\IP\PPP">
+      <UniqueIdentifier>{bcc2c393-096e-4082-b0b2-93927ba46d66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Modem\Base\IP\RAS">
+      <UniqueIdentifier>{a2d1baf7-80d1-4fa0-9fa0-acab020e5d49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Modem\Base\IP\Base">
+      <UniqueIdentifier>{f4a59e8f-6a23-4243-8aef-8955ee8d7055}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -48,9 +63,6 @@
     </ClCompile>
     <ClCompile Include="..\HologramSDK\src\Cloud\HologramCloud.cpp">
       <Filter>Cloud</Filter>
-    </ClCompile>
-    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Serial.cpp">
-      <Filter>Network\Modem\Base</Filter>
     </ClCompile>
     <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Modem.cpp">
       <Filter>Network\Modem\Base</Filter>
@@ -66,6 +78,12 @@
     </ClCompile>
     <ClCompile Include="..\HologramSDK\src\Event\EventBus\EventBus.cpp">
       <Filter>Events\EventBus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Serial\Serial.cpp">
+      <Filter>Network\Modem\Base\Serial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\IP\RAS\winRAS.cpp">
+      <Filter>Network\Modem\Base\IP\RAS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,9 +104,6 @@
     </ClInclude>
     <ClInclude Include="..\HologramSDK\src\Cloud\HologramCloud.h">
       <Filter>Cloud</Filter>
-    </ClInclude>
-    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Serial.h">
-      <Filter>Network\Modem\Base</Filter>
     </ClInclude>
     <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Modem.h">
       <Filter>Network\Modem\Base</Filter>
@@ -125,6 +140,21 @@
     </ClInclude>
     <ClInclude Include="..\HologramSDK\src\Event\EventBus\HandlerRegistration.h">
       <Filter>Events\EventBus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\ConnectionManager.h">
+      <Filter>Network\Modem\Base\IP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Serial\Serial.h">
+      <Filter>Network\Modem\Base\Serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\Base\IP.h">
+      <Filter>Network\Modem\Base\IP\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\RAS\winRAS.h">
+      <Filter>Network\Modem\Base\IP\RAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\PPP\PPP.h">
+      <Filter>Network\Modem\Base\IP\PPP</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
