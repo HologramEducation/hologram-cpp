@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../Utils/Utils.h"
+#include "../../../../Utils/Utils.h"
 
 #ifdef TARGET_WINDOWS
 #pragma comment(lib, "Cfgmgr32.lib")
@@ -16,7 +16,6 @@ DEFINE_GUID(GUID_DEVINTERFACE_MODEM, 0x2C7089AA, 0x2E0E,
 #include <CoreFoundation/CoreFoundation.h>
 
 #include <IOKit/IOKitLib.h>
-#include <IOKit/IOCFPlugIn.h>
 #include <IOKit/usb/IOUSBLib.h>
 #include <IOKit/serial/IOSerialKeys.h>
 
@@ -32,32 +31,32 @@ DEFINE_GUID(GUID_DEVINTERFACE_MODEM, 0x2C7089AA, 0x2E0E,
 
 typedef struct _SERIAL_DEVICE_INFO {
 	_SERIAL_DEVICE_INFO() {}
-	_SERIAL_DEVICE_INFO(std::wstring vid, std::wstring pid) {
+	_SERIAL_DEVICE_INFO(std::string vid, std::string pid) {
 		this->vid = vid;
 		this->pid = pid;
 	}
-	std::wstring vid;
-	std::wstring pid;
-	std::wstring friendlyName;
-	std::wstring portName;
+	std::string vid;
+	std::string pid;
+	std::string friendlyName;
+	std::string portName;
 }SERIAL_DEVICE_INFO;
 
 class Serial {
 public:
-	bool setupSerialPort(std::wstring port, unsigned int baud = 115200);
+	bool setupSerialPort(std::string port, unsigned int baud = 115200);
 	bool write(std::string message);
 	bool read(std::string &buffer, bool waitForBuffer = false);
 	void setTimeout(int timeout);
 
-	static bool isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name);
+	static bool isDeviceConnected(SERIAL_DEVICE_INFO & info, std::string name);
 	static std::vector<SERIAL_DEVICE_INFO> getConnectedSerialDevices();
 private:
-	static bool parseVidPid(std::wstring device, SERIAL_DEVICE_INFO & deviceInfo)
+	static bool parseVidPid(std::string device, SERIAL_DEVICE_INFO & deviceInfo)
 	{
 #ifdef TARGET_WINDOWS
 		// parse out the VID number
-		std::string::size_type vpos = device.find(L"VID_");
-		std::string::size_type ppos = device.find(L"PID_");
+		std::string::size_type vpos = device.find("VID_");
+		std::string::size_type ppos = device.find("PID_");
 
 		if (vpos == std::wstring::npos) {
 			wprintf(L"Failed to locate the VID");
@@ -74,13 +73,13 @@ private:
 		deviceInfo.pid = device.substr(ppos+4, 4);
 #else
 		std::string line;
-		std::ifstream infile(fromWString(device+L"/idVendor"));
+		std::ifstream infile(device+"/idVendor");
 		std::getline(infile, line);
-		deviceInfo.vid = toWString(line);
+		deviceInfo.vid = line;
 		
-		infile = std::ifstream(fromWString(device+L"/idProduct"));
+		infile = std::ifstream(device+"/idProduct");
 		std::getline(infile, line);
-		deviceInfo.pid = toWString(line);
+		deviceInfo.pid = line;
 #endif
 		return true;
 	}
@@ -89,11 +88,11 @@ protected:
 #ifdef TARGET_WINDOWS
 	HANDLE m_hCom;
 private:
-	static bool isCorrectDevice(std::wstring deviceId, SERIAL_DEVICE_INFO device, std::wstring name)
+	static bool isCorrectDevice(std::string deviceId, SERIAL_DEVICE_INFO device, std::string name)
 	{
 		// parse out the VID number
-		std::string::size_type pos = deviceId.find(L"VID_");
-		if (pos == std::wstring::npos) {
+		std::string::size_type pos = deviceId.find("VID_");
+		if (pos == std::string::npos) {
 			wprintf(L"Failed to locate the VID");
 			return false;
 		}
@@ -103,7 +102,7 @@ private:
 		}
 
 		// now the PID 
-		pos = deviceId.find(L"PID_");
+		pos = deviceId.find("PID_");
 		if (pos == std::wstring::npos) {
 			wprintf(L"Failed to locate the PID");
 			return false;
@@ -114,7 +113,7 @@ private:
 			return false;
 		}
 
-		if (deviceId.find(name) == std::wstring::npos) {
+		if (deviceId.find(name) == std::string::npos) {
 			return false;
 		}
 

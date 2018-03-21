@@ -1,7 +1,7 @@
 #include "Serial.h"
 #include <iostream>
 
-bool Serial::setupSerialPort(std::wstring port, unsigned int baud)
+bool Serial::setupSerialPort(std::string port, unsigned int baud)
 {
 #ifdef TARGET_WINDOWS
 	std::string strResult;
@@ -10,7 +10,7 @@ bool Serial::setupSerialPort(std::wstring port, unsigned int baud)
 	if (m_hCom && m_hCom != INVALID_HANDLE_VALUE)
 		CloseHandle(m_hCom);
 
-	m_hCom = CreateFile(port.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+	m_hCom = CreateFile(toWString(port).c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 	if (m_hCom == INVALID_HANDLE_VALUE)
 		return false;
 
@@ -24,7 +24,7 @@ bool Serial::setupSerialPort(std::wstring port, unsigned int baud)
 
 	PurgeComm(m_hCom, PURGE_TXCLEAR | PURGE_TXABORT | PURGE_RXCLEAR | PURGE_RXABORT);
 #else
-    fd = ::open(fromWString(port).c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK);
+    fd = ::open(port.c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK);
 	if (fd == -1) {
 		return false;
 	}
@@ -108,9 +108,8 @@ bool Serial::setupSerialPort(std::wstring port, unsigned int baud)
 
 bool Serial::write(std::string message)
 {
+    std::cout << message << std::endl;
 #ifdef TARGET_WINDOWS
-	std::cout << message << std::endl;
-
 	DWORD dwOut = 0;
 	DWORD dwEvtMask = 0;
 
@@ -175,11 +174,12 @@ bool Serial::read(std::string & buffer, bool waitForBuffer)
 	}
 
 	buffer = pBuffer;
-	std::cout << buffer << std::endl;
 #else
 	int length = 0;
-	ioctl(fd, FIONREAD, &length);
-
+    while(waitForBuffer && length == 0){
+        ioctl(fd, FIONREAD, &length);
+    }
+    
 	if (!length) {
 		return false;
 	}
@@ -192,7 +192,7 @@ bool Serial::read(std::string & buffer, bool waitForBuffer)
 		return false;
 	}
 #endif
-
+    std::cout << buffer << std::endl;
 	return true;
 }
 
@@ -223,13 +223,20 @@ bool Serial::IsInitialized()
 }
 
 //https://stackoverflow.com/questions/7599331/list-usb-device-with-specified-vid-and-pid-without-using-windows-driver-kit
-bool Serial::isDeviceConnected(SERIAL_DEVICE_INFO & info, std::wstring name)
+bool Serial::isDeviceConnected(SERIAL_DEVICE_INFO & info, std::string name)
 {
 	for (auto device : getConnectedSerialDevices()) {
-		if (device.pid == info.pid && device.vid == info.vid && device.portName.find(name) != std::wstring::npos) {
+#ifdef TARGET_WINDOWS
+        if (device.pid == info.pid && device.vid == info.vid && device.portName.find(name) != std::string::npos) {
 			info.portName = device.portName;
 			return true;
 		}
+#elif defined(TARGET_MACOS)
+        if (device.pid == info.pid && device.vid == info.vid && device.portName.compare(device.portName.size()-1, 1, name) == 0) {
+            info.portName = device.portName;
+            return true;
+        }
+#endif
 	}
 	return false;
 }
@@ -292,7 +299,7 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
 
 
 			SERIAL_DEVICE_INFO info;
-			info.portName = deviceInterface;
+			info.portName = fromWString(deviceInterface);
 			parseVidPid(info.portName, info);
 
 			propertyBufferSize = sizeof(CurrentDevice);
@@ -313,7 +320,7 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
 				wprintf(L"Property is not string\n");
 			}
 			else {
-				info.friendlyName.assign(GetDeviceDescription(CurrentDevice));
+				info.friendlyName.assign(fromWString(GetDeviceDescription(CurrentDevice)));
 			}
 
 			devices.push_back(info);
@@ -323,7 +330,6 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
 #elif defined(TARGET_MACOS)
     kern_return_t kr;
     io_service_t device;
-    IOCFPlugInInterface **plugInInterface = NULL;
     CFMutableDictionaryRef matchingDict;
     io_iterator_t iter;
     
@@ -357,108 +363,70 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
     while ((device = IOIteratorNext(iter)))
     {
         SERIAL_DEVICE_INFO info;
-        io_name_t deviceName;
-        io_string_t path;
-        CFTypeRef deviceNameAsCFString;
-        CFTypeRef bsdPathAsCFString;
-        UInt16 vendorId;
-        UInt16 productId;
+        CFTypeRef bsdPathAsCFString = NULL;
+        CFTypeRef productNameAsCFString = NULL;
+        CFTypeRef vendorIdAsCFNumber = NULL;
+        CFTypeRef productIdAsCFNumber = NULL;
+        CFTypeRef tIdAsCFNumber = NULL;
         
-        // Get the callout device's path (/dev/cu.xxxxx). The callout device should almost always be
-        // used: the dialin device (/dev/tty.xxxxx) would be used when monitoring a serial port for
-        // incoming calls, e.g. a fax listener.
+        bsdPathAsCFString = IORegistryEntryCreateCFProperty(device, CFSTR(kIOCalloutDeviceKey), kCFAllocatorDefault, 0);
         
-        bsdPathAsCFString = IORegistryEntryCreateCFProperty(device,
-                                                            CFSTR(kIOCalloutDeviceKey),
-                                                            kCFAllocatorDefault,
-                                                            0);
-        if (bsdPathAsCFString) {
-            // Convert the path from a CFString to a C (NUL-terminated) string for use
-            // with the POSIX open() call.
-            
-            Boolean result = CFStringGetCString((CFStringRef)bsdPathAsCFString, path, sizeof(path), kCFStringEncodingUTF8);
-            
-            if(result){
-                info.portName = toWString(path);
+        io_registry_entry_t parent;
+        kr = IORegistryEntryGetParentEntry(device, kIOServicePlane, &parent);
+        
+        while( kr == KERN_SUCCESS && !vendorIdAsCFNumber && !productIdAsCFNumber ){
+            if(!productNameAsCFString){
+                productNameAsCFString = IORegistryEntrySearchCFProperty(parent, kIOServicePlane, CFSTR("Product Name"), kCFAllocatorDefault, 0);
             }
+            vendorIdAsCFNumber = IORegistryEntrySearchCFProperty(parent, kIOServicePlane, CFSTR(kUSBVendorID), kCFAllocatorDefault, 0);
             
+            productIdAsCFNumber = IORegistryEntrySearchCFProperty(parent, kIOServicePlane, CFSTR(kUSBProductID), kCFAllocatorDefault, 0);
+            
+            tIdAsCFNumber = IORegistryEntrySearchCFProperty(parent, kIOServicePlane, CFSTR("USBBusNumber"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
+            
+            io_registry_entry_t oldparent = parent;
+            kr = IORegistryEntryGetParentEntry(parent, kIOServicePlane, &parent);
+            IOObjectRelease(oldparent);
+        }
+        
+        io_string_t ioPathName;
+        IORegistryEntryGetPath(device, kIOServicePlane, ioPathName);
+        
+        if( bsdPathAsCFString ){
+            char path[512];
+            if( CFStringGetCString((CFStringRef)bsdPathAsCFString, path, PATH_MAX, kCFStringEncodingUTF8) ){
+                info.portName = path;
+            }
             CFRelease(bsdPathAsCFString);
         }
         
-        io_name_t pathname;
-        while(std::strncmp(pathname, "IOUSBInterface", 14) != 0){
-            IOObjectGetClass(device, pathname);
-            io_registry_entry_t parent;
-            Boolean result = IORegistryEntryGetParentEntry(device, kIOServicePlane, &parent);
-            if(result){
-                break;
+        if( productNameAsCFString ){
+            char productName[512];
+            if( CFStringGetCString((CFStringRef)productNameAsCFString, productName, PATH_MAX, kCFStringEncodingUTF8) ){
+                info.friendlyName = productName;
             }
-            device = parent;
+            CFRelease(productNameAsCFString);
         }
         
-        // Get the USB device's name.
-        kr = IORegistryEntryGetName(device, deviceName);
-        if(KERN_SUCCESS != kr) {
-            deviceName[0] = '\0';
-        }
-        
-        deviceNameAsCFString = CFStringCreateWithCString(kCFAllocatorDefault, deviceName, kCFStringEncodingASCII);
-        
-        
-        if(deviceNameAsCFString) {
-            Boolean result;
-            
-            // Convert from a CFString to a C (NUL-terminated)
-            result = CFStringGetCString((CFStringRef)deviceNameAsCFString,
-                                        deviceName,
-                                        sizeof(deviceName),
-                                        kCFStringEncodingUTF8);
-            
-            if(result) {
-                info.friendlyName = toWString(deviceName);
+        if( vendorIdAsCFNumber ){
+            SInt32 vID;
+            if(CFNumberGetValue((CFNumberRef)vendorIdAsCFNumber, kCFNumberSInt32Type, &vID)){
+                info.vid = toHex(vID);
             }
-            
-            CFRelease(deviceNameAsCFString);
-        }
-        // we need to create an IOUSBDeviceInterface for our device. This will create the necessary
-        // connections between our userland application and the kernel object for the USB Device.
-        SInt32 score;
-        kr = IOCreatePlugInInterfaceForService(device, kIOUSBDeviceUserClientTypeID, kIOCFPlugInInterfaceID, &plugInInterface, &score);
-        
-        if((kIOReturnSuccess != kr) || !plugInInterface) {
-            fprintf(stderr, "Failed getting plugin interface with error: 0x%08x.\n", kr);
-            continue;
+            CFRelease(vendorIdAsCFNumber);
         }
         
-        IOUSBDeviceInterface** deviceInterface;
-        
-        // Use the plugin interface to retrieve the device interface.
-        HRESULT res = (*plugInInterface)->QueryInterface(plugInInterface, CFUUIDGetUUIDBytes(kIOUSBDeviceInterfaceID), (LPVOID*) &deviceInterface);
-        
-        // Now done with the plugin interface.
-        (*plugInInterface)->Release(plugInInterface);
-        
-        if(res || deviceInterface == NULL) {
-            fprintf(stderr, "QueryInterface returned %d.\n", (int) res);
-            continue;
+        if( productIdAsCFNumber ){
+            SInt32 pID;
+            if(CFNumberGetValue((CFNumberRef)productIdAsCFNumber, kCFNumberSInt32Type, &pID)){
+                info.pid = toHex(pID);
+            }
+            CFRelease(productIdAsCFNumber);
         }
         
-        // Now that we have the IOUSBDeviceInterface, we can call the routines in IOUSBLib.h.        
-        kr = (*deviceInterface)->GetDeviceVendor(deviceInterface, &vendorId);
-        if(KERN_SUCCESS != kr) {
-            fprintf(stderr, "GetDeviceVendor returned 0x%08x.\n", kr);
-            continue;
+        if(!info.pid.empty() && !info.vid.empty()){
+            devices.push_back(info);
         }
-        info.vid = toWString(toHex(vendorId));
-        
-        kr = (*deviceInterface)->GetDeviceProduct(deviceInterface, &productId);
-        if(KERN_SUCCESS != kr) {
-            fprintf(stderr, "GetDeviceProduct returned 0x%08x.\n", kr);
-            continue;
-        }
-        info.pid = toWString(toHex(productId));
-        
-        devices.push_back(info);
         
         /* And free the reference taken before continuing to the next item */
         IOObjectRelease(device);
@@ -502,7 +470,7 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
 					//do they match ?
 					if (deviceName.substr(0, prefixMatch[k].size()) == prefixMatch[k].c_str()) {
 						SERIAL_DEVICE_INFO info;
-						info.portName = StringToWstring("/dev/" + deviceName);
+						info.portName = "/dev/" + deviceName;
 						parseVidPid(info.portName, info);
 						devices.push_back(info);
 						break;

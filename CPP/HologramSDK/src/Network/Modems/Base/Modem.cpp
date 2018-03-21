@@ -1,4 +1,5 @@
 #include "Modem.h"
+#include <iostream>
 
 Modem::Modem()
 {
@@ -26,7 +27,7 @@ Modem::~Modem()
 ModemResult Modem::parseATCommandResult(std::string strATCommand, std::string& strResult, std::vector<std::string>& resultArray)
 {
 	resultArray.clear();
-
+    
 	ofStringReplace(strResult, "OK\r\n", "OK");
 	ofStringReplace(strResult, "\r\n", ";");
 	ofStringReplace(strResult, "\r", "");
@@ -35,7 +36,7 @@ ModemResult Modem::parseATCommandResult(std::string strATCommand, std::string& s
 	while (strResult[0] == ';') {
 		strResult.erase(0, 1);
 	}
-
+    
 	resultArray = ofSplitString(strResult, ";");
 
 	std::string result = resultArray.back();
@@ -337,17 +338,6 @@ void Modem::setHexMode(bool state)
 	sendATCommand("AT+UDCONF=1," + mode);
 }
 
-bool Modem::connect()
-{
-	//we need to get the addresses and ports somehow
-    const std::string localHost;
-    int localPort = 0;
-    const std::string remoteHost;
-    int remotePort = 0;
-    ppp.connect(localHost, localPort, remoteHost, remotePort);
-	return true;
-}
-
 bool Modem::setTimezoneConfiguration()
 {
 	bool zoneSync = sendATCommand("AT+CTZU=1");
@@ -474,3 +464,137 @@ ModemResult Modem::determineModemResult(std::string result)
 	}
 	return MODEM_ERROR;
 }
+
+#ifdef USERAS
+std::vector<LPRASDEVINFO> Modem::getConnectedModems() {
+
+	DWORD dwCb = 0;
+	DWORD dwRet = ERROR_SUCCESS;
+	DWORD dwDevices = 0;
+	LPRASDEVINFO lpRasDevInfo = NULL;
+	std::vector<LPRASDEVINFO> devices;
+
+	// Call RasEnumDevices with lpRasDevInfo = NULL. dwCb is returned with the required buffer size and
+	// a return code of ERROR_BUFFER_TOO_SMALL
+	dwRet = RasEnumDevices(lpRasDevInfo, &dwCb, &dwDevices);
+
+	if (dwRet == ERROR_BUFFER_TOO_SMALL) {
+		// Allocate the memory needed for the array of RAS structure(s).
+		lpRasDevInfo = (LPRASDEVINFO)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, dwCb);
+		if (lpRasDevInfo == NULL) {
+			wprintf(L"HeapAlloc failed!\n");
+			return devices;
+		}
+		// The first RASDEVINFO structure in the array must contain the structure size
+		lpRasDevInfo[0].dwSize = sizeof(RASDEVINFO);
+
+		// Call RasEnumDevices to enumerate RAS devices
+		dwRet = RasEnumDevices(lpRasDevInfo, &dwCb, &dwDevices);
+
+		// If successful, print the names of the RAS devices
+		if (ERROR_SUCCESS == dwRet) {
+			for (unsigned int i = 0; i < dwDevices; i++) {
+				if (wcscmp(lpRasDevInfo[i].szDeviceType, RASDT_Modem) == 0) {
+					devices.push_back(&lpRasDevInfo[i]);
+				}
+			}
+		}
+		//Deallocate memory for the connection buffer
+		HeapFree(GetProcessHeap(), 0, lpRasDevInfo);
+		lpRasDevInfo = NULL;
+		return devices;
+	}
+
+	// There was either a problem with RAS or there are no RAS devices to enumerate
+	if (dwDevices >= 1) {
+		wprintf(L"The operation failed to acquire the buffer size.\n");
+	}
+	else {
+		wprintf(L"There were no RAS devices found.\n");
+	}
+
+	return devices;
+}
+
+void Modem::getConnectionProfiles()
+{
+	DWORD dwErr = ERROR_SUCCESS;
+	DWORD dwSize = 0, dwEntries;
+	LPRASENTRYNAME pRasEntryName = NULL;
+	LPRASENTRY pRasEntry = NULL;
+	unsigned int i;
+
+	dwErr = RasEnumEntries(NULL, NULL, NULL, &dwSize, &dwEntries);
+
+	if (dwErr == ERROR_BUFFER_TOO_SMALL)
+	{
+		pRasEntryName = (LPRASENTRYNAME)LocalAlloc(LPTR, dwSize);
+		if (pRasEntryName == NULL)
+		{
+			printf("Alloc failed for EnumEntries %d", GetLastError());
+			goto Done;
+		}
+
+		pRasEntryName->dwSize = sizeof(RASENTRYNAME);
+		dwErr = RasEnumEntries(NULL, NULL, pRasEntryName, &dwSize, &dwEntries);
+		if (dwErr != ERROR_SUCCESS)
+		{
+			printf("RasEnumEntries failed with error %d", dwErr);
+			goto Done;
+		}
+		printf("Number of Entries %d\n", dwEntries);
+
+		for (i = 0; i < dwEntries; i++)
+		{
+			dwSize = 0;
+			dwErr = RasGetEntryProperties(pRasEntryName[i].szPhonebookPath,
+				pRasEntryName[i].szEntryName,
+				NULL,
+				&dwSize,
+				NULL, NULL);
+			if (dwErr == ERROR_BUFFER_TOO_SMALL)
+			{
+				pRasEntry = (LPRASENTRY)LocalAlloc(LPTR, dwSize);
+				if (pRasEntry == NULL)
+				{
+					printf("Alloc failed for RasEntry\n");
+					goto Done;
+				}
+
+				pRasEntry->dwSize = sizeof(RASENTRY);
+				dwErr = RasGetEntryProperties(pRasEntryName[i].szPhonebookPath,
+					pRasEntryName[i].szEntryName,
+					pRasEntry,
+					&dwSize,
+					NULL, 0);
+				if (dwErr != ERROR_SUCCESS)
+				{
+					wprintf(L"RasGetEntryProperties failed with error %d for entry %s\n", dwErr, pRasEntryName[i].szEntryName);
+					goto Done;
+				}
+			}
+			else
+			{
+				wprintf(L"RasGetEntryProperties failed with error %d for entry %s\n", dwErr, pRasEntryName[i].szEntryName);
+				goto Done;
+			}
+			LocalFree(pRasEntry);
+			pRasEntry = NULL;
+		}
+	}
+	else
+	{
+		goto Done;
+	}
+
+Done:
+	if (pRasEntryName)
+	{
+		LocalFree(pRasEntryName);
+	}
+	if (pRasEntry)
+	{
+		LocalFree(pRasEntry);
+	}
+}
+#endif

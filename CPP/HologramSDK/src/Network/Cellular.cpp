@@ -53,23 +53,23 @@ void Cellular::autoDectectModem()
 		}
 		if (modemName == "NOVA201") {
 #ifdef TARGET_WINDOWS
-			if (Serial::isDeviceConnected(Nova_U201::deviceInfo, L"MI_02")) {
+			if (Serial::isDeviceConnected(Nova_U201::deviceInfo, "MI_02")) {
+#elif defined(TARGET_MACOS)
+            if (Serial::isDeviceConnected(Nova_U201::deviceInfo, "1")) {
 #else
-			if (Serial::isDeviceConnected(Nova_R404::deviceInfo, L"2")) {
+			if (Serial::isDeviceConnected(Nova_U201::deviceInfo, "2")) {
 #endif
 				modem = new Nova_U201();
-				modem->setupSerialPort(Nova_U201::deviceInfo.portName);				
+				modem->setupSerialPort(Nova_U201::deviceInfo.portName);
 #ifdef USERAS
 				for (auto device : Modem::getConnectedModems()) {
 					if (wcsstr(device->szDeviceName, L"AT DATA")) {
-						modem->setupRASConnection(device->szDeviceName, TEXT("Hologram Cellular Connection"));
+						modem->setConnectionType(_RAS, fromWString(device->szDeviceName), "Hologram Cellular Connection");
 						break;
 					}
 				}
-#elif defined(IOTCORE)
-				//IoT Core PPP code
 #else
-				//linux ppp code
+				modem->setConnectionType(_PPP, Nova_U201::deviceInfo.portName, "Hologram Cellular Connection");
 #endif
 				modem->initModemSerialMode();
 				modem->populateModemInformation();
@@ -78,23 +78,23 @@ void Cellular::autoDectectModem()
 		}
 		if (modemName == "NOVA404") {
 #ifdef TARGET_WINDOWS
-			if (Serial::isDeviceConnected(Nova_R404::deviceInfo, L"MI_02")) {
+			if (Serial::isDeviceConnected(Nova_R404::deviceInfo, "MI_02")) {
+#elif defined(TARGET_MACOS)
+                if (Serial::isDeviceConnected(Nova_R404::deviceInfo, "1")) {
 #else
-			if (Serial::isDeviceConnected(Nova_R404::deviceInfo, L"2")) {
+			if (Serial::isDeviceConnected(Nova_R404::deviceInfo, "2")) {
 #endif
 				modem = new Nova_R404();
 				modem->setupSerialPort(Nova_R404::deviceInfo.portName);
 #ifdef USERAS
 				for (auto device : Modem::getConnectedModems()) {
 					if (wcsstr(device->szDeviceName, L"Qualcomm HS-USB Modem") != nullptr) {
-						modem->setupRASConnection(device->szDeviceName, TEXT("Hologram Cellular Connection"));
+						modem->setConnectionType(_RAS, fromWString(device->szDeviceName), "Hologram Cellular Connection");
 						break;
 					}
 				}
-#elif defined(IOTCORE)
-				//IoT Core PPP code
 #else
-				//linux ppp code
+				modem->setConnectionType(_PPP, Nova_R404::deviceInfo.portName, "Hologram Cellular Connection");
 #endif
 				modem->initModemSerialMode();
 				modem->populateModemInformation();

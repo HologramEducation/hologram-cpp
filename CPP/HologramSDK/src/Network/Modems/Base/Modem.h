@@ -1,7 +1,6 @@
 #pragma once
-#include "Serial.h"
-#include "PPP/PPP.h"
-
+#include "Serial/Serial.h"
+#include "IP\ConnectionManager.h"
 #include "../../../Event/EventBus/EventBus.h"
 #include "../../../Event/Events.h"
 
@@ -54,10 +53,13 @@ public:
 	virtual std::string sendMessage(std::string message);
 
 	//Cellular
-	bool connect();
-	void disconnect() {
-
+	bool connect() {
+		return manager.getConnection()->connect();
 	}
+	void disconnect() {
+		manager.getConnection()->disconnect();
+	}
+
 	bool setTimezoneConfiguration();
 	virtual void setNetworkRegistrationStatus() = 0;
 	std::string popRecievedMessage();
@@ -97,7 +99,14 @@ public:
 
 	MODEM_INFO modemInfo;
 
-	PPP ppp;
+	void setConnectionType(ConnectionType type, std::string name, std::string device) {
+		manager.setConnectionType(type, name, device);
+	}
+	
+#ifdef USERAS
+	static std::vector<LPRASDEVINFO> getConnectedModems();
+	static void getConnectionProfiles();
+#endif
 protected:
 	bool checkRegistered(std::string atCommand);
 	void parsePDU(std::string header, std::string pdu, SMS * sms, int & index);
@@ -110,7 +119,7 @@ protected:
 	unsigned char socketId;
 private:	
 	std::deque<std::string> socketBuffer;
-
+	ConnectionManager manager;
 	ModemResult determineModemResult(std::string result);
 };
 
