@@ -15,7 +15,12 @@
 #if defined( __WIN32__ ) || defined( _WIN32 )
 #define TARGET_WINDOWS
 #ifndef IOTCORE
-//#define USERAS 1
+#define USERAS 1
+#else
+//we have to include winsock before windows.h or we get a bunch of redefinition errors...
+#pragma comment(lib, "Ws2_32.lib")
+#include <winsock2.h>
+#include <ws2tcpip.h>
 #endif
 #include <windows.h>
 #elif defined( __APPLE_CC__)
@@ -98,40 +103,6 @@ static std::string toHex(const int i)
     
     return ret.str();
 }
-static wchar_t gsm7toChar(unsigned char gsmChar, bool & inExtended) {
-	if (inExtended) {
-		inExtended = false;
-		if (EXT.count(gsmChar) > 0) {
-			return EXT[gsmChar];
-		}
-	}
-	else if (gsmChar == 0x1B) {
-		inExtended = true;
-		return ' ';
-	}
-	else if (gsmChar < GSM.length())
-		return GSM[gsmChar];
-	return ' ';
-}
-
-static std::string convertGSM7to8bit(std::string message, int msg_len) {
-	int last = 0;
-	int current = 0;
-	int i = 0;
-	std::string msg;
-	bool inExt = false;
-	for (int count = 0; count < msg_len; count++) {
-		int offset = count % 8;
-		last = current;
-		if (offset < 7) {
-			current = int(((unsigned char)fromHex(message.substr(i * 2, 2))[0]));
-			i += 1;
-			char gsmChar = (last >> (8 - offset)) | (current << offset);
-			msg += gsm7toChar(gsmChar & 0x7F, inExt);
-		}
-	}
-	return msg;
-}
 
 static std::string switchCharPairs(std::string strToSwap) {
 	std::string swappedString;
@@ -158,6 +129,41 @@ static std::string fromWString(std::wstring source) {
 	std::string retStr = buffer;
 	delete[] buffer;
 	return retStr.substr(0, len);
+}
+
+static wchar_t gsm7toChar(unsigned char gsmChar, bool & inExtended) {
+	if (inExtended) {
+		inExtended = false;
+		if (EXT.count(gsmChar) > 0) {
+			return EXT[gsmChar];
+		}
+	}
+	else if (gsmChar == 0x1B) {
+		inExtended = true;
+		return ' ';
+	}
+	else if (gsmChar < GSM.length())
+		return GSM[gsmChar];
+	return ' ';
+}
+
+static std::string convertGSM7to8bit(std::string message, int msg_len) {
+	int last = 0;
+	int current = 0;
+	int i = 0;
+	std::wstring msg;
+	bool inExt = false;
+	for (int count = 0; count < msg_len; count++) {
+		int offset = count % 8;
+		last = current;
+		if (offset < 7) {
+			current = int(((unsigned char)fromHex(message.substr(i * 2, 2))[0]));
+			i += 1;
+			char gsmChar = (last >> (8 - offset)) | (current << offset);
+			msg += gsm7toChar(gsmChar & 0x7F, inExt);
+		}
+	}
+	return fromWString(msg);
 }
 
 //--------------------Openframeworks String Manipulation ------------------------------

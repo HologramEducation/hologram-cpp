@@ -37,7 +37,7 @@ public:
 			return;
 		}
 
-		std::wcout << "Message sent " << e.getMessage() << std::endl;
+		std::cout << "Message sent " << e.getMessage() << std::endl;
 	}
 
 	/**
@@ -65,10 +65,10 @@ int main(int argc, char* argv[])
 	std::map<std::string, std::string> credentials;
 	credentials.emplace("devicekey", argv[2]); //1 - 404 2 - 201
 	HologramCloud cloud = HologramCloud(credentials, false, NetworkType::CELLULAR);
-	std::vector<std::wstring> topics;
-	topics.push_back(L"WINDOWS");
-	topics.push_back(L"CPPSDK");
-	std::string result = cloud.sendMessage(L"Windows Desktop", topics);
+	std::vector<std::string> topics;
+	topics.push_back("WINDOWS");
+	topics.push_back("CPPSDK");
+	std::string result = cloud.sendMessage("Windows Desktop", topics);
 	auto code = cloud.parseResultString(result);
 	//cloud.sendSMS(L"Just the CPP SDK sending SMSs eith the 404", argv[3]);
 	return 0;
