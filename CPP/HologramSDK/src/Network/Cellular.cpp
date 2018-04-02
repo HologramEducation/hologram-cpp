@@ -6,8 +6,6 @@ Cellular::Cellular()
 	supportedModems.push_back("NOVA404");
 	supportedModems.push_back("E303");
 	supportedModems.push_back("MS2131");
-	
-	
 
 	connectionState = CLOUD_DISCONNECTED;
 }

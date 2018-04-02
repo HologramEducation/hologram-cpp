@@ -1,27 +1,22 @@
 #pragma once
-#include "..\Base\IP.h"
-
-enum PPPType {
-	PPPOS,
-	PPPOE
-};
+#include "../Base/IP.h"
+#include "../../Serial/Serial.h"
 
 class PPP : public IP
 {
 public:
-	PPP(std::string name, std::string device) {
-		type = PPPOS;
-	}
-	~PPP() {
+	PPP(Serial * serialport);
+	~PPP();
 
-	}
 	virtual bool connect() {
 		return false;
 	}
 	virtual void disconnect() {
 
 	}
+	virtual bool isConnected() {
+		return false;
+	}
 private:
-	PPPType type;
+	Serial * serialport;
 };
-

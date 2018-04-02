@@ -100,7 +100,7 @@ public:
 	MODEM_INFO modemInfo;
 
 	void setConnectionType(ConnectionType type, std::string name, std::string device) {
-		manager.setConnectionType(type, name, device);
+		manager.setConnectionType(type, name, device, this);
 	}
 	
 #ifdef USERAS

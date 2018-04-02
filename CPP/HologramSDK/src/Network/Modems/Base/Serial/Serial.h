@@ -46,6 +46,10 @@ public:
 	bool setupSerialPort(std::string port, unsigned int baud = 115200);
 	bool write(std::string message);
 	bool read(std::string &buffer, bool waitForBuffer = false);
+	unsigned char readByte();
+	bool writeByte(unsigned char byte);
+	bool isAvailable();
+
 	void setTimeout(int timeout);
 
 	static bool isDeviceConnected(SERIAL_DEVICE_INFO & info, std::string name);

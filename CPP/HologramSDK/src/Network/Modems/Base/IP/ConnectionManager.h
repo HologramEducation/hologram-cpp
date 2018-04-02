@@ -22,11 +22,11 @@ public:
 		delete protocol;
 	}
 
-	void setConnectionType(ConnectionType type, std::string name, std::string device) {
+	void setConnectionType(ConnectionType type, std::string name = "", std::string device = "", Serial * serialport = nullptr) {
 		this->type = type;
 		switch (type) {
 		case _PPP:
-			protocol = new PPP(name, device);
+			protocol = new PPP(serialport);
 			break;
 		case _RAS:
 			protocol = new winRAS(name, device);

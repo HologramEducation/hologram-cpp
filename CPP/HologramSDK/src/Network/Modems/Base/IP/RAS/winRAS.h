@@ -13,18 +13,14 @@ public:
 
 	virtual bool connect();
 	virtual void disconnect();
+	virtual bool isConnected() {
+		updateConnectionState();
+		return getConnectionState() == RASCS_Connected;
+	}
 
 	bool setupRASConnection(std::wstring modemName, std::wstring connName);
 
-	RASCONNSTATUS getConnectionStatus() {
-		rasConnStatus.dwSize = sizeof(RASCONNSTATUS);
-		RasGetConnectStatus(hRasConn, &rasConnStatus);
-		return rasConnStatus;
-	}
 
-	RASCONNSTATE getConnectionState() {
-		return connState;
-	}
 
 private:
 	HRASCONN hRasConn;
@@ -36,6 +32,16 @@ private:
 		rasConnStatus.dwSize = sizeof(RASCONNSTATUS);
 		RasGetConnectStatus(hRasConn, &rasConnStatus);
 		connState = rasConnStatus.rasconnstate;
+	}	
+	
+	RASCONNSTATUS getConnectionStatus() {
+		rasConnStatus.dwSize = sizeof(RASCONNSTATUS);
+		RasGetConnectStatus(hRasConn, &rasConnStatus);
+		return rasConnStatus;
+	}
+
+	RASCONNSTATE getConnectionState() {
+		return connState;
 	}
 };
 

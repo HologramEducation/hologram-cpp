@@ -86,69 +86,6 @@ RawSerial xx(p9, p10); // change this to YOUR board second serial port pin defin
 #define IP_HEADER_DUMP_YES /* YES for ip header dump */
 #define TCP_HEADER_DUMP_YES /* YES for tcp header dump */
 
-// this is the webpage we serve when we get an HTTP request to root (/)
-// keep size under ~900 bytes to fit into a single PPP packet
-
-const static char rootWebPage[] = "\
-<!DOCTYPE html>\
-<html>\
-<head>\
-<title>mbed PPP-Blinky</title>\r\n\
-<script>\r\n\
-window.onload=function(){\
-setInterval(function(){function x(){return document.getElementById('w');};\
-x().textContent=parseInt(x().textContent)+1;},100);};\r\n\
-</script>\r\n\
-</head>\
-<body style=\"font-family: sans-serif; font-size:20px; text-align:center; color:#807070\">\
-<h1>mbed PPP-Blinky Up and Running</h1>\
-<h1 id=\"w\">0</h1>\
-<h1><a href=\"http://bit.ly/pppBlink2\">Source on mbed</a></h1>\
-<h1><a href=\"/ws\">WebSocket Demo</a></h1>\
-<h1><a href=\"/x\">Benchmark 1</a></h1>\
-<h1><a href=\"/xb\">Benchmark 2</a></h1>\
-<h1><a href=\"http://jsfiddle.net/d26cyuh2/\">JSFiddle Demo</a></h1>\
-</body>\
-</html>\r\n"; // size = 644 bytes plus 1 null byte = 645 bytes
-
-// this is a websocket demo html page we serve when GET /ws is requested
-const static char webSocketPage[] = "\
-<!DOCTYPE html>\
-<html>\
-<head>\
-<title>mbed PPP-Blinky</title>\
-<script>\
-window.onload=function(){\
- var url=\"ws://172.10.10.2\";\
- var sts=document.getElementById(\"sts\");\
- var btn=document.getElementById(\"btn\");\
- var ctr=0;\
- function show(text){sts.textContent=text;}\
- btn.onclick=function(){\
-  if(btn.textContent==\"Connect\"){\
-   x=new WebSocket(url);\
-    x.onopen=function(){\
-    show(\"Connected to : \"+url);\
-    btn.textContent=\"Send \\\"\"+ctr+\"\\\"\";\
-   };\
-  x.onclose=function(){show(\"closed\");};\
-  x.onmessage=function(msg){show(\"PPP-Blinky Sent: \\\"\"+msg.data+\"\\\"\");};\
-  } else {\
-   x.send(ctr);\
-   ctr=ctr+1;\
-   btn.textContent=\"Send \\\"\"+ctr+\"\\\"\";\
-  }\
- };\
-};\
-</script>\
-<body style=\"font-family: sans-serif; font-size:25px; color:#807070\">\
-<h1>PPP-Blinky WebSocket Test</h1>\
-<div id=\"sts\">Idle</div>\
-<button id=\"btn\" style=\"font-size: 100%; margin-top: 55px; margin-bottom: 55px;\">Connect</button>\
-<h4><a href=\"/\">PPP-Blinky home</a></h4>\
-</body>\
-</html>"; // size = 916 bytes + 1 null byte = 917 bytes
-
 // The serial port on your mbed hardware. Your PC should be configured to view this port as a standard dial-up networking modem.
 // On Windows the model type of the modem should be selected as "Communications cable between two computers"
 // The modem baud rate should be set to 115200 baud
@@ -227,9 +164,9 @@ void pppReceiveHandler()
 void putcWhileCheckingInput( char outByte )
 {
 #ifdef SERIAL_PORT_MONITOR_YES
-    checkPc();
+
     debugPutc( outByte );
-    checkPc();
+
 #endif
 }
 
@@ -258,7 +195,7 @@ void fcsDo(int x)
         ppp.fcs=((ppp.fcs&1)^(x&1))?(ppp.fcs>>1)^0x8408:ppp.fcs>>1; // crc calculator
         x>>=1;
     }
-    checkPc(); // handle input
+ // handle input
 }
 
 /// calculate the PPP FCS (frame check sequence) on an entire block of memory
@@ -286,14 +223,14 @@ void dumpPPPFrame()
 {
     char pbuf[30];
     for(int i=0; i<ppp.pkt.len; i++) {
-        checkPc();
+
         sprintf(pbuf, "%02x ", ppp.pkt.buf[i]);
-        checkPc();
+
         putsWhileCheckingInput(pbuf);
     }
-    checkPc();
+
     sprintf(pbuf, " CRC=%04x Len=%d\n", ppp.pkt.crc, ppp.pkt.len);
-    checkPc();
+
     putsWhileCheckingInput(pbuf);
 }
 
@@ -310,7 +247,7 @@ void processPPPFrame(int start, int end)
     int unstuff=0;
     int idx = start;
     while(1) {
-        checkPc();
+
         if (unstuff==0) {
             if (ppp.rx.buf[idx]==0x7d) unstuff=1;
             else {
@@ -337,9 +274,9 @@ void processPPPFrame(int start, int end)
 #define REPORT_FCS_ERROR_YES
 #ifdef REPORT_FCS_ERROR_YES
         char pbuf[50]; // local print buffer
-        checkPc();
+
         sprintf(pbuf, "\nPPP FCS(crc) Error CRC=%x Length = %d\n",ppp.pkt.crc,ppp.pkt.len); // print a debug line
-        checkPc();
+
         putsWhileCheckingInput( pbuf );
         if(0) dumpPPPFrame(); // set to 1 to dump frames with errors in them
 #endif
@@ -349,9 +286,9 @@ void processPPPFrame(int start, int end)
 /// output a character to the PPP port while checking for incoming characters
 void pcPutcWhileCheckingInput(int ch)
 {
-    checkPc(); // check input
+ // check input
     pc.putc(ch);
-    checkPc();
+
 }
 
 /// do PPP HDLC-like handling of special (flag) characters
@@ -375,7 +312,7 @@ void sendPppFrame()
     pcPutcWhileCheckingInput(0x7e); // hdlc start-of-frame "flag"
     for(int i=0; i<ppp.pkt.len; i++) {
         wait_us(86); // wait one character time
-        checkPc();
+
         hdlcPut( ppp.pkt.buf[i] ); // send a character
     }
     pcPutcWhileCheckingInput(0x7e); // hdlc end-of-frame "flag"
@@ -471,7 +408,7 @@ unsigned int dataCheckSum(char * ptr, int len, int restart)
     }
     i=0;
     while ( i<len ) {
-        checkPc();
+
         hi = ptr[i++];
         lo = ptr[i++];
         ppp.sum = ppp.sum + ((hi<<8)|lo);
@@ -697,12 +634,12 @@ void ICMPpacket()   // internet control message protocol
         int icmpSequence = __REV16( ppp.icmp->sequenceR ); // byte reversed - big endian
         if(1) {
             char pbuf[50];
-            checkPc();
+
             sprintf(pbuf, "ICMP PING %d.%d.%d.%d %d.%d.%d.%d ", srcAdr[0],srcAdr[1],srcAdr[2],srcAdr[3],dstAdr[0],dstAdr[1],dstAdr[2],dstAdr[3]);
             putsWhileCheckingInput( pbuf );
-            checkPc();
+
             sprintf(pbuf, "Ident %04x Sequence %04d \n",icmpIdent,icmpSequence);
-            checkPc();
+
             putsWhileCheckingInput( pbuf );
         }
 #endif
@@ -745,7 +682,7 @@ void IGMPpacket()
 void dumpHeaderIP (int outGoing)
 {
 #if defined(IP_HEADER_DUMP_YES) && defined(SERIAL_PORT_MONITOR_YES)
-    checkPc(); // we are expecting the first character of the next packet
+ // we are expecting the first character of the next packet
     int IPv4Id = __REV16(ppp.ip->identR);
     char pbuf[80]; // local print buffer
     int n=0;
@@ -979,12 +916,12 @@ void dumpDataTCP(int outGoing)
         int tcpDataSize = tcpSize - headerSizeTcp; // size of data block after TCP header
         char pbuf[80]; // local print buffer
         int n=0;
-        checkPc();
+
         n=n+sprintf(pbuf+n, outGoing ? "\x1b[34m" : "\x1b[30m" ); // VT100 color code, print black for incoming, blue for outgoing headers
-        checkPc();
+
         n=n+sprintf(pbuf+n, "IP:%d ipHeader:%d tcpHeader:%d tcpData:%d\n", packetLengthIp, headerSizeIp, headerSizeTcp, tcpDataSize);    // 1 for more verbose
         if (n>70) putsWhileCheckingInput("n>pbuf overflow in dumpDataTCP()\n");
-        checkPc();
+
         putsWhileCheckingInput( pbuf );
         if (tcpDataSize > 0) {
             ppp.tcpData[tcpDataSize]=0; // insert a null after the data so debug printf stops printing after the data
@@ -1255,7 +1192,7 @@ void waitForPppFrame()
 void waitForPcConnectString()
 {
     while(ppp.online == 0) {
-        checkPc(); // gather received characters
+ // gather received characters
         // search for Windows Dialup Networking "Direct Connection Between Two Computers" expected connect string
         char * found1 = strstr( (char *)ppp.rx.buf, "CLIENT" );
         if (found1 != NULL) {
@@ -1263,7 +1200,7 @@ void waitForPcConnectString()
             if (v0) debugPrintf("Connected: Found connect string \"CLIENT\", sent \"CLIENTSERVER\"\n");
             pc.puts("CLIENTSERVER");
             ppp.online=1; // we are connected - set flag so we stop looking for the connect string
-            checkPc();
+
         }
     }
 }

@@ -196,6 +196,55 @@ bool Serial::read(std::string & buffer, bool waitForBuffer)
 	return true;
 }
 
+unsigned char Serial::readByte()
+{
+	unsigned char buf;
+#ifdef TARGET_WINDOWS
+	DWORD dwOut = 0;
+	ReadFile(m_hCom, &buf, 1, &dwOut, NULL);
+
+#else
+	::read(fd, &buf, 1);
+#endif
+	return buf;
+}
+
+bool Serial::writeByte(unsigned char byte)
+{
+#ifdef TARGET_WINDOWS
+	if (!WriteFile(m_hCom, &byte, 1, NULL, NULL)) {
+		return false;
+	}
+#else
+	ssize_t numWritten = ::write(fd, &byte, 1);
+	if (numWritten <= 0) {
+		return false;
+	}
+#endif
+	return true;
+}
+
+bool Serial::isAvailable()
+{
+	if (!IsInitialized()) {
+		return false;
+	}
+
+#ifdef TARGET_WINDOWS
+	COMSTAT stat;
+	DWORD err;
+	if (ClearCommError(m_hCom, &err, &stat)) {
+		return stat.cbInQue > 0;
+	}
+	return false;
+#else
+	int numBytes = 0;
+	ioctl(fd, FIONREAD, &numBytes);
+	return numBytes > 0;
+#endif
+
+}
+
 void Serial::setTimeout(int timeout)
 {
 #ifdef TARGET_WINDOWS
