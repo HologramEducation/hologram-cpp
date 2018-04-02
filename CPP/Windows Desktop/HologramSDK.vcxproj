@@ -168,6 +168,7 @@
     <ClCompile Include="..\HologramSDK\src\Cloud\HologramCloud.cpp" />
     <ClCompile Include="..\HologramSDK\src\Event\EventBus\EventBus.cpp" />
     <ClCompile Include="..\HologramSDK\src\Network\Cellular.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\IP\PPP\PPP.cpp" />
     <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\IP\RAS\winRAS.cpp" />
     <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Modem.cpp" />
     <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Serial\Serial.cpp" />

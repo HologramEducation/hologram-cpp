@@ -85,6 +85,9 @@
     <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\IP\RAS\winRAS.cpp">
       <Filter>Network\Modem\Base\IP\RAS</Filter>
     </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\IP\PPP\PPP.cpp">
+      <Filter>Network\Modem\Base\IP\PPP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\HologramSDK\src\Utils\Utils.h">
