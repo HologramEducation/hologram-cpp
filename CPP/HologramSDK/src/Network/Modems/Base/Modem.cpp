@@ -292,7 +292,9 @@ void Modem::handleURC(std::string urcString)
 		socketId = urcString.back();
 		last_read_payload_length = 0;
 		nextState = SOCKET_CLOSED;
-	}
+    } else if (urcString.find("+UUPSDD: ") != std::string::npos) {
+        EventBus::FireEvent(DisconnectionEvent(CELLULAR));
+    }
 	else {
 
 	}
