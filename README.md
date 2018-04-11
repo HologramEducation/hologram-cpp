@@ -1,7 +1,7 @@
-# CPP Hologram SDK
+# C++ Hologram SDK
 Libraries to help you get connected with the Hologram Nova 
 
-This is an unoffical repo with methods to connect the Hologram Nova and possibly other modems to the hologram network. 
+This is an unoffical repo to connect the Hologram Nova and other modems to the hologram network.
 
 ## Windows Desktop
 This version makes use of the [Windows RAS component](Understanding_RAS.md "Windows RAS component") to create and dial up a connection to the cellular network.
