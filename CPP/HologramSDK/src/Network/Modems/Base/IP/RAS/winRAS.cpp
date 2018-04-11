@@ -2,19 +2,25 @@
 
 winRAS::winRAS(std::string name, std::string device)
 {
+#ifdef TARGET_WINDOWS
 	hRasConn = NULL;
 	setupRASConnection(toWString(device), toWString(name));
+#endif
 }
 
 winRAS::~winRAS()
 {
+#ifdef TARGET_WINDOWS
 	if (hRasConn != NULL) {
 		RasHangUp(hRasConn);
 	}
+#endif
 }
+
 
 bool winRAS::connect()
 {
+#ifdef TARGET_WINDOWS
 	// Dial a RAS entry in synchronous mode
 	hRasConn = NULL;
 	RASDIALPARAMS rasDialParams;
@@ -32,14 +38,19 @@ bool winRAS::connect()
 		return false;
 	}
 	return true;
+#endif
+    return false;
 }
 
 void winRAS::disconnect() {
+#ifdef TARGET_WINDOWS
 	if (hRasConn != NULL) {
 		RasHangUp(hRasConn);
 	}
+#endif
 }
 
+#ifdef TARGET_WINDOWS
 bool winRAS::setupRASConnection(std::wstring modemName, std::wstring connName)
 {
 	wchar_t tchNewEntry[MAX_PATH + 1] = TEXT("\0");
@@ -114,3 +125,4 @@ bool winRAS::setupRASConnection(std::wstring modemName, std::wstring connName)
 	connState = RASCS_Disconnected;
 	return true;
 }
+#endif

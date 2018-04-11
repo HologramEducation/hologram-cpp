@@ -1,7 +1,7 @@
 #pragma once
-#include "Base\IP.h"
-#include "PPP\PPP.h"
-#include "RAS\winRAS.h"
+#include "Base/IP.h"
+#include "PPP/PPP.h"
+#include "RAS/winRAS.h"
 
 enum ConnectionType {
 	_PPP,
