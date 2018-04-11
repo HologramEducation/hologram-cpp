@@ -1,7 +1,7 @@
-# Hologram-SDK
+# CPP Hologram SDK
 Libraries to help you get connected with the Hologram Nova 
 
-This is an unoffical repo with methods to connect the Hologram Nova and possibly other modems to the hologram network. Right now it contains things written in C++ but in the future it should have many usable languages.
+This is an unoffical repo with methods to connect the Hologram Nova and possibly other modems to the hologram network. 
 
 ## Windows Desktop
 This version makes use of the [Windows RAS component](Understanding_RAS.md "Windows RAS component") to create and dial up a connection to the cellular network.
@@ -12,9 +12,11 @@ This version makes use of the [Windows RAS component](Understanding_RAS.md "Wind
  * Ws2_32.lib
  
 ## Windows IOT Core/Windows Universal App
-Still a work in progress, currently there does not appear to be a PPP implmentation in the IoT Core so this will try to create a minimal working option. 
+Currently there does not appear to be a PPP implmentation in the IoT Core so this will try to create a minimal working option. 
 
-Possible options for a PPP stack might rely on: http://savannah.nongnu.org/projects/lwip/
+Possible options for a PPP stack might be found/written using: 
+ * http://savannah.nongnu.org/projects/lwip/
+ * https://os.mbed.com/users/nixnax/code/PPP-Blinky/
 
 ### Uses the following static libraries:
  * onecoreuap.lib
@@ -24,7 +26,7 @@ Possible options for a PPP stack might rely on: http://savannah.nongnu.org/proje
 ## MacOS
 Give it a test run!
 
-PPP hasn't been added yet so connecting is not possible, but sending messages and getting SMS should work
+PPP hasn't been added yet so creating a data connection is not possible, but sending messages and getting SMS work
 
 ### Required Frameworks:
  * IOKit
@@ -34,7 +36,7 @@ PPP hasn't been added yet so connecting is not possible, but sending messages an
 While it should probably compile it has not been tested yet and our offical python SDK is a much better option for deveopers
 https://github.com/hologram-io/hologram-python
 
-PPP hasn't been added yet so connecting is not possible, but sending messages and getting SMS should work
+PPP hasn't been added yet so creating a data connection is not possible, but sending messages and getting SMS work
 
 ### Warning 
 Without routing internet traffic your machine may make a lot requests on the cellular network and cause you to rack up a lot of data usage unintentionally!
