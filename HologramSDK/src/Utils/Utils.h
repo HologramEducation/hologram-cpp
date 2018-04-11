@@ -86,12 +86,12 @@ static std::string fromHex(std::string const& s) {
 	return sOut;
 }
 
-static std::string toHex(const std::string& s)
+static std::string toHex(const std::string& s, unsigned char width = 2)
 {
 	std::ostringstream ret;
 
 	for (std::string::size_type i = 0; i < s.length(); ++i)
-		ret << std::hex << std::setfill('0') << std::setw(4) << std::nouppercase << (int)s[i];
+		ret << std::hex << std::setfill('0') << std::setw(width) << std::nouppercase << (int)s[i];
 
 	return ret.str();
 }

@@ -460,7 +460,7 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
         if( vendorIdAsCFNumber ){
             SInt32 vID;
             if(CFNumberGetValue((CFNumberRef)vendorIdAsCFNumber, kCFNumberSInt32Type, &vID)){
-                info.vid = toHex(vID);
+                info.vid = toHex(vID, 4);
             }
             CFRelease(vendorIdAsCFNumber);
         }
@@ -468,7 +468,7 @@ std::vector<SERIAL_DEVICE_INFO> Serial::getConnectedSerialDevices() {
         if( productIdAsCFNumber ){
             SInt32 pID;
             if(CFNumberGetValue((CFNumberRef)productIdAsCFNumber, kCFNumberSInt32Type, &pID)){
-                info.pid = toHex(pID);
+                info.pid = toHex(pID, 4);
             }
             CFRelease(productIdAsCFNumber);
         }
