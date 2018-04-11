@@ -4,7 +4,7 @@ Libraries to help you get connected with the Hologram Nova
 This is an unoffical repo with methods to connect the Hologram Nova and possibly other modems to the hologram network. Right now it contains things written in C++ but in the future it should have many usable languages.
 
 ## Windows Desktop
-This version makes use of the Windows RAS component to create and dial up a connection to the cellular network.
+This version makes use of the [Windows RAS component](Understanding_RAS.md "Windows RAS component") to create and dial up a connection to the cellular network.
 
 ### Uses the following static libraries:
  * rasapi32.lib
