@@ -11,7 +11,7 @@ class SCN : public IP
 {
 public:
 	SCN(std::string name, Serial * serialport);
-	virtual ~SCN();
+	~SCN();
 
     virtual bool connect();
 	virtual void disconnect() {
@@ -22,6 +22,8 @@ public:
 	}
 private:
 	Serial * serialport;
+#ifdef TARGET_MACOS
     SCNetworkConnectionRef m_connection;
     CFStringRef serviceId;
+#endif
 };

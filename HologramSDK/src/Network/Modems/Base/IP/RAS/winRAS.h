@@ -12,18 +12,18 @@ class winRAS : public IP
     
 public:
 	winRAS(std::string name, std::string device);
-	virtual ~winRAS();
+	~winRAS();
 
 	virtual bool connect();
 	virtual void disconnect();
 	virtual bool isConnected() {
-#ifdef TARGET_WINDOWS
+#ifdef USERAS
 		updateConnectionState();
 		return getConnectionState() == RASCS_Connected;
 #endif
         return false;
 	}
-#ifdef TARGET_WINDOWS
+#ifdef USERAS
 	bool setupRASConnection(std::wstring modemName, std::wstring connName);
 
 
