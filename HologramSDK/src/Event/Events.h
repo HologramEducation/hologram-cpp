@@ -59,13 +59,13 @@ private:
 	bool source;
 };
 
-class MessageRecievedEvent : public Event
+class MessageReceivedEvent : public Event
 {
 public:
-	MessageRecievedEvent() {
+	MessageReceivedEvent() {
 
 	}
-	~MessageRecievedEvent() {}
+	~MessageReceivedEvent() {}
 };
 
 class SMSRecievedEvent : public Event

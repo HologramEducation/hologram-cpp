@@ -1,7 +1,7 @@
 #include "../HologramSDK/src/Cloud/HologramCloud.h"
 #include <iostream>
 
-class EventListener : public EventHandler<MessageRecievedEvent>,  public EventHandler<MessageSentEvent>, public EventHandler<ConnectionEvent>
+class EventListener : public EventHandler<MessageReceivedEvent>,  public EventHandler<MessageSentEvent>, public EventHandler<ConnectionEvent>
 {
 public:
 	EventListener() { }
@@ -14,14 +14,14 @@ public:
 	*
 	* @param e The MessageRecievedEvent event
 	*/
-	virtual void onEvent(MessageRecievedEvent & e) override {
+	virtual void onEvent(MessageReceivedEvent & e) override {
 
 		// Ignore the event if it's already been canceled
 		if (e.getCanceled()) {
 			return;
 		}
 
-		std::cout << "Message recieved" << std::endl;
+		std::cout << "RECEIVED EVENT: Message received" << std::endl;
 	}
 
 
@@ -37,7 +37,7 @@ public:
 			return;
 		}
 
-		std::cout << "Message sent " << e.getMessage() << std::endl;
+		std::cout << "SEND EVENT: Message sent " << e.getMessage() << std::endl;
 	}
 
 	/**
@@ -61,9 +61,9 @@ int main(int argc, char* argv[])
 	EventListener eventEcho;
 	EventBus::AddHandler<MessageSentEvent>(eventEcho);
 	EventBus::AddHandler<ConnectionEvent>(eventEcho);
-	EventBus::AddHandler<MessageRecievedEvent>(eventEcho);
+	EventBus::AddHandler<MessageReceivedEvent>(eventEcho);
 	std::map<std::string, std::string> credentials;
-	credentials.emplace("devicekey", argv[2]); //1 - 404 2 - 201
+	credentials.emplace("devicekey", argv[1]); //1 - 201 2 - 404
 	HologramCloud cloud = HologramCloud(credentials, false, NetworkType::CELLULAR);
 	std::vector<std::string> topics;
 	topics.push_back("WINDOWS");
@@ -71,5 +71,5 @@ int main(int argc, char* argv[])
 	std::string result = cloud.sendMessage("Windows Desktop", topics);
 	auto code = cloud.parseResultString(result);
 	//cloud.sendSMS(L"Just the CPP SDK sending SMSs eith the 404", argv[3]);
-	return 0;
+	return code;
 }

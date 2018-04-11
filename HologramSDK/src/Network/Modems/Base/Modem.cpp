@@ -101,7 +101,7 @@ std::string Modem::sendMessage(std::string message)
 		std::this_thread::sleep_for(timespan);
 	}
 	if (urcState == SOCKET_SEND_READ) {
-		EventBus::FireEvent(MessageRecievedEvent());
+		EventBus::FireEvent(MessageReceivedEvent());
 		return readSocket(socketId, last_read_payload_length);
 	}
 	else {

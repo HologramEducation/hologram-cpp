@@ -1,7 +1,7 @@
 #include "../HologramSDK/src/Cloud/HologramCloud.h"
 #include <iostream>
 
-class EventListener : public EventHandler<MessageRecievedEvent>, public EventHandler<MessageSentEvent>, public EventHandler<ConnectionEvent>
+class EventListener : public EventHandler<MessageReceivedEvent>, public EventHandler<MessageSentEvent>, public EventHandler<ConnectionEvent>
 {
 public:
 	EventListener() { }
@@ -14,7 +14,7 @@ public:
 	*
 	* @param e The MessageRecievedEvent event
 	*/
-	virtual void onEvent(MessageRecievedEvent & e) override {
+	virtual void onEvent(MessageReceivedEvent & e) override {
 
 		// Ignore the event if it's already been canceled
 		if (e.getCanceled()) {
@@ -37,7 +37,7 @@ public:
 			return;
 		}
 
-		std::wcout << "Message sent " << e.getMessage() << std::endl;
+		std::cout << "Message sent " << e.getMessage() << std::endl;
 	}
 
 	/**
@@ -61,14 +61,14 @@ int main(int argc, char* argv[])
 	EventListener eventEcho;
 	EventBus::AddHandler<MessageSentEvent>(eventEcho);
 	EventBus::AddHandler<ConnectionEvent>(eventEcho);
-	EventBus::AddHandler<MessageRecievedEvent>(eventEcho);
+	EventBus::AddHandler<MessageReceivedEvent>(eventEcho);
 	std::map<std::string, std::string> credentials;
-	credentials.emplace("devicekey", argv[2]); //1 - 404 2 - 201
+	credentials.emplace("devicekey", argv[1]); //1 - 404 2 - 201
 	HologramCloud cloud = HologramCloud(credentials, false, NetworkType::CELLULAR);
-	std::vector<std::wstring> topics;
-	topics.push_back(L"WINDOWS");
-	topics.push_back(L"CPPSDK");
-	std::string result = cloud.sendMessage(L"Windows IoT Core", topics);
+	std::vector<std::string> topics;
+	topics.push_back("WINDOWSIOT");
+	topics.push_back("CPPSDK");
+	std::string result = cloud.sendMessage("Windows IoT Core", topics);
 	auto code = cloud.parseResultString(result);
 	//cloud.sendSMS(L"Just the CPP SDK sending SMSs eith the 404", argv[3]);
 	return 0;
