@@ -2,10 +2,12 @@
 #include "Base/IP.h"
 #include "PPP/PPP.h"
 #include "RAS/winRAS.h"
+#include "SCN/SCN.h"
 
 enum ConnectionType {
 	_PPP,
-	_RAS
+	_RAS,
+    _SCN
 };
 
 class ConnectionManager
@@ -31,6 +33,9 @@ public:
 		case _RAS:
 			protocol = new winRAS(name, device);
 			break;
+        case _SCN:
+            protocol = new SCN(name, serialport);
+            break;
 		default:
 			break;
 		}

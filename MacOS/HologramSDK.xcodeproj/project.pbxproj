@@ -10,6 +10,8 @@
 		F200D678207D8674003160E2 /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F200D677207D8674003160E2 /* Serial.cpp */; };
 		F200D67A207D868A003160E2 /* PPP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F200D679207D868A003160E2 /* PPP.cpp */; };
 		F200D67C207D87A4003160E2 /* winRAS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F200D67B207D87A4003160E2 /* winRAS.cpp */; };
+		F200D67E207DA261003160E2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F200D67D207DA261003160E2 /* SystemConfiguration.framework */; };
+		F281B2C7207DB76D00126B27 /* SCN.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F281B2C6207DB76D00126B27 /* SCN.cpp */; };
 		F2C7CBCD204A57FF0084E889 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBCC204A57FF0084E889 /* main.cpp */; };
 		F2C7CBD0204A59BC0084E889 /* EventBus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBCF204A59BB0084E889 /* EventBus.cpp */; };
 		F2C7CBD3204A5A000084E889 /* CustomCloud.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2C7CBD1204A5A000084E889 /* CustomCloud.cpp */; };
@@ -39,6 +41,8 @@
 		F200D677207D8674003160E2 /* Serial.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Serial.cpp; path = ../HologramSDK/src/Network/Modems/Base/Serial/Serial.cpp; sourceTree = "<group>"; };
 		F200D679207D868A003160E2 /* PPP.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PPP.cpp; path = ../HologramSDK/src/Network/Modems/Base/IP/PPP/PPP.cpp; sourceTree = "<group>"; };
 		F200D67B207D87A4003160E2 /* winRAS.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = winRAS.cpp; path = ../HologramSDK/src/Network/Modems/Base/IP/RAS/winRAS.cpp; sourceTree = "<group>"; };
+		F200D67D207DA261003160E2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		F281B2C6207DB76D00126B27 /* SCN.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SCN.cpp; path = ../HologramSDK/src/Network/Modems/Base/IP/SCN/SCN.cpp; sourceTree = "<group>"; };
 		F2C7CBC7204A57F30084E889 /* Authentication */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Authentication; path = ../HologramSDK/src/Authentication; sourceTree = "<group>"; };
 		F2C7CBC8204A57F30084E889 /* Network */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Network; path = ../HologramSDK/src/Network; sourceTree = "<group>"; };
 		F2C7CBC9204A57F30084E889 /* Cloud */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Cloud; path = ../HologramSDK/src/Cloud; sourceTree = "<group>"; };
@@ -63,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F200D67E207DA261003160E2 /* SystemConfiguration.framework in Frameworks */,
 				F2CEB4B9205F016A00E3B015 /* CoreFoundation.framework in Frameworks */,
 				F2CEB4B7205F016000E3B015 /* IOKit.framework in Frameworks */,
 			);
@@ -74,6 +79,7 @@
 		F2CEB4B5205F015F00E3B015 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F200D67D207DA261003160E2 /* SystemConfiguration.framework */,
 				F2CEB4B8205F016A00E3B015 /* CoreFoundation.framework */,
 				F2CEB4B6205F015F00E3B015 /* IOKit.framework */,
 			);
@@ -83,6 +89,7 @@
 		F2D421B6204A1AEF0089CDEA = {
 			isa = PBXGroup;
 			children = (
+				F281B2C6207DB76D00126B27 /* SCN.cpp */,
 				F200D67B207D87A4003160E2 /* winRAS.cpp */,
 				F200D679207D868A003160E2 /* PPP.cpp */,
 				F200D677207D8674003160E2 /* Serial.cpp */,
@@ -170,6 +177,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F281B2C7207DB76D00126B27 /* SCN.cpp in Sources */,
 				F200D67C207D87A4003160E2 /* winRAS.cpp in Sources */,
 				F200D67A207D868A003160E2 /* PPP.cpp in Sources */,
 				F200D678207D8674003160E2 /* Serial.cpp in Sources */,
