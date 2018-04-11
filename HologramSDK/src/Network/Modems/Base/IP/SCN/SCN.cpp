@@ -3,20 +3,25 @@
 SCN::SCN(std::string name, Serial * serialport)
 {
 	this->serialport = serialport;
+#ifdef TARGET_MACOS
     serviceId = CFStringCreateWithCString( NULL, "Hologram PPP Connection" , kCFStringEncodingUTF8 );
+#endif
 }
 
 SCN::~SCN()
 {
+#ifdef TARGET_MACOS
     if (m_connection)
     {
         SCNetworkConnectionUnscheduleFromRunLoop(m_connection, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
         CFRelease(m_connection);
         m_connection = NULL;
     }
+#endif
 }
 
 bool SCN::connect(){
+#ifdef TARGET_MACOS
     const void *pppKeys[3], *pppVals[3];
     pppKeys[index] = (void*) kSCPropNetPPPAuthName;
     pppVals[index] = (void*) cfUsername;
@@ -63,4 +68,6 @@ bool SCN::connect(){
         
         sleep(3);
     }
+#endif
+	return false;
 }
