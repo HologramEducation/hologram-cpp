@@ -6,7 +6,7 @@ class PPP : public IP
 {
 public:
 	PPP(Serial * serialport);
-	~PPP();
+	virtual ~PPP();
 
 	virtual bool connect() {
 		return false;

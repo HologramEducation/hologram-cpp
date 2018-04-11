@@ -12,7 +12,7 @@ class winRAS : public IP
     
 public:
 	winRAS(std::string name, std::string device);
-	~winRAS();
+	virtual ~winRAS();
 
 	virtual bool connect();
 	virtual void disconnect();
