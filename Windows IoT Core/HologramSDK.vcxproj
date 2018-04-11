@@ -40,8 +40,13 @@
     <ClInclude Include="..\HologramSDK\src\Event\Events.h" />
     <ClInclude Include="..\HologramSDK\src\Network\Base\Network.h" />
     <ClInclude Include="..\HologramSDK\src\Network\Cellular.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\Base\IP.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\ConnectionManager.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\PPP\PPP.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\RAS\winRAS.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\SCN\SCN.h" />
     <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Modem.h" />
-    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Serial.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Serial\Serial.h" />
     <ClInclude Include="..\HologramSDK\src\Network\Modems\Nova_R404.h" />
     <ClInclude Include="..\HologramSDK\src\Network\Modems\Nova_U201.h" />
     <ClInclude Include="..\HologramSDK\src\Network\NetworkManager.h" />
@@ -53,8 +58,11 @@
     <ClCompile Include="..\HologramSDK\src\Cloud\HologramCloud.cpp" />
     <ClCompile Include="..\HologramSDK\src\Event\EventBus\EventBus.cpp" />
     <ClCompile Include="..\HologramSDK\src\Network\Cellular.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\IP\PPP\PPP.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\IP\RAS\winRAS.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\IP\SCN\SCN.cpp" />
     <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Modem.cpp" />
-    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Serial.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Serial\Serial.cpp" />
     <ClCompile Include="..\HologramSDK\src\Network\Modems\Nova_R404.cpp" />
     <ClCompile Include="..\HologramSDK\src\Network\Modems\Nova_U201.cpp" />
     <ClCompile Include="main.cpp" />

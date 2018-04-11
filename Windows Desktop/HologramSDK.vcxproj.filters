@@ -52,6 +52,9 @@
     <Filter Include="Network\Modem\Base\IP\Base">
       <UniqueIdentifier>{f4a59e8f-6a23-4243-8aef-8955ee8d7055}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Network\Modem\Base\IP\SCN">
+      <UniqueIdentifier>{cf5cb907-e3aa-4ef0-9a34-28786e97af75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -87,6 +90,9 @@
     </ClCompile>
     <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\IP\PPP\PPP.cpp">
       <Filter>Network\Modem\Base\IP\PPP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\IP\SCN\SCN.cpp">
+      <Filter>Network\Modem\Base\IP\SCN</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +164,9 @@
     </ClInclude>
     <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\PPP\PPP.h">
       <Filter>Network\Modem\Base\IP\PPP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\SCN\SCN.h">
+      <Filter>Network\Modem\Base\IP\SCN</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

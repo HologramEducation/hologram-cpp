@@ -170,6 +170,7 @@
     <ClCompile Include="..\HologramSDK\src\Network\Cellular.cpp" />
     <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\IP\PPP\PPP.cpp" />
     <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\IP\RAS\winRAS.cpp" />
+    <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\IP\SCN\SCN.cpp" />
     <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Modem.cpp" />
     <ClCompile Include="..\HologramSDK\src\Network\Modems\Base\Serial\Serial.cpp" />
     <ClCompile Include="..\HologramSDK\src\Network\Modems\Nova_R404.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\ConnectionManager.h" />
     <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\PPP\PPP.h" />
     <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\RAS\winRAS.h" />
+    <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\IP\SCN\SCN.h" />
     <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Modem.h" />
     <ClInclude Include="..\HologramSDK\src\Network\Modems\Base\Serial\Serial.h" />
     <ClInclude Include="..\HologramSDK\src\Network\Modems\Nova_R404.h" />
