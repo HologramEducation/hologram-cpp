@@ -33,19 +33,14 @@
 
 .vs
 
-Windows IoT Core/Python/Python/bin
-Windows IoT Core/Python/Python/obj
-Windows IoT Core/Python/Python/PythonHome
-Windows IoT Core/CPP/Win10IoT_Test/ARM
-Windows IoT Core/Python/Python/Python_TemporaryKey.pfx
-Windows IoT Core/CPP/ARM
-Windows Desktop/CPP/HologramCPPSDK/x64
-Windows Desktop/CPP/x64
-Windows Desktop/CPP/Debug
-Windows Desktop/CPP/HologramCPPSDK/Debug
-Windows IoT Core/CPP/Win10IoT_Test/Debug
+Windows IoT Core/ARM
+Windows Desktop/HologramCPPSDK/x64
+Windows Desktop/x64
+Windows Desktop/Debug
+Windows Desktop/HologramCPPSDK/Debug
+Windows IoT Core/Win10IoT_Test/Debug
 *.DS_Store
-CPP/Windows Desktop/x64
-CPP/Windows IoT Core/ARM
-CPP/Linux/obj
-CPP/Linux/bin
+Windows Desktop/x64
+Windows IoT Core/ARM
+Linux/obj
+Linux/bin
