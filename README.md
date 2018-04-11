@@ -12,7 +12,9 @@ This version makes use of the Windows RAS component to create and dial up a conn
  * Ws2_32.lib
  
 ## Windows IOT Core/Windows Universal App
-Still a work in progress, currently there does not appear to be a PPP implmentation in the IoT Core so this will try to create a minimal working option using AT commands. Possible options for a PPP stack might rely on: http://savannah.nongnu.org/projects/lwip/
+Still a work in progress, currently there does not appear to be a PPP implmentation in the IoT Core so this will try to create a minimal working option. 
+
+Possible options for a PPP stack might rely on: http://savannah.nongnu.org/projects/lwip/
 
 ### Uses the following static libraries:
  * onecoreuap.lib
@@ -20,7 +22,9 @@ Still a work in progress, currently there does not appear to be a PPP implmentat
  * Ws2_32.lib
 
 ## MacOS
-Early beta, still some bugs to work out!
+Give it a test run!
+
+PPP hasn't been added yet so connecting is not possible, but sending messages and getting SMS should work
 
 ### Required Frameworks:
  * IOKit
@@ -29,6 +33,8 @@ Early beta, still some bugs to work out!
 ## Linux
 While it should probably compile it has not been tested yet and our offical python SDK is a much better option for deveopers
 https://github.com/hologram-io/hologram-python
+
+PPP hasn't been added yet so connecting is not possible, but sending messages and getting SMS should work
 
 ### Warning 
 Without routing internet traffic your machine may make a lot requests on the cellular network and cause you to rack up a lot of data usage unintentionally!

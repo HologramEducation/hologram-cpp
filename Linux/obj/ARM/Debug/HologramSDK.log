@@ -1,0 +1,1 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\Microsoft\VisualStudio\v15.0\CodeAnalysis\Microsoft.CodeAnalysis.targets(325,15): error MSB4086: A numeric comparison was attempted on "$(PlatformToolsetVersion)" that evaluates to "" instead of a number, in condition "'$(PlatformToolsetVersion)'<'120'".
